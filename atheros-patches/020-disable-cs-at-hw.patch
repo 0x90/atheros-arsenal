@@ -1,0 +1,13 @@
+--- a/drivers/net/wireless/ath/ath9k/hw.c	2012-05-21 10:22:50.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/hw.c	2012-05-21 10:39:13.000000000 +0800
+@@ -1958,7 +1958,9 @@
+ 	}
+ 
+ 	ath9k_hw_apply_gpio_override(ah);
+-
++	REG_SET_BIT(ah, AR_DIAG_SW, AR_DIAG_FORCE_CH_IDLE_HIGH);
++	REG_SET_BIT(ah, AR_DIAG_SW, AR_DIAG_IGNORE_VIRT_CS);
++	REG_SET_BIT(ah, AR_D_GBL_IFS_MISC, AR_D_GBL_IFS_MISC_IGNORE_BACKOFF);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(ath9k_hw_reset);

@@ -1,0 +1,15 @@
+#include "shared.slickh"
+
+voipDemux :: JaldiVoIPDemux(3)
+
+InfiniteSource(DATA \<450000 54 000040004001b45e c0a80201 c0a802f9 080084710547000d 9694d7a500000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000>, LIMIT 1, BURST 1, STOP true)
+	-> CheckIPHeader
+	-> Print
+	-> voipDemux
+
+voipDemux[$VOIP_OUT_1] -> Print(Output1) -> Discard
+voipDemux[$VOIP_OUT_2] -> Print(Output2) -> Discard
+voipDemux[$VOIP_OUT_3] -> Print(Output3) -> Discard
+voipDemux[$VOIP_OUT_4] -> Print(Output4) -> Discard
+voipDemux[$VOIP_OUT_OVERFLOW] -> Print(OverflowOutput) -> Discard
+voipDemux[$VOIP_OUT_BAD] -> Print(BadOutput) -> Discard

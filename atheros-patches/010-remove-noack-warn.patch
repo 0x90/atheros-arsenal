@@ -1,0 +1,13 @@
+--- a/net/mac80211/tx.c	2012-12-24 14:30:46.000000000 +0800
++++ b/net/mac80211/tx.c	2012-12-24 16:07:42.000000000 +0800
+@@ -694,8 +694,8 @@
+ 	if (unlikely(!info->control.rates[0].count))
+ 		info->control.rates[0].count = 1;
+ 
+-	if (WARN_ON_ONCE((info->control.rates[0].count > 1) &&
+-			 (info->flags & IEEE80211_TX_CTL_NO_ACK)))
++	if ((info->control.rates[0].count > 1) &&
++			 (info->flags & IEEE80211_TX_CTL_NO_ACK))
+ 		info->control.rates[0].count = 1;
+ 
+ 	if (is_multicast_ether_addr(hdr->addr1)) {

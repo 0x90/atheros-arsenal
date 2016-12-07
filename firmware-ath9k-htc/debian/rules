@@ -1,0 +1,29 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/pkg-info.mk
+include debian/cross-toolchain.mk
+
+# We build a firmware, so we do not link to the ssp libraries
+export DEB_BUILD_MAINT_OPTIONS = hardening=-stackprotector
+
+DVU = $(DEB_VERSION_UPSTREAM)
+FW_FILENAME_VER = $(if $(findstring -,$(DVU)),$(shell echo $(DVU) | sed 's/\..*/.dev.0/'),$(DVU))
+
+%:
+	dh $@
+
+override_dh_auto_configure: $(stamp)gcc_xtensa-elf
+
+override_dh_clean:
+	rm -rf $(toolchain_dir)
+	dh_clean
+
+override_dh_auto_build-indep:
+	CROSS_COMPILE="$(toolchain_dir)/bin/xtensa-elf-" VERBOSE=1 $(MAKE) -C target_firmware
+
+override_dh_install-indep:
+	mv target_firmware/htc_9271.fw target_firmware/htc_9271-$(FW_FILENAME_VER).fw
+	mv target_firmware/htc_7010.fw target_firmware/htc_7010-$(FW_FILENAME_VER).fw
+	mv target_firmware/build/k2/fw.elf target_firmware/htc_9271-$(FW_FILENAME_VER).elf
+	mv target_firmware/build/magpie/fw.elf target_firmware/htc_7010-$(FW_FILENAME_VER).elf
+	dh_install

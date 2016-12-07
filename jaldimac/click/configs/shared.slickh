@@ -1,0 +1,114 @@
+// Shared definitions for Jaldimac click configurations
+
+// $HOST_IP, $HOST_IP_NETMASK, and $STATION_ID must already be defined when
+// this file is included!
+// Examples:
+// #define $HOST_IP 10.0.0.1
+// #define $HOST_IP_NETMASK 10.0.0.1/24
+// #define $STATION_ID 1
+
+// ======================================================
+// Required packages
+// ======================================================
+require(package jaldi)
+
+// ======================================================
+// Constants
+// ======================================================
+
+// General network configuration
+#define $BULK_MTU 1500
+
+// Jaldi station IDs
+#define $DRIVER_ID 0
+#define $BROADCAST_ID 0
+#define $MASTER_ID 1
+#define $STATION_1_ID 2
+#define $STATION_2_ID 3
+#define $STATION_3_ID 4
+#define $STATION_4_ID 5
+
+// Click port names - this really needs to be redone but no time right now
+#define $CONTROL 0
+#define $BULK 1
+#define $VOIP 2
+
+#define $VOIP_IN_1 2
+#define $VOIP_IN_2 3
+#define $VOIP_IN_3 4
+#define $VOIP_IN_4 5
+#define $VOIP_IN_OVERFLOW 6
+
+#define $VOIP_OUT_1 0
+#define $VOIP_OUT_2 1
+#define $VOIP_OUT_3 2
+#define $VOIP_OUT_4 3
+#define $VOIP_OUT_OVERFLOW 4
+#define $VOIP_OUT_BAD 5
+
+#define $ALL_VOIP 1
+
+#define $ALT_CONTROL 1
+
+#define $DATA 1
+
+#define $OUT 0
+
+#define $ARP_REPLY 0
+#define $ARP_QUERY 1
+#define $IP 2
+#define $OTHER 3
+
+#define $INTERNAL 0
+#define $HOST 1
+
+#define $DRIVER_FROM_DOWNSTREAM 0
+#define $DRIVER_FROM_SCHEDULER 1
+#define $DRIVER_UPSTREAM_VOIP 2
+#define $DRIVER_TO_DOWNSTREAM 1
+
+// ======================================================
+// Components
+// ======================================================
+
+// Since we've switched to using tun interfaces we don't need to deal with
+// Ethernet, but for now we can keep these elementclasses around in case they
+// become useful again.
+/*
+elementclass EthernetToIP
+{
+	input -> Strip(14)	// Remove Ethernet header
+	      -> CheckIPHeader	// Check for legality and annotate
+	      -> output
+}
+
+elementclass IPToEthernet
+{
+	aq :: ARPQuerier($HOST_IP, $HOST_MAC
+	input[$DATA] -> DecIPTTL -> ipf :: IPFragmenter($MTU)
+	ipf -> [$DATA]aq -> output		// Frames and ARP queries go to output
+	input[$ARP_REPLY] -> [$ARP_REPLY]aq	// ARP responses come in via input[$ARP-REPLY]
+}
+
+elementclass EthernetClassifier
+{
+	c :: Classifier(12/0806 20/0001,		// ARP queries
+			12/0806 20/0002,		// ARP responses
+			12/0800,			// IP packets
+			-);				// Other
+	
+	// This is defined in a verbose manner to clearly denote
+	// the names associated with each port.
+	input -> c
+	c[$ARP_QUERY] -> [$ARP_QUERY]output
+	c[$ARP_REPLY] -> [$ARP_REPLY]output
+	c[$IP] -> [$IP]output
+	c[$OTHER] -> [$OTHER]output
+}
+
+// Proxy ARP
+elementclass ProxyARP
+{
+	input -> ARPResponder($PROXY_ARP_NETWORK $HOST_MAC) -> output
+}
+*/

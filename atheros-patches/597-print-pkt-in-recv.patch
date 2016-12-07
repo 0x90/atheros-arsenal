@@ -1,0 +1,20 @@
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2012-11-24 17:40:03.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2012-11-24 17:39:30.000000000 +0800
+@@ -1854,6 +1854,17 @@
+ 		else
+ 			rs.is_mybeacon = false;
+ 
++		if (!ieee80211_is_beacon(hdr->frame_control) && rs.rs_datalen < 200){
++			char *data = kmalloc(rs.rs_datalen*3, GFP_KERNEL);
++			if (data){
++				sprintf(data, "\n");
++				int index = 0;
++				for (; index < rs.rs_datalen ; index++)
++					sprintf(data, "%s%x ", data, skb->data[index]);
++				printk("%s\n", data);kfree(data);
++			}
++		}
++
+ 		ath_debug_stat_rx(sc, &rs);
+ 
+ 		/*

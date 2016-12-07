@@ -1,0 +1,291 @@
+#!/usr/bin/env python
+#
+# Copyright (c) 2015 Qualcomm Atheros, Inc.
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+import subprocess
+import os
+import logging
+import sys
+import argparse
+import re
+import tempfile
+import Queue
+import threading
+
+DRIVER_DIR = 'drivers/net/wireless/ath/ath10k/'
+
+IGNORE_FILES = [ 'trace.h' ]
+
+CHECKPATCH_IGNORE = [ 'MSLEEP',
+                      'USLEEP_RANGE',
+                      'PRINTK_WITHOUT_KERN_LEVEL',
+                      'NETWORKING_BLOCK_COMMENT_STYLE',
+                      'BLOCK_COMMENT_STYLE',
+                      'LINUX_VERSION_CODE',
+                      'COMPLEX_MACRO',
+                      'PREFER_DEV_LEVEL',
+                      'PREFER_PR_LEVEL',
+                      'COMPARISON_TO_NULL',
+                      'BIT_MACRO',
+                      'CONSTANT_COMPARISON',
+                      'MACRO_WITH_FLOW_CONTROL'
+]
+
+CHECKPATCH_OPTS = [ '--strict', '-q', '--terse', '--no-summary',
+                    '--max-line-length=90', '--show-types' ]
+
+checkpatch_filter = [
+    ('ath10k_read_simulate_fw_crash', 'LONG_LINE'),
+    ('wmi_ops', 'LONG_LINE'),
+    ('wmi_tlv_policy', 'SPACING'),
+    ('ath10k_core_register_work', 'RETURN_VOID'),
+    ('ATH10K_HW_RATE_CCK_.*', 'LONG_LINE'),
+]
+
+# global variables
+
+logger = logging.getLogger('ath10k-check')
+
+# use instead nproc(1)
+cores = '8'
+threads = int(cores) + 2
+
+class CPWarning():
+    def __str__(self):
+        return 'CPWarning(%s, %s, %s, %s, %s)' % (self.path, self.lineno,
+                                                  self.tag, self.type,
+                                                  self.msg)
+
+    def __init__(self):
+        self.path = ''
+        self.lineno = ''
+        self.type = ''
+        self.msg = ''
+        self.tag = ''
+
+def run_gcc():
+    # to disable utf-8 from gcc, easier to paste that way
+    os.environ['LC_CTYPE'] = 'C'
+
+    cmd = 'rm -f %s/*.o' % (DRIVER_DIR)
+    logger.debug('%s' % cmd)
+    subprocess.call(cmd, shell=True)
+
+    cmd = ['make', '-k', '-j', cores, DRIVER_DIR]
+    logger.debug('%s' % cmd)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    (stdout, stderr) = p.communicate()
+
+    stderr = stderr.strip()
+
+    if len(stderr) > 0:
+        print stderr
+
+    return p.returncode
+
+def run_sparse():
+    cmd = ['make', '-k', '-j', cores, DRIVER_DIR, 'C=2', 'CF="-D__CHECK_ENDIAN__"']
+    logger.debug('%s' % cmd)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    (stdout, stderr) = p.communicate()
+
+    stderr = stderr.strip()
+
+    if len(stderr) > 0:
+        print stderr
+
+    return p.returncode
+
+def find_tagname(tag_map, filename, lineno):
+    # we need the tags sorted per linenumber
+    sorted_tags = sorted(tag_map[filename], key=lambda tup: tup[0])
+
+    lineno = int(lineno)
+
+    prev = None
+
+    # find the tag which is in lineno
+    for (l, tag) in sorted_tags:
+        if l > lineno:
+            return prev
+
+        prev = tag
+
+    return None
+
+def parse_checkpatch_warning(line):
+    m = re.match( r'(.*):(\d+): .*:(.*): (.*)', line, re.M|re.I)
+    result = CPWarning()
+    result.path = m.group(1)
+    result.lineno = m.group(2)
+    result.type = m.group(3)
+    result.msg = m.group(4)
+
+    return result
+
+def is_filtered(cpwarning):
+    if cpwarning.tag == None:
+        return False
+
+    for (tag, type) in checkpatch_filter:
+        matchobj = re.match(tag, cpwarning.tag)
+        if matchobj == None:
+            continue
+
+        if cpwarning.type == type:
+            return True
+
+    return False
+
+def run_checkpatch_cmd(q, tag_map):
+    checkpatch_cmd = ['checkpatch.pl']
+    checkpatch_cmd += CHECKPATCH_OPTS
+    checkpatch_cmd += ['--ignore', ",".join(CHECKPATCH_IGNORE), '-f']
+
+    while True:
+        try:
+            f = q.get_nowait()
+        except Queue.Empty:
+            # no more files to check
+            break
+
+        cmd = checkpatch_cmd + [f]
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        (stdoutdata, stderrdata) = p.communicate()
+
+        if stdoutdata == None:
+            continue
+
+        lines = stdoutdata.splitlines()
+        for line in lines:
+            w = parse_checkpatch_warning(line)
+            w.tag = find_tagname(tag_map, f, w.lineno)
+
+            if is_filtered(w):
+                logger.debug('FILTERED: %s' % w)
+                continue
+
+            logger.debug(w)
+            print '%s:%s: %s' % (w.path, w.lineno, w.msg)
+
+        q.task_done()
+
+def run_checkpatch():
+    # get all files which need to be checked
+    cmd = 'git ls-tree HEAD %s | cut -f 2' % (DRIVER_DIR)
+    output = subprocess.check_output(cmd, shell=True)
+    driver_files = output.splitlines()
+
+    # drop files we need to ignore
+    for name in IGNORE_FILES:
+        full_name = '%s%s' % (DRIVER_DIR, name)
+        if full_name in driver_files:
+            driver_files.remove(full_name)
+
+    logger.debug('driver_files: %s' % (driver_files))
+
+    # create global index file
+    (fd, tmpfilename) = tempfile.mkstemp()
+    f = os.fdopen(fd, 'w')
+    f.write('\n'.join(driver_files))
+    f.close()
+
+    # FIXME: do we need to call os.close(fd) still?
+
+    cmd = 'gtags -f %s' % (tmpfilename)
+    logger.debug('%s' % (cmd))
+    output = subprocess.check_output(cmd, shell=True)
+
+    os.remove(tmpfilename)
+
+    # tag_map[FILENAME] = [(start line, tagname)]
+    tag_map = {}
+
+    # create tag mapping
+    for f in driver_files:
+        cmd = 'global -f %s' % (f)
+        output = subprocess.check_output(cmd, shell=True)
+        lines = output.splitlines()
+        for l in lines:
+            columns = l.split()
+            tagname = columns[0]
+            line = int(columns[1])
+
+            if not tag_map.has_key(f):
+                tag_map[f] = []
+
+            tag_map[f].append((line, tagname))
+
+    q = Queue.Queue()
+
+    for f in driver_files:
+        q.put(f)
+
+    # run checkpatch for all files
+    for i in range(threads):
+        t = threading.Thread(target=run_checkpatch_cmd, args = (q,tag_map))
+        t.daemon = True
+        t.start()
+
+    q.join()
+
+    return 0
+
+def main():
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s')
+
+    parser = argparse.ArgumentParser(description='ath10k source code checker')
+
+    parser.add_argument('-d', '--debug', action='store_true',
+                        help='enable debug messages')
+
+    parser.add_argument('--fast', action='store_true',
+                        help='run only tests which finish in few seconds')
+
+    args = parser.parse_args()
+
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+
+    if args.fast:
+        gcc = True
+        sparse = True
+        checkpatch = False
+    else:
+        gcc = True
+        sparse = True
+        checkpatch = True
+
+    if gcc:
+        ret = run_gcc()
+        if ret != 0:
+            logger.debug('gcc failed: %d', ret)
+            sys.exit(1)
+
+    if sparse:
+        ret = run_sparse()
+        if ret != 0:
+            logger.debug('sparse failed: %d', ret)
+            sys.exit(2)
+
+    if checkpatch:
+        ret = run_checkpatch()
+        if ret != 0:
+            logger.debug('checkpatch failed: %d', ret)
+            sys.exit(3)
+
+if __name__ == "__main__":
+   main()
+

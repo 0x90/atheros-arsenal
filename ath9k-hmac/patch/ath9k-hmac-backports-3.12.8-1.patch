@@ -1,0 +1,979 @@
+From 18281be4dac86a54ef42d82fa5f774238fe8677f Mon Sep 17 00:00:00 2001
+From: Sven Zehl <zehl@tu-berlin.de>
+Date: Tue, 27 Sep 2016 16:49:30 +0200
+Subject: [PATCH] backports HMAC
+
+---
+ backports-3.12.8-1/.local-symbols                  |   1 +
+ backports-3.12.8-1/defconfigs/ath9k                |  10 +
+ .../drivers/net/wireless/ath/ath9k/Kconfig         |   8 +
+ .../drivers/net/wireless/ath/ath9k/ath9k.h         |  19 ++
+ .../drivers/net/wireless/ath/ath9k/main.c          | 183 ++++++++++++++++
+ .../drivers/net/wireless/ath/ath9k/xmit.c          | 229 ++++++++++++++++++++-
+ backports-3.12.8-1/drivers/net/wireless/ath/regd.c |   5 +-
+ backports-3.12.8-1/include/net/cfg80211.h          |   6 +
+ backports-3.12.8-1/include/net/mac80211.h          |   5 +
+ backports-3.12.8-1/include/uapi/linux/nl80211.h    |  17 +-
+ backports-3.12.8-1/kconf/Makefile                  |   2 +-
+ backports-3.12.8-1/net/mac80211/cfg.c              |  15 ++
+ backports-3.12.8-1/net/mac80211/driver-ops.h       |   4 +
+ backports-3.12.8-1/net/wireless/nl80211.c          |  81 ++++++++
+ backports-3.12.8-1/net/wireless/rdev-ops.h         |  10 +
+ 15 files changed, 589 insertions(+), 6 deletions(-)
+
+diff --git a/backports-3.12.8-1/.local-symbols b/backports-3.12.8-1/.local-symbols
+index 5e2f85a..2d98349 100755
+--- a/backports-3.12.8-1/.local-symbols
++++ b/backports-3.12.8-1/.local-symbols
+@@ -137,6 +137,7 @@ ATH9K_DEBUGFS=
+ ATH9K_DFS_CERTIFIED=
+ ATH9K_LEGACY_RATE_CONTROL=
+ ATH9K_RFKILL=
++ATH9K_TID_SLEEPING=
+ ATH9K_HTC=
+ ATH9K_HTC_DEBUGFS=
+ CARL9170=
+diff --git a/backports-3.12.8-1/defconfigs/ath9k b/backports-3.12.8-1/defconfigs/ath9k
+index 0e935cc..5a0fc13 100755
+--- a/backports-3.12.8-1/defconfigs/ath9k
++++ b/backports-3.12.8-1/defconfigs/ath9k
+@@ -7,3 +7,13 @@ CPTCFG_WLAN=y
+ CPTCFG_ATH_CARDS=m
+ CPTCFG_ATH9K=m
+ CPTCFG_ATH9K_HTC=m
++CPTCFG_ATH9K_TID_SLEEPING=y
++CPTCFG_MAC80211_DEBUGFS=y
++CPTCFG_MAC80211_DEBUG_MENU=y
++CPTCFG_MAC80211_VERBOSE_DEBUG=y
++CPTCFG_MAC80211_MLME_DEBUG=y
++CPTCFG_MAC80211_STA_DEBUG=y
++CPTCFG_MAC80211_HT_DEBUG=y
++CPTCFG_MAC80211_IBSS_DEBUG=y
++CPTCFG_MAC80211_PS_DEBUG=y
++
+diff --git a/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/Kconfig b/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/Kconfig
+index c758a70..b2db2e4 100755
+--- a/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/Kconfig
++++ b/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/Kconfig
+@@ -132,3 +132,11 @@ config ATH9K_HTC_DEBUGFS
+ 	depends on ATH9K_HTC && DEBUG_FS
+ 	---help---
+ 	  Say Y, if you need access to ath9k_htc's statistics.
++	  
++config ATH9K_TID_SLEEPING
++	bool "Atheros ath9k TID sleeping support"
++	depends on ATH9K
++	default n
++	---help---
++		Say Y to have ath9k TID sleeping support.
++ 
+diff --git a/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/ath9k.h b/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/ath9k.h
+index d7f9e29..5011517 100755
+--- a/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/ath9k.h
++++ b/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/ath9k.h
+@@ -12,6 +12,7 @@
+  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ * TID_SLEEPING PATCH 2015 Sven Zehl zehl@tkn.tu-berlin.de
+  */
+ 
+ #ifndef ATH9K_H
+@@ -28,6 +29,7 @@
+ #include "mci.h"
+ #include "dfs.h"
+ 
++
+ /*
+  * Header for the ath9k.ko driver core *only* -- hw code nor any other driver
+  * should rely on this file or its contents.
+@@ -35,6 +37,12 @@
+ 
+ struct ath_node;
+ 
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	
++extern struct list_head tid_sleep_sta_sleep_ctl_list; 
++void ath_tx_aggr_sleep_tid_sleep(struct ieee80211_sta *sta, struct ath_softc *sc,
++		       struct ath_node *an);
++#endif
++
+ /* Macro to expand scalars to 64-bit objects */
+ 
+ #define	ito64(x) (sizeof(x) == 1) ?			\
+@@ -189,6 +197,17 @@ struct ath_txq {
+ 	struct sk_buff_head complete_q;
+ };
+ 
++
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	
++struct tid_sleep_sta_sleep_ctl {
++    struct list_head list;
++	struct ieee80211_hw *hw;
++	struct ieee80211_vif *vif;
++	struct ieee80211_sta *sta;	
++	bool sleeping_tids[IEEE80211_NUM_TIDS];
++};
++#endif
++
+ struct ath_atx_ac {
+ 	struct ath_txq *txq;
+ 	struct list_head list;
+diff --git a/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/main.c b/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/main.c
+index 99ab0aa..4f939d3 100755
+--- a/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/main.c
++++ b/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/main.c
+@@ -12,6 +12,7 @@
+  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ * TID_SLEEPING PATCH 2015 Sven Zehl zehl@tkn.tu-berlin.de
+  */
+ 
+ #include <linux/nl80211.h>
+@@ -19,6 +20,17 @@
+ #include "ath9k.h"
+ #include "btcoex.h"
+ 
++
++#ifdef CPTCFG_ATH9K_TID_SLEEPING				
++struct list_head tid_sleep_sta_sleep_ctl_list;  	
++
++struct tid_sleep_tuple
++{
++    u8 mac[6];
++    u8 mask;
++};
++#endif	
++
+ static void ath9k_set_assoc_state(struct ath_softc *sc,
+ 				  struct ieee80211_vif *vif);
+ 
+@@ -660,6 +672,10 @@ static int ath9k_start(struct ieee80211_hw *hw)
+ 	mutex_unlock(&sc->mutex);
+ 
+ 	ath9k_ps_restore(sc);
++    
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	
++	INIT_LIST_HEAD(&tid_sleep_sta_sleep_ctl_list);
++#endif
+ 
+ 	return 0;
+ }
+@@ -1333,6 +1349,20 @@ static int ath9k_sta_add(struct ieee80211_hw *hw,
+ 	struct ath_node *an = (struct ath_node *) sta->drv_priv;
+ 	struct ieee80211_key_conf ps_key = { };
+ 	int key;
++    
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	
++	int iter_sleep_sta;
++	struct tid_sleep_sta_sleep_ctl * new_sleep_sta;
++	new_sleep_sta = kmalloc(sizeof(struct tid_sleep_sta_sleep_ctl), GFP_USER);
++	new_sleep_sta->hw=hw;
++	new_sleep_sta->vif=vif;
++	new_sleep_sta->sta=sta;
++	for(iter_sleep_sta=0; iter_sleep_sta<IEEE80211_NUM_TIDS; iter_sleep_sta++)
++	{
++		new_sleep_sta->sleeping_tids[iter_sleep_sta]=false;
++	}	
++	list_add_tail(&new_sleep_sta->list, &tid_sleep_sta_sleep_ctl_list);	
++#endif	    
+ 
+ 	ath_node_attach(sc, sta, vif);
+ 
+@@ -1366,10 +1396,28 @@ static int ath9k_sta_remove(struct ieee80211_hw *hw,
+ 			    struct ieee80211_vif *vif,
+ 			    struct ieee80211_sta *sta)
+ {
++    
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++	struct tid_sleep_sta_sleep_ctl *sta_pos, *sta_n;
++#endif	
++    
+ 	struct ath_softc *sc = hw->priv;
+ 
+ 	ath9k_del_ps_key(sc, vif, sta);
+ 	ath_node_detach(sc, sta);
++    
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++	list_for_each_entry_safe(sta_pos, sta_n, 
++        &tid_sleep_sta_sleep_ctl_list, list) 
++	{
++		if(sta_pos->sta == sta)
++		{
++			list_del(&sta_pos->list);
++			kfree(sta_pos);
++			return 0;
++		}
++	}
++#endif
+ 
+ 	return 0;
+ }
+@@ -1981,6 +2029,138 @@ static int ath9k_get_antenna(struct ieee80211_hw *hw, u32 *tx_ant, u32 *rx_ant)
+ 	return 0;
+ }
+ 
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	
++
++static int ath9k_tid_sleep_mode(char * tid_sleep_data_ptr, 
++                        u8 tid_sleep_data_len)
++{
++    int j,k,num_entries, tid_no, ff_cntr, p;
++    u8 walking_bit, unmask;
++    u8 wakeup_tids[8];
++    struct tid_sleep_tuple *tids_tuple_ptr;
++    struct tid_sleep_sta_sleep_ctl *sta_pos, *sta_n;
++    tids_tuple_ptr = (struct tid_sleep_tuple *) tid_sleep_data_ptr;
++    if(tid_sleep_data_len % sizeof(struct tid_sleep_tuple) == 0)
++    {
++        num_entries = tid_sleep_data_len / sizeof(struct tid_sleep_tuple);
++#ifdef CPTCFG_ATH_DEBUG       
++        printk("ATH9k:num_entries: %d, tid_sleep_data_len: %d, sizeof one:%lu\n",
++            num_entries,tid_sleep_data_len,sizeof(struct tid_sleep_tuple));
++#endif            
++        for(j=0; j<num_entries; j++)
++        {
++            /*Print current entry*/
++#ifdef CPTCFG_ATH_DEBUG               
++            printk("*****\nEntry No: %d\nMAC: %pM \n",j,
++                tids_tuple_ptr->mac);
++            printk("TID wakeup mask: %d\n", tids_tuple_ptr->mask);
++#endif            
++            
++            walking_bit=1;
++            for(k=0;k<8;k++)
++            {
++                wakeup_tids[k] = 0;
++                unmask = tids_tuple_ptr->mask & walking_bit;
++                if(unmask)
++                {
++                    wakeup_tids[k] = 1;
++                }
++                else
++                {
++                    //printk("WakeupTID: %d set to zero\n", k);
++                }
++                walking_bit = walking_bit << 1;
++            }
++            
++            /*Check if all STAs should be processed*/
++            ff_cntr=0;
++            for(p=0;p<6;p++)
++            {
++                if(tids_tuple_ptr->mac[0]== 0xFF)
++                {
++                    ff_cntr++;
++                } 
++            }
++            if(ff_cntr==6)
++            {
++#ifdef CPTCFG_ATH_DEBUG                   
++                printk("Process all STAs activated\n");
++#endif                
++            }           
++            
++            /*Process entry*/
++            list_for_each_entry_safe(sta_pos, sta_n, 
++                &tid_sleep_sta_sleep_ctl_list, list) 
++            {
++                    if((sta_pos->sta->addr[0]==tids_tuple_ptr->mac[0] && 
++                        sta_pos->sta->addr[1]==tids_tuple_ptr->mac[1] && 
++                            sta_pos->sta->addr[2]==tids_tuple_ptr->mac[2] && 
++                                sta_pos->sta->addr[3]==tids_tuple_ptr->mac[3] && 
++                                    sta_pos->sta->addr[4]==tids_tuple_ptr->mac[4] && 
++                                        sta_pos->sta->addr[5]==tids_tuple_ptr->mac[5]) ||
++                                            (ff_cntr==6)) 
++                    {
++#ifdef CPTCFG_ATH_DEBUG                           
++                        printk("STA MAC: %pM found\n",sta_pos->sta->addr);
++#endif                        
++                        for(tid_no=0; tid_no<8; tid_no++)
++                        {    
++                            if(wakeup_tids[tid_no]) 
++                            {
++                                sta_pos->sleeping_tids[tid_no]=false;
++#ifdef CPTCFG_ATH_DEBUG                                   
++                                printk("Wakeup TID: %d\n",tid_no);
++#endif                                
++                            }
++                            else
++                            {
++                                sta_pos->sleeping_tids[tid_no]=true;
++#ifdef CPTCFG_ATH_DEBUG                                   
++                                printk("Sleeping TID: %d\n",tid_no);
++#endif                                
++                            }
++                        }
++                        ath_tx_aggr_sleep_tid_sleep(sta_pos->sta, sta_pos->hw->priv, 
++                            (struct ath_node *)sta_pos->sta->drv_priv);
++                    }
++            }
++            
++            /*Move to next entry*/
++            if(j<num_entries-1)
++            {
++                tids_tuple_ptr++;
++            }
++        }
++        if(num_entries==0) /*Allow nothing, set everything to sleep*/
++        {
++#ifdef CPTCFG_ATH_DEBUG               
++            printk("Global Sleep Mode Activated!\n");
++            printk("Putting all STAs and all their TIDs into sleep mode\n");
++#endif            
++            list_for_each_entry_safe(sta_pos, sta_n, &tid_sleep_sta_sleep_ctl_list, list) 
++            {
++                for(tid_no=0; tid_no<8; tid_no++)
++                {    
++                    sta_pos->sleeping_tids[tid_no]=true;
++#ifdef CPTCFG_ATH_DEBUG                       
++                    printk("Sleeping TID: %d\n",tid_no);
++#endif                    
++                }
++                ath_tx_aggr_sleep_tid_sleep(sta_pos->sta, sta_pos->hw->priv, 
++                            (struct ath_node *)sta_pos->sta->drv_priv);
++            }
++        }
++    }
++    else
++    {
++        return -1;
++    }
++    
++	return 0;
++}
++#endif
++
++
+ #ifdef CONFIG_PM_SLEEP
+ 
+ static void ath9k_wow_map_triggers(struct ath_softc *sc,
+@@ -2381,4 +2561,7 @@ struct ieee80211_ops ath9k_ops = {
+ 	.sw_scan_start	    = ath9k_sw_scan_start,
+ 	.sw_scan_complete   = ath9k_sw_scan_complete,
+ 	.channel_switch_beacon     = ath9k_channel_switch_beacon,
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++    .set_tid_sleep_mode = ath9k_tid_sleep_mode,
++#endif   
+ };
+diff --git a/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/xmit.c b/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/xmit.c
+index 7fe6b59..2ccd0bf 100755
+--- a/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/xmit.c
++++ b/backports-3.12.8-1/drivers/net/wireless/ath/ath9k/xmit.c
+@@ -12,12 +12,14 @@
+  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ * TID_SLEEPING PATCH 2015 Sven Zehl zehl@tkn.tu-berlin.de
+  */
+ 
+ #include <linux/dma-mapping.h>
+ #include "ath9k.h"
+ #include "ar9003_mac.h"
+ 
++
+ #define BITS_PER_BYTE           8
+ #define OFDM_PLCP_BITS          22
+ #define HT_RC_2_STREAMS(_rc)    ((((_rc) & 0x78) >> 3) + 1)
+@@ -1453,9 +1455,47 @@ void ath_tx_aggr_sleep(struct ieee80211_sta *sta, struct ath_softc *sc,
+ 	struct ath_txq *txq;
+ 	bool buffered;
+ 	int tidno;
++    
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	
++	struct tid_sleep_sta_sleep_ctl *sta_pos, *sta_n, *sta_found;
++    sta_found = 0;
++    sta_n = 0;
++    sta_found = 0;
++    /*Find out if the STA is one of our Sleep steering STAs*/
++	list_for_each_entry_safe(sta_pos, sta_n, 
++        &tid_sleep_sta_sleep_ctl_list, list) 
++	{
++#ifdef CPTCFG_ATH_DEBUG   
++        printk("ath_tx_aggr_sleep: MAC searched: %pM \n", sta->addr);
++        printk("ath_tx_aggr_sleep: MAC saved: %pM \n", sta_pos->sta->addr);
++#endif
++		if(sta_pos->sta == sta) 
++		{
++			sta_found=sta_pos;
++			break;
++		}
++	}
++#endif	    
++    
+ 
+ 	for (tidno = 0, tid = &an->tid[tidno];
+ 	     tidno < IEEE80211_NUM_TIDS; tidno++, tid++) {
++             
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++		if(sta_found)
++		{
++            if(sta_found->sleeping_tids[tidno]==false)
++			{
++				/*Do not put a TID of a STA that is in global sleep mode 
++                into sleep mode if the TID of the STA has set 
++                sleep mode set to false*/
++#ifdef CPTCFG_ATH_DEBUG                   
++                printk("ath_tx_aggr_sleep: Do no sleeo break!");
++#endif                
++				continue;
++			}
++		}
++#endif             
+ 
+ 		if (!tid->sched)
+ 			continue;
+@@ -1481,16 +1521,121 @@ void ath_tx_aggr_sleep(struct ieee80211_sta *sta, struct ath_softc *sc,
+ 	}
+ }
+ 
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	
++void ath_tx_aggr_sleep_tid_sleep(struct ieee80211_sta *sta, 
++    struct ath_softc *sc, struct ath_node *an)
++{
++	struct ath_atx_tid *tid;
++	struct ath_atx_ac *ac;
++	struct ath_txq *txq;
++	int tidno;	
++
++	struct tid_sleep_sta_sleep_ctl *sta_pos, *sta_n, *sta_found;
++    sta_found = 0;
++    sta_n = 0;
++    sta_found = 0;
++    /*Find out if the STA is one of our Sleep steering STAs...*/
++	list_for_each_entry_safe(sta_pos, sta_n, 
++        &tid_sleep_sta_sleep_ctl_list, list) 
++	{
++#ifdef CPTCFG_ATH_DEBUG           
++        printk("ath_tx_aggr_sleep_tid_sleep: MAC searched: %pM \n", 
++            sta->addr);
++        printk("ath_tx_aggr_sleep_tid_sleep: MAC saved: %pM \n", 
++            sta_pos->sta->addr);
++#endif        
++		if(sta_pos->sta == sta) 
++		{
++			sta_found=sta_pos;
++			break;
++		}
++	}
++
++	
++	
++	for (tidno = 0, tid = &an->tid[tidno];
++	     tidno < IEEE80211_NUM_TIDS; tidno++, tid++) {
++
++		if(sta_found)
++		{
++            if(sta_found->sleeping_tids[tidno]==false)
++			{
++				/*Do not put a TID of a STA that is in global sleep mode 
++                 * into sleep mode if the TID of the STA has set 
++                 * sleep mode set to false...*/
++				continue;
++			}
++		}
++
++		ac = tid->ac;
++		txq = ac->txq;
++
++		ath_txq_lock(sc, txq);
++
++		if (!tid->sched) {
++			ath_txq_unlock(sc, txq);
++			continue;
++		}
++		tid->sched = false;
++		list_del(&tid->list);
++
++		if (ac->sched) {
++			ac->sched = false;
++			list_del(&ac->list);
++		}
++		ath_txq_unlock(sc, txq);
++	}
++    /*Wake the TIDs that should be resumed up!*/
++    ath_tx_aggr_wakeup(sc, an);
++}
++#endif	
++
+ void ath_tx_aggr_wakeup(struct ath_softc *sc, struct ath_node *an)
+ {
+ 	struct ath_atx_tid *tid;
+ 	struct ath_atx_ac *ac;
+ 	struct ath_txq *txq;
+ 	int tidno;
++    
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	
++	struct tid_sleep_sta_sleep_ctl *sta_pos, *sta_n, *sta_found;
++    sta_found = 0;
++    sta_n = 0;
++    sta_found = 0;
++    /*Find out if the STA is one of our Sleep steering STAs...*/
++	list_for_each_entry_safe(sta_pos, sta_n, 
++        &tid_sleep_sta_sleep_ctl_list, list) 
++	{
++#ifdef CPTCFG_ATH_DEBUG           
++        printk("ath_tx_aggr_wakeup: MAC search: %pM \n", 
++            an->sta->addr);
++        printk("ath_tx_aggr_wakeup: MAC saved: %pM \n", 
++            sta_pos->sta->addr);
++#endif        
++		if(sta_pos->sta == an->sta) 
++		{
++			sta_found=sta_pos;
++			break;
++		}
++	}
++#endif		    
+ 
+ 	for (tidno = 0, tid = &an->tid[tidno];
+ 	     tidno < IEEE80211_NUM_TIDS; tidno++, tid++) {
+ 
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++		if(sta_found)
++		{
++			if(sta_found->sleeping_tids[tidno]==true)
++			{
++				continue;
++#ifdef CPTCFG_ATH_DEBUG                   
++                printk("ath_tx_aggr_wakeup: Do no wake up, break!");
++#endif                
++			}
++		}
++#endif	
++
+ 		ac = tid->ac;
+ 		txq = ac->txq;
+ 
+@@ -2178,6 +2323,14 @@ int ath_tx_start(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 	struct ath_buf *bf;
+ 	int q;
+ 	int ret;
++    
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++	struct tid_sleep_sta_sleep_ctl *sta_pos, *sta_n, *sta_found;
++    bool tid_sleep_tid_force_sleep=false;
++    sta_found = 0;
++    sta_n = 0;
++    sta_found = 0;	
++#endif	    
+ 
+ 	ret = ath_tx_prepare(hw, skb, txctl);
+ 	if (ret)
+@@ -2211,6 +2364,71 @@ int ath_tx_start(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 
+ 		if (info->flags & IEEE80211_TX_CTL_CLEAR_PS_FILT)
+ 			tid->ac->clear_ps_filter = true;
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++        if(txctl->an)
++        {
++            if(txctl->an->sta)
++            {	
++#ifdef CPTCFG_ATH_DEBUG                   
++                printk("ath_tx_start: MAC search: %pM \n", 
++                    txctl->an->sta->addr);
++#endif                
++                /*Find out if the STA is one of our Sleep steering STAs...*/
++                list_for_each_entry_safe(sta_pos, 
++                    sta_n, &tid_sleep_sta_sleep_ctl_list, list) 
++                {
++                    if(sta_pos->sta == txctl->an->sta) 
++                    {
++#ifdef CPTCFG_ATH_DEBUG                           
++                        printk("ath_tx_start: MAC saved: %pM \n", 
++                            sta_pos->sta->addr);
++#endif                        
++                        sta_found=sta_pos;
++                        if(tid)
++                        {
++#ifdef CPTCFG_ATH_DEBUG                               
++                            printk("ath_tx_start:STA found 1");
++#endif                            
++                            tid_sleep_tid_force_sleep=sta_found->
++                                sleeping_tids[tid->tidno];
++                        }
++                        break;
++                    }
++                }
++            }
++            else if(txctl->sta)
++            {
++#ifdef CPTCFG_ATH_DEBUG                   
++                 printk("ath_tx_start: MAC search: %pM \n", 
++                    txctl->sta->addr);
++#endif                 
++                /*Find out if the STA is one of our Sleep steering STAs...*/
++                list_for_each_entry_safe(sta_pos, sta_n, 
++                    &tid_sleep_sta_sleep_ctl_list, list) 
++                {
++#ifdef CPTCFG_ATH_DEBUG                       
++                    printk("ath_tx_start: MAC saved: %pM \n", 
++                        sta_pos->sta->addr);
++#endif                    
++                    if(sta_pos->sta == txctl->sta) 
++                    {
++                        sta_found=sta_pos;
++                        if(tid)
++                        {
++#ifdef CPTCFG_ATH_DEBUG                               
++                            printk("ath_tx_start: STA found 2");
++#endif                            
++                            tid_sleep_tid_force_sleep=sta_found->
++                                sleeping_tids[tid->tidno];
++                        }
++                        break;
++                    }
++                }
++            }
++        }
++#endif	
++
++
+ 
+ 		/*
+ 		 * Add this frame to software queue for scheduling later
+@@ -2218,9 +2436,16 @@ int ath_tx_start(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 		 */
+ 		TX_STAT_INC(txq->axq_qnum, a_queued_sw);
+ 		__skb_queue_tail(&tid->buf_q, skb);
+-		if (!txctl->an->sleeping)
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++		if (!txctl->an->sleeping && tid_sleep_tid_force_sleep==false) {
++#else
++		if (!txctl->an->sleeping) {
++#endif        
++#ifdef CPTCFG_ATH_DEBUG   
++            printk("ath_tx_start: This frame will be sent\n");
++#endif            
+ 			ath_tx_queue_tid(txq, tid);
+-
++        }
+ 		ath_txq_schedule(sc, txq);
+ 		goto out;
+ 	}
+diff --git a/backports-3.12.8-1/drivers/net/wireless/ath/regd.c b/backports-3.12.8-1/drivers/net/wireless/ath/regd.c
+index 7d077c7..a1003e0 100755
+--- a/backports-3.12.8-1/drivers/net/wireless/ath/regd.c
++++ b/backports-3.12.8-1/drivers/net/wireless/ath/regd.c
+@@ -12,6 +12,7 @@
+  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ * TID_SLEEPING PATCH 2015 Sven Zehl zehl@tkn.tu-berlin.de
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+@@ -568,7 +569,9 @@ static int __ath_regd_init(struct ath_regulatory *reg)
+ 		       "country code should be used\n");
+ 		reg->country_code = CTRY_UNITED_STATES;
+ 	}
+-
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	               
++		printk("ath: ATH9K HMAC ENABLED\n");
++#endif  
+ 	if (reg->country_code == CTRY_DEFAULT) {
+ 		country = NULL;
+ 	} else {
+diff --git a/backports-3.12.8-1/include/net/cfg80211.h b/backports-3.12.8-1/include/net/cfg80211.h
+index 9c4e228..428a5de 100755
+--- a/backports-3.12.8-1/include/net/cfg80211.h
++++ b/backports-3.12.8-1/include/net/cfg80211.h
+@@ -8,6 +8,7 @@
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
++ * TID_SLEEPING PATCH 2015 Sven Zehl zehl@tkn.tu-berlin.de
+  */
+ 
+ #include <linux/netdevice.h>
+@@ -22,6 +23,7 @@
+ #include <linux/net.h>
+ #include <net/regulatory.h>
+ 
++
+ /**
+  * DOC: Introduction
+  *
+@@ -2407,6 +2409,10 @@ struct cfg80211_ops {
+ 	int	(*channel_switch)(struct wiphy *wiphy,
+ 				  struct net_device *dev,
+ 				  struct cfg80211_csa_settings *params);
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++    int	(*tid_sleeping)(struct wiphy *wiphy, struct net_device *dev,
++			     char * tid_sleep_data_ptr, u8 tid_sleep_data_len);
++#endif                  
+ };
+ 
+ /*
+diff --git a/backports-3.12.8-1/include/net/mac80211.h b/backports-3.12.8-1/include/net/mac80211.h
+index 1682fc3..8dfdf39 100755
+--- a/backports-3.12.8-1/include/net/mac80211.h
++++ b/backports-3.12.8-1/include/net/mac80211.h
+@@ -8,6 +8,7 @@
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+  * published by the Free Software Foundation.
++ * TID_SLEEPING PATCH 2015 Sven Zehl zehl@tkn.tu-berlin.de
+  */
+ 
+ #ifndef MAC80211_H
+@@ -2867,6 +2868,10 @@ struct ieee80211_ops {
+ 	void (*channel_switch_beacon)(struct ieee80211_hw *hw,
+ 				      struct ieee80211_vif *vif,
+ 				      struct cfg80211_chan_def *chandef);
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++    int (*set_tid_sleep_mode)(char * tid_sleep_data_ptr, 
++        u8 tid_sleep_data_len);
++#endif	                      
+ };
+ 
+ /**
+diff --git a/backports-3.12.8-1/include/uapi/linux/nl80211.h b/backports-3.12.8-1/include/uapi/linux/nl80211.h
+index fde2c02..142f992 100755
+--- a/backports-3.12.8-1/include/uapi/linux/nl80211.h
++++ b/backports-3.12.8-1/include/uapi/linux/nl80211.h
+@@ -22,7 +22,7 @@
+  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+- *
++ * TID_SLEEPING PATCH 2015 Sven Zehl zehl@tkn.tu-berlin.de
+  */
+ 
+ #include <linux/types.h>
+@@ -685,6 +685,10 @@
+  *	width). %NL80211_ATTR_CH_SWITCH_BLOCK_TX may be supplied to inform
+  *	other station that transmission must be blocked until the channel
+  *	switch is complete.
++ * 
++ * @NL80211_CMD_SET_TID_SLEEP: set the power save mode of a single TID
++ *  of a distinct STA.
++ *
+  *
+  * @NL80211_CMD_MAX: highest used command number
+  * @__NL80211_CMD_AFTER_LAST: internal use
+@@ -854,7 +858,9 @@ enum nl80211_commands {
+ 	NL80211_CMD_CHANNEL_SWITCH,
+ 
+ 	/* add new commands above here */
+-
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++	NL80211_CMD_SET_TID_SLEEP,
++#endif
+ 	/* used to define NL80211_CMD_MAX below */
+ 	__NL80211_CMD_AFTER_LAST,
+ 	NL80211_CMD_MAX = __NL80211_CMD_AFTER_LAST - 1
+@@ -1496,6 +1502,9 @@ enum nl80211_commands {
+  * @NL80211_ATTR_RXMGMT_FLAGS: flags for nl80211_send_mgmt(), u32.
+  *	As specified in the &enum nl80211_rxmgmt_flags.
+  *
++ * @NL80211_ATTR_TID_SLEEP: payload for changing the power save mode of 
++ *  a single TID of a distinct STA. (TID_SLEEPING)
++ * 
+  * @NL80211_ATTR_MAX: highest attribute number currently defined
+  * @__NL80211_ATTR_AFTER_LAST: internal use
+  */
+@@ -1807,6 +1816,10 @@ enum nl80211_attrs {
+ 	NL80211_ATTR_RXMGMT_FLAGS,
+ 
+ 	/* add attributes here, update the policy in nl80211.c */
++    
++#ifdef CPTCFG_ATH9K_TID_SLEEPING   
++    	NL80211_ATTR_TID_SLEEP,
++#endif
+ 
+ 	__NL80211_ATTR_AFTER_LAST,
+ 	NL80211_ATTR_MAX = __NL80211_ATTR_AFTER_LAST - 1
+diff --git a/backports-3.12.8-1/kconf/Makefile b/backports-3.12.8-1/kconf/Makefile
+index dfd793a..70e68a9 100755
+--- a/backports-3.12.8-1/kconf/Makefile
++++ b/backports-3.12.8-1/kconf/Makefile
+@@ -1,4 +1,4 @@
+-CFLAGS=-Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
++CFLAGS=-Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer 
+ 
+ LXDIALOG := lxdialog/checklist.o lxdialog/inputbox.o lxdialog/menubox.o lxdialog/textbox.o lxdialog/util.o lxdialog/yesno.o
+ 
+diff --git a/backports-3.12.8-1/net/mac80211/cfg.c b/backports-3.12.8-1/net/mac80211/cfg.c
+index cb09f6d..d19a338 100755
+--- a/backports-3.12.8-1/net/mac80211/cfg.c
++++ b/backports-3.12.8-1/net/mac80211/cfg.c
+@@ -4,6 +4,7 @@
+  * Copyright 2006-2010	Johannes Berg <johannes@sipsolutions.net>
+  *
+  * This file is GPLv2 as found in COPYING.
++ * TID_SLEEPING PATCH 2015 Sven Zehl zehl@tkn.tu-berlin.de
+  */
+ 
+ #include <linux/ieee80211.h>
+@@ -1455,6 +1456,17 @@ static int ieee80211_del_station(struct wiphy *wiphy, struct net_device *dev,
+ 	return 0;
+ }
+ 
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++static int ieee80211_tid_sleeping(struct wiphy *wiphy,
++				    struct net_device *dev, char * tid_sleep_data_ptr, 
++                        u8 tid_sleep_data_len)
++{
++    struct ieee80211_local *local = wiphy_priv(wiphy);
++    local->ops->set_tid_sleep_mode(tid_sleep_data_ptr, tid_sleep_data_len);
++    return 0;
++}                    
++#endif    
++
+ static int ieee80211_change_station(struct wiphy *wiphy,
+ 				    struct net_device *dev, u8 *mac,
+ 				    struct station_parameters *params)
+@@ -3687,4 +3699,7 @@ struct cfg80211_ops mac80211_config_ops = {
+ 	.get_channel = ieee80211_cfg_get_channel,
+ 	.start_radar_detection = ieee80211_start_radar_detection,
+ 	.channel_switch = ieee80211_channel_switch,
++#ifdef CPTCFG_ATH9K_TID_SLEEPING
++    .tid_sleeping = ieee80211_tid_sleeping,
++#endif        
+ };
+diff --git a/backports-3.12.8-1/net/mac80211/driver-ops.h b/backports-3.12.8-1/net/mac80211/driver-ops.h
+index cb920c4..6359ff1 100755
+--- a/backports-3.12.8-1/net/mac80211/driver-ops.h
++++ b/backports-3.12.8-1/net/mac80211/driver-ops.h
+@@ -1,6 +1,10 @@
+ #ifndef __MAC80211_DRIVER_OPS
+ #define __MAC80211_DRIVER_OPS
+ 
++/*
++ * TID_SLEEPING PATCH 2015 Sven Zehl zehl@tkn.tu-berlin.de
++ */
++
+ #include <net/mac80211.h>
+ #include "ieee80211_i.h"
+ #include "trace.h"
+diff --git a/backports-3.12.8-1/net/wireless/nl80211.c b/backports-3.12.8-1/net/wireless/nl80211.c
+index 47f7e91..2bff489 100755
+--- a/backports-3.12.8-1/net/wireless/nl80211.c
++++ b/backports-3.12.8-1/net/wireless/nl80211.c
+@@ -2,6 +2,7 @@
+  * This is the new netlink-based wireless configuration interface.
+  *
+  * Copyright 2006-2010	Johannes Berg <johannes@sipsolutions.net>
++ * TID_SLEEPING PATCH 2015 Sven Zehl zehl@tkn.tu-berlin.de
+  */
+ 
+ #include <linux/if.h>
+@@ -3914,6 +3915,76 @@ static int nl80211_set_station_tdls(struct genl_info *info,
+ 	return nl80211_parse_sta_wme(info, params);
+ }
+ 
++
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	
++
++static int nl80211_dump_tid_sleeping(struct sk_buff *skb,
++				struct netlink_callback *cb)
++{
++	//struct station_info sinfo;
++	//struct cfg80211_registered_device *rdev;
++	//struct wireless_dev *wdev;
++	//u8 mac_addr[ETH_ALEN];
++	//int sta_idx = cb->args[2];
++	//int err;
++    
++    printk("TID SLEEPING DUMP IT!, should be implemented to get return values\n");
++	return 0;
++}
++
++
++static int nl80211_tid_sleeping(struct sk_buff *skb, struct genl_info *info)
++{
++	struct cfg80211_registered_device *rdev = info->user_ptr[0];
++	struct net_device *dev = info->user_ptr[1];
++	int err;
++    char * tid_sleep_data_ptr;
++    u8 tid_sleep_data_len;
++    
++    tid_sleep_data_len = 0;
++    tid_sleep_data_ptr = 0;
++	if (info->attrs[NL80211_ATTR_TID_SLEEP]) {
++		tid_sleep_data_ptr =
++			nla_data(info->attrs[NL80211_ATTR_TID_SLEEP]);
++		tid_sleep_data_len =
++			nla_len(info->attrs[NL80211_ATTR_TID_SLEEP]);
++	}
++    else
++    {
++        printk("No data supplied for NL80211_ATTR_TID_SLEEP\n");
++    }
++
++	switch (dev->ieee80211_ptr->iftype) {
++	case NL80211_IFTYPE_AP:
++	case NL80211_IFTYPE_AP_VLAN:
++	case NL80211_IFTYPE_P2P_GO:
++	case NL80211_IFTYPE_P2P_CLIENT:
++	case NL80211_IFTYPE_STATION:
++	case NL80211_IFTYPE_ADHOC:
++	case NL80211_IFTYPE_MESH_POINT:
++		break;
++	default:
++		err = -EOPNOTSUPP;
++		goto out_put;
++	}
++    if(tid_sleep_data_ptr == 0)
++    {
++        printk("No data supplied nl80211_tid_sleeping()\n");
++        err = -EOPNOTSUPP;
++        goto out_put;
++    }
++    
++
++	err = rdev_tid_sleeping(rdev, dev, tid_sleep_data_ptr, tid_sleep_data_len);
++    err=0;
++
++ out_put:
++	return err;
++}
++
++#endif
++
++
+ static int nl80211_set_station(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct cfg80211_registered_device *rdev = info->user_ptr[0];
+@@ -9498,6 +9569,16 @@ static struct genl_ops nl80211_ops[] = {
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+ 				  NL80211_FLAG_NEED_RTNL,
+ 	},
++#ifdef CPTCFG_ATH9K_TID_SLEEPING   
++    {
++		.cmd = NL80211_CMD_SET_TID_SLEEP,
++		.doit = nl80211_tid_sleeping,
++        .dumpit = nl80211_dump_tid_sleeping,
++		.policy = nl80211_policy,
++		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
++				  NL80211_FLAG_NEED_RTNL,
++	},
++#endif        
+ };
+ 
+ static struct genl_multicast_group nl80211_mlme_mcgrp = {
+diff --git a/backports-3.12.8-1/net/wireless/rdev-ops.h b/backports-3.12.8-1/net/wireless/rdev-ops.h
+index 725db21..898f099 100755
+--- a/backports-3.12.8-1/net/wireless/rdev-ops.h
++++ b/backports-3.12.8-1/net/wireless/rdev-ops.h
+@@ -198,6 +198,16 @@ static inline int rdev_change_station(struct cfg80211_registered_device *rdev,
+ 	return ret;
+ }
+ 
++#ifdef CPTCFG_ATH9K_TID_SLEEPING	
++static inline int rdev_tid_sleeping(struct cfg80211_registered_device *rdev,
++				      struct net_device *dev,  char * tid_sleep_data_ptr, u8 tid_sleep_data_len)
++{
++	int ret;
++	ret = rdev->ops->tid_sleeping(&rdev->wiphy, dev, tid_sleep_data_ptr, tid_sleep_data_len);
++	return ret;
++}
++#endif
++
+ static inline int rdev_get_station(struct cfg80211_registered_device *rdev,
+ 				   struct net_device *dev, u8 *mac,
+ 				   struct station_info *sinfo)
+-- 
+2.8.1
+

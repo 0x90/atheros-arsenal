@@ -1,0 +1,14 @@
+// JaldiMAC Click configuration for upstream traffic from a tun device
+
+// Defines $UPSTREAM_SOURCE and $UPSTREAM_SINK for tun devices.
+// $HOST_IP_NETMASK must be defined before this file is included.
+
+// ======================================================
+// Component Graph
+// ======================================================
+
+AddressInfo(tun0 $HOST_IP_NETMASK)
+tunDevice :: KernelTun(tun0)
+
+#define $UPSTREAM_SOURCE tunDevice
+#define $UPSTREAM_SINK tunDevice

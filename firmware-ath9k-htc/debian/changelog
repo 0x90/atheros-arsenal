@@ -1,0 +1,5 @@
+open-ath9k-htc-firmware (1.4.0-81-gf206e56+dfsg-1) unstable; urgency=low
+
+  * Initial Release. Closes: #751339, #711470
+
+ -- Oleksij Rempel <linux@rempel-privat.de>  Sun, 25 Sep 2016 17:24:10 +0000

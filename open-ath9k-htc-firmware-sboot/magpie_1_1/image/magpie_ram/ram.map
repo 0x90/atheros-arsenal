@@ -1,0 +1,1098 @@
+Archive member included because of file (symbol)
+
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o (cmnos_dbg_module_install)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o (__adf_nbuf_put_tail)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o (WMI_service_module_install)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o (wlan_pci_module_init)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o (init_htc_handle)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o) (g_pci_init_func)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o) (owl_tgt_node_init)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o) (ieee80211_tgt_crypto_encap)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o) (ath_tx_status_update_rate)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o) (ath_hal_computetxtime)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o) (ar5416Attach)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o) (ar5416GetRateTable)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o) (ath_hal_getuptime)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o) (ar5416AttachRateTables)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o (cmnos_clock_init_patch)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o (bEepromExist)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o (_HIFusb_get_max_msg_len_patch)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o) (__adf_net_register_drv)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o) (__adf_os_dmamem_alloc)
+/home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+                              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o) (__adf_os_setup_intr)
+
+Allocating common symbols
+Common symbol       size              file
+
+cmd_str             0xa0              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+_assfail_ori        0x4               /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+gvLen               0x2               /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+cmd_buf_ptr         0x4               /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+htc_handle          0x4               /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+raw_cmd             0x28              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+UsbDeviceDescriptorPatch
+                    0x24              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+cmd_buffer          0xf0              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+cmd_not_found       0x4               /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+cmd_buf_full        0x4               /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+pressed_time        0x4               /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ConfigDescriptorPatch
+                    0x3c              /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+
+↵
+Speichereinrichtung
+↵
+
+Name             Ursprung           Länge             Eigenschaften
+lit_seg          0x00000000004e8000 0x000000000001f600
+iram_seg         0x0000000000906000 0x000000000000ad00
+dram_seg         0x0000000000510d00 0x0000000000006000
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+LOAD /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+LOAD /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+
+.lit4           0x00000000004e8000    0x19000
+                0x00000000004e8000                _rom_literal_start = ABSOLUTE (.)
+                0x0000000000501000                . = (. + 0x19000)
+ *fill*         0x00000000004e8000    0x19000 
+                0x0000000000501000                _lit4_start = ABSOLUTE (.)
+                0x0000000000501000                _lit4_end = ABSOLUTE (.)
+                0x0000000000501000                _rom_literal_end = ABSOLUTE (.)
+
+.dport0.rodata  0x0000000000501000        0x0
+                0x0000000000501000                _dport0_rodata_start = ABSOLUTE (.)
+ *(.dport0.rodata)
+ *(.dport.rodata)
+                0x0000000000501000                _dport0_rodata_end = ABSOLUTE (.)
+
+.dport0.literal
+                0x0000000000501000        0x0
+                0x0000000000501000                _dport0_literal_start = ABSOLUTE (.)
+ *(.dport0.literal)
+ *(.dport.literal)
+                0x0000000000501000                _dport0_literal_end = ABSOLUTE (.)
+
+.dram0.rodata   0x0000000000501000        0x0
+                0x0000000000501000                _dram0_rodata_start = ABSOLUTE (.)
+ *(.dram0.rodata)
+ *(.dram.rodata)
+                0x0000000000501000                _dram0_rodata_end = ABSOLUTE (.)
+
+.rodata         0x0000000000501000     0x1388
+                0x0000000000501000                _rodata_start = ABSOLUTE (.)
+ *(.rodata)
+ .rodata        0x0000000000501000        0xd /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ *fill*         0x000000000050100d        0x3 
+ .rodata        0x0000000000501010       0xcc /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+                0x0000000000501010                command_table
+ .rodata        0x00000000005010dc       0xe1 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ *fill*         0x00000000005011bd        0x3 
+ .rodata        0x00000000005011c0       0x16 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ *fill*         0x00000000005011d6        0x2 
+ .rodata        0x00000000005011d8      0x106 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ *fill*         0x00000000005012de        0x2 
+ .rodata        0x00000000005012e0      0x115 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ *fill*         0x00000000005013f5        0x3 
+ .rodata        0x00000000005013f8       0x28 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .rodata        0x0000000000501420       0xfc /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ *(.rodata.*)
+ .rodata.str1.4
+                0x000000000050151c       0xb6 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ *fill*         0x00000000005015d2        0x2 
+ .rodata.str1.4
+                0x00000000005015d4      0x35d /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ *fill*         0x0000000000501931        0x3 
+ .rodata.str1.4
+                0x0000000000501934       0x71 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ *fill*         0x00000000005019a5        0x3 
+ .rodata.str1.4
+                0x00000000005019a8      0x573 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+                                        0x585 (size before relaxing)
+ .rodata.str1.4
+                0x0000000000000000       0x16 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .rodata.str1.4
+                0x0000000000000000       0x16 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ *fill*         0x0000000000501f1b        0x1 
+ .rodata.str1.4
+                0x0000000000501f1c       0x99 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+ *fill*         0x0000000000501fb5        0x3 
+ .rodata.str1.4
+                0x0000000000501fb8       0xa7 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+                                         0xbf (size before relaxing)
+ *fill*         0x000000000050205f        0x1 
+ .rodata.str1.4
+                0x0000000000502060       0x50 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .rodata.str1.4
+                0x00000000005020b0       0x65 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+                                         0x7d (size before relaxing)
+ *fill*         0x0000000000502115        0x3 
+ .rodata.str1.4
+                0x0000000000502118       0x10 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .rodata.str1.4
+                0x0000000000502128      0x250 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+                                        0x295 (size before relaxing)
+ *(.gnu.linkonce.r.*)
+ *(.rodata1)
+                0x0000000000502378                __XT_EXCEPTION_TABLE__ = ABSOLUTE (.)
+ *(.xt_except_table)
+ *(.gcc_except_table)
+ *(.gnu.linkonce.e.*)
+ *(.gnu.version_r)
+                0x0000000000502378                . = ALIGN (0x4)
+                0x0000000000502378                _bss_table_start = ABSOLUTE (.)
+                0x0000000000502378        0x4 LONG 0x510d00 _dport0_bss_start
+                0x000000000050237c        0x4 LONG 0x510d00 _dport0_bss_end
+                0x0000000000502380        0x4 LONG 0x512c60 _bss_start
+                0x0000000000502384        0x4 LONG 0x512ef0 _bss_end
+                0x0000000000502388                _bss_table_end = ABSOLUTE (.)
+                0x0000000000502388                _rodata_end = ABSOLUTE (.)
+
+.literals       0x0000000000502388      0x7b0
+                0x0000000000502388                _literals_start = ABSOLUTE (.)
+ *(*.lit4)
+ .lit4          0x0000000000502388       0xd4 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ .lit4          0x000000000050245c       0xbc /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+                                        0x128 (size before relaxing)
+ .lit4          0x0000000000502518       0x18 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+                                         0x20 (size before relaxing)
+ .lit4          0x0000000000502530      0x124 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+                                        0x198 (size before relaxing)
+ .lit4          0x0000000000502654       0x2c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+                                         0xa8 (size before relaxing)
+ .lit4          0x0000000000502680       0x30 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+                                         0x48 (size before relaxing)
+ .lit4          0x00000000005026b0       0x2c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+                                         0x40 (size before relaxing)
+ .lit4          0x00000000005026dc      0x108 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+                                        0x1f0 (size before relaxing)
+ .lit4          0x00000000005027e4       0x14 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+                                         0x1c (size before relaxing)
+ .lit4          0x00000000005027f8       0x70 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+                                        0x10c (size before relaxing)
+ .lit4          0x0000000000502868        0x8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+                                          0xc (size before relaxing)
+ .lit4          0x0000000000502870        0x8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+                                         0x1c (size before relaxing)
+ .lit4          0x0000000000502878      0x128 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+                                        0x1fc (size before relaxing)
+ .lit4          0x00000000005029a0       0x14 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+                                         0x1c (size before relaxing)
+ .lit4          0x00000000005029b4        0x8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+                                         0x24 (size before relaxing)
+ .lit4          0x00000000005029bc        0x8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+ .lit4          0x00000000005029c4        0xc /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+                                         0x1c (size before relaxing)
+ .lit4          0x00000000005029d0      0x158 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+                                        0x220 (size before relaxing)
+ .lit4          0x0000000000502b28       0x10 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+                                         0x14 (size before relaxing)
+ .lit4          0x0000000000502b38        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .lit4          0x0000000000502b38        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+                                          0x4 (size before relaxing)
+ .lit4          0x0000000000502b38        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+                                          0x8 (size before relaxing)
+ *(.gnu.linkonce.lit4.*)
+                0x0000000000502b38                _literals_end = ABSOLUTE (.)
+
+.dram0.literal  0x0000000000502b38        0x0
+                0x0000000000502b38                _dram0_literal_start = ABSOLUTE (.)
+ *(.dram0.literal)
+ *(.dram.literal)
+                0x0000000000502b38                _dram0_literal_end = ABSOLUTE (.)
+
+.dport0.data    0x0000000000510d00        0x0
+                0x0000000000510d00                _dport0_data_start = ABSOLUTE (.)
+ *(.dport0.data)
+ *(.dport.data)
+                0x0000000000510d00                _dport0_data_end = ABSOLUTE (.)
+
+.dport0.bss     0x0000000000510d00        0x0
+                0x0000000000510d00                . = ALIGN (0x8)
+                0x0000000000510d00                _dport0_bss_start = ABSOLUTE (.)
+ *(.dport0.bss)
+                0x0000000000510d00                . = ALIGN (0x8)
+                0x0000000000510d00                _dport0_bss_end = ABSOLUTE (.)
+
+.dram0.data     0x0000000000510d00        0x0
+                0x0000000000510d00                _dram0_data_start = ABSOLUTE (.)
+ *(.dram0.data)
+ *(.dram.data)
+                0x0000000000510d00                _dram0_data_end = ABSOLUTE (.)
+
+.data           0x0000000000510d00     0x1f5e
+                0x0000000000510d00                _data_start = ABSOLUTE (.)
+ *(.data)
+ .data          0x0000000000510d00        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ .data          0x0000000000510d00        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ .data          0x0000000000510d00        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ .data          0x0000000000510d00        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ .data          0x0000000000510d00        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .data          0x0000000000510d00        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .data          0x0000000000510d00        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+ .data          0x0000000000510d00      0x100 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ .data          0x0000000000510e00      0x184 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+                0x0000000000510e00                g_pci_init_func
+ .data          0x0000000000510f84        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .data          0x0000000000510f84        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .data          0x0000000000510f84        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .data          0x0000000000510f84        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+ .data          0x0000000000510f84        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .data          0x0000000000510f84      0xdac /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+                0x0000000000510f84                ar5416_11na_table
+                0x0000000000511240                ar5416_11ng_table
+                0x00000000005114fc                ar5416_11g_table
+                0x00000000005117b8                ar5416_11b_table
+                0x0000000000511a74                ar5416_11a_table
+ .data          0x0000000000511d30        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .data          0x0000000000511d30      0xf28 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+                0x0000000000511d30                ar5416_11naRateTable
+                0x000000000051246c                ar5416_11ngRateTable
+ .data          0x0000000000512c58        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+ .data          0x0000000000512c58        0x6 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+                0x0000000000512c58                bEepromExist
+ .data          0x0000000000512c5e        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+ .data          0x0000000000512c5e        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .data          0x0000000000512c5e        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .data          0x0000000000512c5e        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+ *(.data.*)
+ *(.gnu.linkonce.d.*)
+ *(.data1)
+ *(.sdata)
+ *(.sdata.*)
+ *(.gnu.linkonce.s.*)
+ *(.sdata2)
+ *(.sdata2.*)
+ *(.gnu.linkonce.s2.*)
+ *(.jcr)
+ *(.eh_frame)
+ *crtbegin.o(.ctors)
+ *(EXCLUDE_FILE(*crtend.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+ *crtbegin.o(.dtors)
+ *(EXCLUDE_FILE(*crtend.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+                0x0000000000512c5e                __XT_EXCEPTION_DESCS__ = ABSOLUTE (.)
+ *(.xt_except_desc)
+ *(.gnu.linkonce.h.*)
+                0x0000000000512c5e                __XT_EXCEPTION_DESCS_END__ = ABSOLUTE (.)
+ *(.xt_except_desc_end)
+ *(.dynamic)
+ *(.gnu.version_d)
+                0x0000000000512c5e                _data_end = ABSOLUTE (.)
+
+.bss            0x0000000000512c60      0x290
+                0x0000000000512c60                . = ALIGN (0x8)
+                0x0000000000512c60                _bss_start = ABSOLUTE (.)
+ *(.dynsbss)
+ *(.sbss)
+ *(.sbss.*)
+ *(.gnu.linkonce.sb.*)
+ *(.scommon)
+ *(.sbss2)
+ *(.sbss2.*)
+ *(.gnu.linkonce.sb2.*)
+ *(.dynbss)
+ *(.bss)
+ .bss           0x0000000000512c60        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ .bss           0x0000000000512c60       0x10 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+                0x0000000000512c60                idle_cnt
+                0x0000000000512c64                htc_complete_setup
+ .bss           0x0000000000512c70        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ .bss           0x0000000000512c70        0x4 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+                0x0000000000512c70                delay
+ .bss           0x0000000000512c74        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .bss           0x0000000000512c74        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .bss           0x0000000000512c74        0xc /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+                0x0000000000512c74                g_wlan_intr
+                0x0000000000512c78                g_wlan_drv_handle
+                0x0000000000512c7c                g_wlan_drv
+ .bss           0x0000000000512c80        0x5 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+                0x0000000000512c80                init_htc_handle
+ .bss           0x0000000000512c85        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .bss           0x0000000000512c85        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .bss           0x0000000000512c85        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .bss           0x0000000000512c85        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .bss           0x0000000000512c85        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+ .bss           0x0000000000512c85        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .bss           0x0000000000512c85        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+ .bss           0x0000000000512c85        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .bss           0x0000000000512c85        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+ *fill*         0x0000000000512c85        0x3 
+ .bss           0x0000000000512c88        0x8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+                0x0000000000512c88                ref_clk
+ .bss           0x0000000000512c90       0x26 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+                0x0000000000512c90                gpio
+                0x0000000000512c94                gpio_func
+                0x0000000000512c98                bJumptoFlash
+                0x0000000000512c9c                m_origUsbfifoRecvCmd
+ .bss           0x0000000000512cb6        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+ .bss           0x0000000000512cb6        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .bss           0x0000000000512cb6        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .bss           0x0000000000512cb6        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+ *(.bss.*)
+ *(.gnu.linkonce.b.*)
+ *(COMMON)
+ *fill*         0x0000000000512cb6        0x2 
+ COMMON         0x0000000000512cb8        0x4 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+                0x0000000000512cb8                _assfail_ori
+ COMMON         0x0000000000512cbc        0x4 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+                0x0000000000512cbc                htc_handle
+ COMMON         0x0000000000512cc0      0x1cc /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+                0x0000000000512cc0                cmd_str
+                0x0000000000512d60                gvLen
+                0x0000000000512d64                cmd_buf_ptr
+                0x0000000000512d68                raw_cmd
+                0x0000000000512d90                cmd_buffer
+                0x0000000000512e80                cmd_not_found
+                0x0000000000512e84                cmd_buf_full
+                0x0000000000512e88                pressed_time
+ COMMON         0x0000000000512e8c       0x60 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+                0x0000000000512e8c                UsbDeviceDescriptorPatch
+                0x0000000000512eb0                ConfigDescriptorPatch
+ *(.dram0.bss)
+                0x0000000000512ef0                . = ALIGN (0x8)
+ *fill*         0x0000000000512eec        0x4 
+                0x0000000000512ef0                _bss_end = ABSOLUTE (.)
+                0x0000000000512ef0                _end = ALIGN (0x8)
+                0x0000000000512ef0                PROVIDE (end, ALIGN (0x8))
+                0x0000000000512ef0                _fw_image_end = ABSOLUTE (.)
+
+.text           0x0000000000906000     0x8c51
+                0x0000000000906000                _stext = .
+                0x0000000000906000                _text_start = ABSOLUTE (.)
+ *(.entry.text)
+ *(.init.literal)
+ *(.init)
+ *(.literal .text .text.* .stub .gnu.warning .gnu.linkonce.literal.* .gnu.linkonce.t.*.literal .gnu.linkonce.t.*)
+ .text          0x0000000000906000      0x2b6 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+                0x0000000000906000                app_start
+ *fill*         0x00000000009062b6        0x2 
+ .text          0x00000000009062b8      0x584 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+                0x00000000009062b8                fatal_exception_func
+                0x0000000000906300                change_magpie_clk
+                0x00000000009063a0                exception_reset
+                0x00000000009064a8                reset_EP4_FIFO
+                0x00000000009064d4                zfGenExceptionEvent
+                0x0000000000906534                AR6002_fatal_exception_handler_patch
+                0x00000000009065b0                zfGenWrongEpidEvent
+                0x0000000000906604                HTCControlSvcProcessMsg_patch
+                0x0000000000906638                HTCMsgRecvHandler_patch
+                0x0000000000906794                init_mem
+                0x00000000009067c8                wlan_task
+ .text          0x000000000090683c       0xb4 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+                0x000000000090683c                htc_setup_comp
+                0x0000000000906844                _wmi_cmd_rsp
+                0x00000000009068b4                Magpie_init
+ .text          0x00000000009068f0      0x933 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+                0x0000000000907150                db_ascii_to_int
+                0x00000000009071fc                dbg_timer_func
+                0x0000000000907214                cmnos_dbg_module_install
+ *fill*         0x0000000000907223        0x1 
+ .text          0x0000000000907224      0x472 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+                0x0000000000907224                __adf_nbuf_alloc
+                0x0000000000907264                __adf_nbuf_free
+                0x0000000000907280                __adf_nbuf_realloc_headroom
+                0x00000000009072a0                __adf_nbuf_realloc_tailroom
+                0x00000000009072c0                __adf_nbuf_expand
+                0x00000000009072e0                __adf_nbuf_push_head
+                0x000000000090730c                __adf_nbuf_pull_head
+                0x0000000000907338                __adf_nbuf_copy
+                0x0000000000907358                __adf_nbuf_unshare
+                0x0000000000907378                __adf_nbuf_frag_info
+                0x00000000009073a0                __adf_nbuf_get_priv
+                0x00000000009073c0                __adf_nbuf_queue_add
+                0x00000000009073e0                __adf_nbuf_queue_remove
+                0x0000000000907408                __adf_nbuf_dmamap_create
+                0x0000000000907424                __adf_nbuf_map
+                0x0000000000907430                __adf_nbuf_unmap
+                0x000000000090743c                __adf_nbuf_dmamap_destroy
+                0x0000000000907444                __adf_nbuf_dmamap_info
+                0x0000000000907470                __adf_nbuf_set_rx_cksum
+                0x0000000000907478                __adf_nbuf_get_vlan_info
+                0x0000000000907480                __adf_nbuf_create_frm_frag
+                0x0000000000907528                __adf_nbuf_split_to_frag
+                0x0000000000907588                __adf_nbuf_last
+                0x000000000090759c                __adf_nbuf_trim_tail
+                0x00000000009075d8                __adf_nbuf_put_tail
+                0x0000000000907600                __adf_nbuf_headroom
+                0x000000000090760c                __adf_nbuf_tailroom
+                0x0000000000907628                __adf_nbuf_len
+                0x0000000000907630                __adf_nbuf_clone
+                0x0000000000907638                __adf_nbuf_cat
+                0x0000000000907640                __adf_nbuf_is_cloned
+                0x0000000000907648                __adf_nbuf_peek_header
+                0x0000000000907660                __adf_nbuf_queue_init
+                0x0000000000907670                __adf_nbuf_queue_len
+                0x0000000000907678                __adf_nbuf_queue_first
+                0x0000000000907680                __adf_nbuf_queue_next
+                0x0000000000907688                __adf_nbuf_is_queue_empty
+ *fill*         0x0000000000907696        0x2 
+ .text          0x0000000000907698      0x207 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+                0x0000000000907868                WMI_service_module_install
+ *fill*         0x000000000090789f        0x1 
+ .text          0x00000000009078a0      0x13a /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+                0x00000000009078a0                wlan_pci_module_init
+                0x00000000009078b0                wlan_pci_register_drv
+                0x00000000009078bc                wlan_pci_config_write
+                0x00000000009078ec                wlan_pci_config_read
+                0x0000000000907924                wlan_pci_probe
+                0x00000000009079c4                wlan_pci_isr
+ *fill*         0x00000000009079da        0x2 
+ .text          0x00000000009079dc     0x1fa0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+                0x0000000000908124                wmi_event
+                0x000000000090819c                ath_intr
+                0x00000000009088dc                wmi_cmd_rsp
+                0x0000000000909310                ath_get_minrateidx
+                0x0000000000909500                ath_tgt_attach
+                0x0000000000909954                ath_detach
+ .text          0x000000000090997c       0xbb /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+                0x000000000090999c                init_ath_pci
+                0x0000000000909a2c                exit_ath_pci
+ *fill*         0x0000000000909a37        0x1 
+ .text          0x0000000000909a38     0x20e8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+                0x000000000090a39c                ATH_SKB_2_WH
+                0x000000000090a3e0                owl_tgt_node_init
+                0x000000000090a424                ath_tx_status_clear
+                0x000000000090a434                ath_tx_status_update
+                0x000000000090a4c0                ath_tx_status_update_aggr
+                0x000000000090a6c0                ath_tx_status_send
+                0x000000000090a708                ath_tgt_tid_drain
+                0x000000000090a738                ath_tgt_tx_prepare
+                0x000000000090a9b0                ath_tgt_tx_send_normal
+                0x000000000090aa34                ath_tgt_send_mgt
+                0x000000000090ae68                ath_tgt_handle_normal
+                0x000000000090aecc                ath_tx_addto_baw
+                0x000000000090af18                ath_tgt_tx_form_aggr
+                0x000000000090b458                ath_tgt_tx_comp_aggr
+                0x000000000090b7d0                owltgt_tx_processq
+                0x000000000090b868                owl_tgt_tx_tasklet
+                0x000000000090b8d4                ath_tgt_handle_aggr
+                0x000000000090b978                ath_tgt_tx_cleanup
+ .text          0x000000000090bb20      0xd9e /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+                0x000000000090c1f8                rcSibUpdate_11n
+                0x000000000090c240                median
+                0x000000000090c26c                rcRateFind_11n
+                0x000000000090c56c                rcUpdate_11n
+                0x000000000090c6c4                ath_tx_status_update_rate
+                0x000000000090c768                ath_rate_attach
+                0x000000000090c798                ath_rate_detach
+                0x000000000090c7a0                ath_rate_findrate
+                0x000000000090c7cc                ath_rate_tx_complete
+                0x000000000090c804                ath_rate_newassoc
+                0x000000000090c818                ath_rate_node_update
+                0x000000000090c82c                ath_rate_newstate
+                0x000000000090c84c                ath_rate_mcs2rate
+ *fill*         0x000000000090c8be        0x2 
+ .text          0x000000000090c8c0      0x1a4 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+                0x000000000090c8c0                ath_hal_attach_tgt
+                0x000000000090c8d4                ath_hal_getcapability
+                0x000000000090c910                ath_hal_computetxtime
+                0x000000000090c980                ath_hal_setupratetable
+                0x000000000090c9e8                ath_hal_get_curmode
+                0x000000000090ca3c                ath_hal_wait
+ .text          0x000000000090ca64     0x14ee /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+                0x000000000090ca64                ar5416GetInterrupts
+                0x000000000090ca6c                ar5416SetupRxDesc_20
+                0x000000000090cae4                ar5416GetTxIntrQueue
+                0x000000000090cb04                ar5416IntrReqTxDesc_20
+                0x000000000090cb44                ar5416SetupTxDesc_20
+                0x000000000090cd2c                ar5416FillTxDesc_20
+                0x000000000090ce64                ar5416FillKeyTxDesc_20
+                0x000000000090ce88                ar5416Set11nTxDesc_20
+                0x000000000090cf94                ar5416Set11nRateScenario_20
+                0x000000000090d214                ar5416Set11nAggrFirst_20
+                0x000000000090d2a0                ar5416Set11nAggrMiddle_20
+                0x000000000090d324                ar5416Set11nAggrLast_20
+                0x000000000090d3a4                ar5416Clr11nAggr_20
+                0x000000000090d3e4                ar5416Set11nBurstDuration_20
+                0x000000000090d428                ar5416Set11nVirtualMoreFrag_20
+                0x000000000090d498                ar5416StartTxDma
+                0x000000000090d4b0                ar5416SetTxDP
+                0x000000000090d4c4                ar5416EnableReceive
+                0x000000000090d4d4                ar5416SetRxDP
+                0x000000000090d4e4                ar5416NumTxPending
+                0x000000000090d514                ar5416StopTxDma
+                0x000000000090d558                ar5416AbortTxDma
+                0x000000000090d630                ar5416GetTxDP
+                0x000000000090d644                ar5416StopPcuReceive
+                0x000000000090d660                ar5416StartPcuReceive
+                0x000000000090d67c                ar5416GetRxDP
+                0x000000000090d68c                ar5416ResetTsf
+                0x000000000090d6b8                ar5416GetTsf32
+                0x000000000090d6c8                ar5416GetTsf64
+                0x000000000090d6e4                ar5416SetInterrupts
+                0x000000000090d770                ar5416UpdateTxTrigLevel
+                0x000000000090d7d4                ar5416IsInterruptPending
+                0x000000000090d7ec                ar5416StopDmaReceive
+                0x000000000090d810                ar5416GetCapability
+                0x000000000090d824                ar5416Detach
+                0x000000000090d830                ar5416ProcRxDescFast_20
+                0x000000000090da28                ar5416SetRxFilter
+                0x000000000090da84                ar5416ProcTxDesc_20
+                0x000000000090dd50                ar5416GetPendingInterrupts
+                0x000000000090de40                ar5416Attach
+                0x000000000090dec4                ar5416SetMulticastFilter
+                0x000000000090dee0                ar5416ClrMulticastFilterIndex
+                0x000000000090df1c                ar5416SetMulticastFilterIndex
+ *fill*         0x000000000090df52        0x2 
+ .text          0x000000000090df54       0x32 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+                0x000000000090df54                ar5416GetRateTable
+ *fill*         0x000000000090df86        0x2 
+ .text          0x000000000090df88       0xc9 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+                0x000000000090df88                ath_hal_getuptime
+                0x000000000090df98                _ath_hal_attach_tgt
+                0x000000000090dfc0                ath_hal_detach
+                0x000000000090dfcc                ath_hal_reg_write_target
+                0x000000000090dfd8                ath_hal_reg_read_target
+                0x000000000090dfe4                ath_hal_delay
+                0x000000000090dff4                ath_hal_malloc
+                0x000000000090e018                ath_hal_free
+                0x000000000090e020                ath_hal_memzero
+                0x000000000090e034                ath_hal_memcpy
+                0x000000000090e04c                ath_hal_vprintf
+ *fill*         0x000000000090e051        0x3 
+ .text          0x000000000090e054        0xf /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+                0x000000000090e054                ar5416AttachRateTables
+ *fill*         0x000000000090e063        0x1 
+ .text          0x000000000090e064       0x6d /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+                0x000000000090e064                cmnos_clock_init_patch
+                0x000000000090e070                cmnos_refclk_speed_get_patch
+                0x000000000090e07c                cmnos_delay_us_patch
+                0x000000000090e098                cmnos_tick_patch
+                0x000000000090e0c4                cmnos_milliseconds_patch
+ *fill*         0x000000000090e0d1        0x3 
+ .text          0x000000000090e0d4      0x9cc /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+                0x000000000090e514                _fw_usbfifo_recv_command
+                0x000000000090e5ac                _fw_usbfifo_init
+                0x000000000090e5cc                vUsb_Reg_Out_patch
+                0x000000000090e698                vUSBFIFO_EP6Cfg_FS_patch
+                0x000000000090e6dc                vUsbFIFO_EPxCfg_FS_patch
+                0x000000000090e700                bSet_configuration_patch
+                0x000000000090e724                vUsb_Status_In_patch
+                0x000000000090e830                zfTurnOffPower_patch
+                0x000000000090e93c                zfResetUSBFIFO_patch
+                0x000000000090e98c                bGet_descriptor_patch
+                0x000000000090ea5c                bStandardCommand_patch
+ .text          0x000000000090eaa0       0xa8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+                0x000000000090eaa0                _HIFusb_get_max_msg_len_patch
+                0x000000000090eab4                _HIFusb_isr_handler_patch
+                0x000000000090eac8                _HIFusb_start_patch
+ .text          0x000000000090eb48       0x2b /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+                0x000000000090eb48                __adf_os_dmamem_alloc
+ *fill*         0x000000000090eb73        0x1 
+ .text          0x000000000090eb74       0x18 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+                0x000000000090eb74                __adf_os_setup_intr
+                0x000000000090eb80                __adf_os_free_intr
+ *fill*         0x000000000090eb8c        0x0 
+ *fill*         0x000000000090eb8c        0x0 
+ *fill*         0x000000000090eb8c        0x0 
+ *fill*         0x000000000090eb8c        0x0 
+ *fill*         0x000000000090eb8c        0x0 
+ *fill*         0x000000000090eb8c        0x0 
+ .text          0x000000000090eb8c       0xb1 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+                0x000000000090eb8c                ieee80211_tgt_crypto_encap
+ *fill*         0x000000000090ec3d        0x0 
+ *fill*         0x000000000090ec3d        0x0 
+ *fill*         0x000000000090ec3d        0x0 
+ *fill*         0x000000000090ec3d        0x0 
+ *fill*         0x000000000090ec3d        0x0 
+ *fill*         0x000000000090ec3d        0x0 
+ *fill*         0x000000000090ec3d        0x3 
+ .text          0x000000000090ec40       0x11 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+                0x000000000090ec40                __adf_net_register_drv
+                0x000000000090ec4c                __adf_net_unregister_drv
+ *fill*         0x000000000090ec51        0x0 
+ *fill*         0x000000000090ec51        0x0 
+ *(.fini.literal)
+ *(.fini)
+ *(.gnu.version)
+                0x000000000090ec51                _text_end = ABSOLUTE (.)
+                0x000000000090ec51                _etext = .
+
+.iram0.text     0x000000000090ec51        0x0
+                0x000000000090ec51                _iram0_text_start = ABSOLUTE (.)
+ *(.iram0.literal .iram.literal .iram.text.literal .iram0.text .iram.text)
+                0x000000000090ec51                _iram0_text_end = ABSOLUTE (.)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x0000000000000000      0x2e0
+ *(.debug_aranges)
+ .debug_aranges
+                0x0000000000000000       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ .debug_aranges
+                0x0000000000000020       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ .debug_aranges
+                0x0000000000000040       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ .debug_aranges
+                0x0000000000000060       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ .debug_aranges
+                0x0000000000000080       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .debug_aranges
+                0x00000000000000a0       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .debug_aranges
+                0x00000000000000c0       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+ .debug_aranges
+                0x00000000000000e0       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ .debug_aranges
+                0x0000000000000100       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .debug_aranges
+                0x0000000000000120       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .debug_aranges
+                0x0000000000000140       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .debug_aranges
+                0x0000000000000160       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .debug_aranges
+                0x0000000000000180       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+ .debug_aranges
+                0x00000000000001a0       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .debug_aranges
+                0x00000000000001c0       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+ .debug_aranges
+                0x00000000000001e0       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .debug_aranges
+                0x0000000000000200       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+ .debug_aranges
+                0x0000000000000220       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+ .debug_aranges
+                0x0000000000000240       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+ .debug_aranges
+                0x0000000000000260       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+ .debug_aranges
+                0x0000000000000280       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .debug_aranges
+                0x00000000000002a0       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .debug_aranges
+                0x00000000000002c0       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x0000000000000000    0x533a0
+ *(.debug_info)
+ .debug_info    0x0000000000000000     0x29a0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ .debug_info    0x00000000000029a0     0x2f93 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ .debug_info    0x0000000000005933     0x27d1 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ .debug_info    0x0000000000008104     0x39a2 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ .debug_info    0x000000000000baa6     0x33da /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .debug_info    0x000000000000ee80     0x2c93 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .debug_info    0x0000000000011b13     0x2985 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+ .debug_info    0x0000000000014498     0xa7a8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ .debug_info    0x000000000001ec40     0x5181 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .debug_info    0x0000000000023dc1     0x94fc /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .debug_info    0x000000000002d2bd     0x25fe /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .debug_info    0x000000000002f8bb     0x67bc /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .debug_info    0x0000000000036077     0x3dab /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+ .debug_info    0x0000000000039e22     0x58e9 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .debug_info    0x000000000003f70b     0x3698 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+ .debug_info    0x0000000000042da3     0x3b26 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .debug_info    0x00000000000468c9     0x26b5 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+ .debug_info    0x0000000000048f7e     0x2505 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+ .debug_info    0x000000000004b483     0x3151 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+ .debug_info    0x000000000004e5d4     0x2400 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+ .debug_info    0x00000000000509d4      0x41b /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .debug_info    0x0000000000050def     0x245e /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .debug_info    0x000000000005324d      0x153 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+
+.debug_abbrev   0x0000000000000000     0x51da
+ *(.debug_abbrev)
+ .debug_abbrev  0x0000000000000000      0x294 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ .debug_abbrev  0x0000000000000294      0x402 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ .debug_abbrev  0x0000000000000696      0x2f8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ .debug_abbrev  0x000000000000098e      0x527 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ .debug_abbrev  0x0000000000000eb5      0x46c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .debug_abbrev  0x0000000000001321      0x453 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .debug_abbrev  0x0000000000001774      0x2ff /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+ .debug_abbrev  0x0000000000001a73      0x722 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ .debug_abbrev  0x0000000000002195      0x40c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .debug_abbrev  0x00000000000025a1      0x6d8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .debug_abbrev  0x0000000000002c79      0x1f6 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .debug_abbrev  0x0000000000002e6f      0x4f9 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .debug_abbrev  0x0000000000003368      0x36e /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+ .debug_abbrev  0x00000000000036d6      0x521 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .debug_abbrev  0x0000000000003bf7      0x22e /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+ .debug_abbrev  0x0000000000003e25      0x38a /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .debug_abbrev  0x00000000000041af      0x1df /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+ .debug_abbrev  0x000000000000438e      0x273 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+ .debug_abbrev  0x0000000000004601      0x507 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+ .debug_abbrev  0x0000000000004b08      0x24a /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+ .debug_abbrev  0x0000000000004d52      0x171 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .debug_abbrev  0x0000000000004ec3      0x20b /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .debug_abbrev  0x00000000000050ce      0x10c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+
+.debug_line     0x0000000000000000    0x11be9
+ *(.debug_line)
+ .debug_line    0x0000000000000000      0x8fa /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ .debug_line    0x00000000000008fa      0xb50 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ .debug_line    0x000000000000144a      0x72c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ .debug_line    0x0000000000001b76      0xe9a /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ .debug_line    0x0000000000002a10      0xc0a /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .debug_line    0x000000000000361a      0x919 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .debug_line    0x0000000000003f33      0x84a /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+ .debug_line    0x000000000000477d     0x2355 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ .debug_line    0x0000000000006ad2      0x951 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .debug_line    0x0000000000007423     0x2ba7 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .debug_line    0x0000000000009fca      0x753 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .debug_line    0x000000000000a71d     0x1663 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .debug_line    0x000000000000bd80      0x88c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+ .debug_line    0x000000000000c60c     0x167c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .debug_line    0x000000000000dc88      0x705 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+ .debug_line    0x000000000000e38d      0x851 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .debug_line    0x000000000000ebde      0x72c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+ .debug_line    0x000000000000f30a      0x7bb /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+ .debug_line    0x000000000000fac5      0xf98 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+ .debug_line    0x0000000000010a5d      0x72b /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+ .debug_line    0x0000000000011188      0x2af /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .debug_line    0x0000000000011437      0x623 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .debug_line    0x0000000000011a5a      0x18f /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+
+.debug_frame    0x0000000000000000     0x1df0
+ *(.debug_frame)
+ .debug_frame   0x0000000000000000       0x28 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ .debug_frame   0x0000000000000028      0x118 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ .debug_frame   0x0000000000000140       0x58 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ .debug_frame   0x0000000000000198      0x1d8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ .debug_frame   0x0000000000000370      0x388 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .debug_frame   0x00000000000006f8      0x118 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .debug_frame   0x0000000000000810       0xa0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+ .debug_frame   0x00000000000008b0      0x580 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ .debug_frame   0x0000000000000e30       0xa0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .debug_frame   0x0000000000000ed0      0x448 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .debug_frame   0x0000000000001318       0x28 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .debug_frame   0x0000000000001340      0x1c0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .debug_frame   0x0000000000001500       0xa0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+ .debug_frame   0x00000000000015a0      0x418 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .debug_frame   0x00000000000019b8       0x28 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+ .debug_frame   0x00000000000019e0      0x118 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .debug_frame   0x0000000000001af8       0x28 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+ .debug_frame   0x0000000000001b20       0x88 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+ .debug_frame   0x0000000000001ba8      0x148 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+ .debug_frame   0x0000000000001cf0       0x58 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+ .debug_frame   0x0000000000001d48       0x40 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .debug_frame   0x0000000000001d88       0x28 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .debug_frame   0x0000000000001db0       0x40 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+
+.debug_str      0x0000000000000000     0x8666
+ *(.debug_str)
+ .debug_str     0x0000000000000000     0x1942 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+                                       0x1b3d (size before relaxing)
+ .debug_str     0x0000000000001942      0x361 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+                                       0x1d09 (size before relaxing)
+ .debug_str     0x0000000000001ca3      0x3ab /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+                                       0x1c51 (size before relaxing)
+ .debug_str     0x000000000000204e      0x3a1 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+                                       0x1c45 (size before relaxing)
+ .debug_str     0x00000000000023ef      0x683 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+                                       0x1e7e (size before relaxing)
+ .debug_str     0x0000000000002a72      0x291 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+                                       0x1b1e (size before relaxing)
+ .debug_str     0x0000000000002d03      0x341 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+                                       0x1bdd (size before relaxing)
+ .debug_str     0x0000000000003044     0x22a1 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+                                       0x466c (size before relaxing)
+ .debug_str     0x00000000000052e5      0x180 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+                                       0x3553 (size before relaxing)
+ .debug_str     0x0000000000005465      0xc46 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+                                       0x42a2 (size before relaxing)
+ .debug_str     0x00000000000060ab       0x91 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+                                       0x19dd (size before relaxing)
+ .debug_str     0x000000000000613c      0x7d1 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+                                       0x3873 (size before relaxing)
+ .debug_str     0x000000000000690d      0x65b /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+                                       0x2ad6 (size before relaxing)
+ .debug_str     0x0000000000006f68      0xbd3 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+                                       0x362b (size before relaxing)
+ .debug_str     0x0000000000007b3b       0xf5 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+                                       0x27c6 (size before relaxing)
+ .debug_str     0x0000000000007c30      0x10a /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+                                       0x25e3 (size before relaxing)
+ .debug_str     0x0000000000007d3a       0xb4 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+                                       0x1c4f (size before relaxing)
+ .debug_str     0x0000000000007dee      0x143 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+                                       0x19a1 (size before relaxing)
+ .debug_str     0x0000000000007f31      0x47a /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+                                       0x1d1c (size before relaxing)
+ .debug_str     0x00000000000083ab      0x104 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+                                       0x180e (size before relaxing)
+ .debug_str     0x00000000000084af       0x8b /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+                                        0x46c (size before relaxing)
+ .debug_str     0x000000000000853a       0x9a /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+                                       0x184c (size before relaxing)
+ .debug_str     0x00000000000085d4       0x92 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+                                        0x1d6 (size before relaxing)
+
+.debug_loc      0x0000000000000000     0xd834
+ *(.debug_loc)
+ .debug_loc     0x0000000000000000       0x8a /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ .debug_loc     0x000000000000008a      0x56c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ .debug_loc     0x00000000000005f6      0x183 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ .debug_loc     0x0000000000000779      0xf95 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ .debug_loc     0x000000000000170e      0xb54 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .debug_loc     0x0000000000002262      0x525 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .debug_loc     0x0000000000002787      0x269 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+ .debug_loc     0x00000000000029f0     0x30e0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ .debug_loc     0x0000000000005ad0      0x1c3 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .debug_loc     0x0000000000005c93     0x3743 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .debug_loc     0x00000000000093d6      0x23e /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .debug_loc     0x0000000000009614     0x1be1 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .debug_loc     0x000000000000b1f5      0x4ba /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+ .debug_loc     0x000000000000b6af     0x15e4 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .debug_loc     0x000000000000cc93       0x41 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+ .debug_loc     0x000000000000ccd4      0x2d3 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .debug_loc     0x000000000000cfa7       0x20 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+ .debug_loc     0x000000000000cfc7       0xe7 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+ .debug_loc     0x000000000000d0ae      0x5c1 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+ .debug_loc     0x000000000000d66f       0xa1 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+ .debug_loc     0x000000000000d710       0x61 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .debug_loc     0x000000000000d771       0x62 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .debug_loc     0x000000000000d7d3       0x61 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.xt.insn
+ *(.xt.insn)
+ *(.gnu.linkonce.x.*)
+
+.xt.prop        0x0000000000000000     0x4d1c
+ *(.xt.prop)
+ .xt.prop       0x0000000000000000       0x84 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+                                        0x2f4 (size before relaxing)
+ .xt.prop       0x0000000000000084      0x210 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+                                        0x5b8 (size before relaxing)
+ .xt.prop       0x0000000000000294       0x6c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+                                         0xb4 (size before relaxing)
+ .xt.prop       0x0000000000000300      0x6b4 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+                                        0xb64 (size before relaxing)
+ .xt.prop       0x00000000000009b4      0x504 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+                                        0x72c (size before relaxing)
+ .xt.prop       0x0000000000000eb8      0x1c8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+                                        0x288 (size before relaxing)
+ .xt.prop       0x0000000000001080      0x114 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+                                        0x1b0 (size before relaxing)
+ .xt.prop       0x0000000000001194      0xe10 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+                                       0x141c (size before relaxing)
+ .xt.prop       0x0000000000001fa4       0xe4 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+                                        0x12c (size before relaxing)
+ .xt.prop       0x0000000000002088     0x11d0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+                                       0x1500 (size before relaxing)
+ .xt.prop       0x0000000000003258       0x6c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .xt.prop       0x00000000000032c4      0xa38 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+                                        0xa50 (size before relaxing)
+ .xt.prop       0x0000000000003cfc      0x1b0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+                                        0x1f8 (size before relaxing)
+ .xt.prop       0x0000000000003eac      0x7ec /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+                                        0xdd4 (size before relaxing)
+ .xt.prop       0x0000000000004698       0x84 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+                                         0xc0 (size before relaxing)
+ .xt.prop       0x000000000000471c      0x114 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+                                        0x168 (size before relaxing)
+ .xt.prop       0x0000000000004830       0x30 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+ .xt.prop       0x0000000000004860       0x9c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+                                         0xfc (size before relaxing)
+ .xt.prop       0x00000000000048fc      0x324 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+                                        0xa14 (size before relaxing)
+ .xt.prop       0x0000000000004c20       0x6c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+                                         0x9c (size before relaxing)
+ .xt.prop       0x0000000000004c8c       0x30 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .xt.prop       0x0000000000004cbc       0x24 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .xt.prop       0x0000000000004ce0       0x3c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+ *(.gnu.linkonce.prop.*)
+
+.comment        0x0000000000000000       0x6d
+ .comment       0x0000000000000000       0x11 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+                                         0x12 (size before relaxing)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .comment       0x0000000000000011       0x5c /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+                                         0x6e (size before relaxing)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .comment       0x0000000000000000       0x12 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+
+.xtensa.info    0x0000000000000000       0x38
+ .xtensa.info   0x0000000000000000       0x38 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/app_start.o
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/magpie.o
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_nbuf.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a(wlan_pci.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ieee80211_output.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_phy.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416Phy.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(cmnos_clock_patch.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(HIF_usb_patch.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_net.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_dma.o)
+ .xtensa.info   0x0000000000000000        0x0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a(adf_os_irq_pvt.o)
+
+.xt.lit
+ *(.xt.lit)
+ *(.gnu.linkonce.p.*)
+                0x0000000000500000                PROVIDE (_indir_tbl, 0x500000)
+                0x00000000008e6b64                PROVIDE (memcpy, 0x8e6b64)
+                0x00000000008e6e48                PROVIDE (memset, 0x8e6e48)
+                0x00000000008e6998                PROVIDE (__divsi3, 0x8e6998)
+                0x00000000008e6a4c                PROVIDE (__udivsi3, 0x8e6a4c)
+                0x00000000008e6a9c                PROVIDE (__umodsi3, 0x8e6a9c)
+                0x00000000008e6a00                PROVIDE (__modsi3, 0x8e6a00)
+                0x00000000008e1614                PROVIDE (athos_interrupt_init, 0x8e1614)
+                0x00000000008e1460                PROVIDE (athos_unblock_all_intrlvl, 0x8e1460)
+                0x00000000008e1604                PROVIDE (athos_interrupt_handler, 0x8e1604)
+                0x00000000008e1230                PROVIDE (_xtos_set_interrupt_handler, 0x8e1230)
+                0x00000000008e1548                PROVIDE (generic_hif_module_install, 0x8e1548)
+                0x00000000008e54a8                PROVIDE (htc_module_install, 0x8e54a8)
+                0x00000000008e6264                PROVIDE (buf_pool_module_install, 0x8e6264)
+                0x00000000008e4f60                PROVIDE (vbuf_module_install, 0x8e4f60)
+                0x00000000008e5010                PROVIDE (vdesc_module_install, 0x8e5010)
+                0x00000000008e6560                PROVIDE (strcmp, 0x8e6560)
+                0x00000000008e6710                PROVIDE (strlen, 0x8e6710)
+                0x00000000008e6678                PROVIDE (strcpy, 0x8e6678)
+                0x00000000008e683c                PROVIDE (strncpy, 0x8e683c)
+                0x00000000004e87f9                PROVIDE (Xthal_num_ccompare, 0x4e87f9)
+                0x000000000050095c                PROVIDE (cticks, 0x50095c)
+                0x00000000004e0100                PROVIDE (UsbDeviceDescriptor, 0x4e0100)
+                0x00000000004e01a0                PROVIDE (String00Descriptor, 0x4e01a0)
+                0x00000000004e01b0                PROVIDE (String10Descriptor, 0x4e01b0)
+                0x00000000004e01c0                PROVIDE (String20Descriptor, 0x4e01c0)
+                0x00000000004e01e0                PROVIDE (String30Descriptor, 0x4e01e0)
+                0x00000000008e37e8                PROVIDE (HIFusb_DescTraceDump, 0x8e37e8)
+                0x00000000008e6980                PROVIDE (xthal_get_intenable, 0x8e6980)
+                0x00000000008e6990                PROVIDE (xthal_set_intenable, 0x8e6990)
+                0x00000000008e6988                PROVIDE (xthal_get_interrupt, 0x8e6988)
+                0x00000000008e6970                PROVIDE (xthal_get_ccompare, 0x8e6970)
+                0x00000000008e6960                PROVIDE (xthal_set_ccompare, 0x8e6960)
+                0x00000000008e6958                PROVIDE (xthal_get_ccount, 0x8e6958)
+                0x00000000004e87f9                PROVIDE (Xthal_num_ccompare, 0x4e87f9)
+                0x00000000008e5d2c                PROVIDE (zfDmaReclaimPacket, 0x8e5d2c)
+                0x00000000008e5dc0                PROVIDE (zfDmaPutPacket, 0x8e5dc0)
+                0x00000000008e5cf0                PROVIDE (zfDmaGetPacket, 0x8e5cf0)
+                0x00000000008e5e78                PROVIDE (fwd_init, 0x8e5e78)
+                0x0000000000500aa4                PROVIDE (usbFifoConf, 0x500aa4)
+                0x00000000008e36e4                PROVIDE (_HIFusb_isr_handler, 0x8e36e4)
+                0x00000000008e4934                PROVIDE (mUsbFIFOConfig, 0x8e4934)
+                0x00000000008e4954                PROVIDE (mUsbEPMxPtSzHigh, 0x8e4954)
+                0x00000000008e497c                PROVIDE (mUsbEPMxPtSzLow, 0x8e497c)
+                0x00000000008e49a0                PROVIDE (mUsbEPinHighBandSet, 0x8e49a0)
+                0x00000000008e4934                PROVIDE (mUsbFIFOConfig, 0x8e4934)
+                0x00000000008e4914                PROVIDE (mUsbFIFOMap, 0x8e4914)
+                0x00000000008e48f8                PROVIDE (mUsbEPMap, 0x8e48f8)
+                0x0000000000500ad0                PROVIDE (u8UsbInterfaceValue, 0x500ad0)
+                0x0000000000500ace                PROVIDE (u8UsbConfigValue, 0x500ace)
+                0x0000000000500ad2                PROVIDE (u8UsbInterfaceAlternateSetting, 0x500ad2)
+                0x0000000000500a98                PROVIDE (ControlCmd, 0x500a98)
+                0x00000000008e49ec                PROVIDE (vUsbFIFO_EPxCfg_HS, 0x8e49ec)
+                0x00000000008e38d0                PROVIDE (vUsbClrEPx, 0x8e38d0)
+                0x00000000008e3b54                PROVIDE (bSet_configuration, 0x8e3b54)
+                0x0000000000500ac4                PROVIDE (eUsbCxFinishAction, 0x500ac4)
+                0x0000000000500708                PROVIDE (pci_sc, 0x500708)
+                0x00000000008e31e8                PROVIDE (__pci_reap_recv, 0x8e31e8)
+                0x00000000008e31bc                PROVIDE (__pci_reap_xmitted, 0x8e31bc)
+                0x00000000008e34a0                PROVIDE (_HIFusb_start, 0x8e34a0)
+                0x0000000000500a54                PROVIDE (g_hifUSBCtx, 0x500a54)
+                0x00000000008e367c                PROVIDE (_HIFusb_return_recv_buf, 0x8e367c)
+                0x00000000008e1574                PROVIDE (athos_indirection_table_install, 0x8e1574)
+                0x0000000000500ac0                PROVIDE (u8ConfigDescriptorEX, 0x500ac0)
+                0x00000000008e3e64                PROVIDE (bStandardCommand, 0x8e3e64)
+                0x0000000000500abc                PROVIDE (u16TxRxCounter, 0x500abc)
+                0x0000000000500ab8                PROVIDE (pu8DescriptorEX, 0x500ab8)
+                0x00000000008e3a9c                PROVIDE (bGet_descriptor, 0x8e3a9c)
+                0x00000000008e6348                PROVIDE (_xtos_set_exception_handler, 0x8e6348)
+                0x00000000008e581c                PROVIDE (HTCMsgRecvHandler, 0x8e581c)
+                0x00000000008e56f4                PROVIDE (HTCControlSvcProcessMsg, 0x8e56f4)
+                0x00000000008e54ec                PROVIDE (HTCFreeMsgBuffer, 0x8e54ec)
+                0x0000000000500ad8                PROVIDE (u8UsbDeviceDescriptor, 0x500ad8)
+START GROUP
+LOAD /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a
+LOAD /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libadf.a
+LOAD /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a
+LOAD /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwlan.a
+LOAD /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a
+LOAD /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a
+END GROUP
+OUTPUT(ram.out elf32-xtensa-be)
+
+.debug_ranges   0x0000000000000000     0x1108
+ .debug_ranges  0x0000000000000000       0x18 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/ram/init/obj/init.o
+ .debug_ranges  0x0000000000000018       0xa8 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcmnos.a(dbg_api.o)
+ .debug_ranges  0x00000000000000c0       0x48 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libwmi.a(wmi_svc.o)
+ .debug_ranges  0x0000000000000108      0x638 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath.o)
+ .debug_ranges  0x0000000000000740       0x30 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_ath_pci.o)
+ .debug_ranges  0x0000000000000770      0x4f0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(if_owl.o)
+ .debug_ranges  0x0000000000000c60      0x350 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ratectrl_11n_ln.o)
+ .debug_ranges  0x0000000000000fb0       0x88 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ar5416_hw.o)
+ .debug_ranges  0x0000000000001038       0x30 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/libcarrier_apd.a(ah_osdep.o)
+ .debug_ranges  0x0000000000001068       0xa0 /home/lex/tmp/my/open-ath9k-htc-firmware/target_firmware/magpie_fw_dev/build/magpie_1_1/image/magpie_ram/../../../..//build/magpie_1_1/lib/ram/librompatch.a(usb_api_patch.o)

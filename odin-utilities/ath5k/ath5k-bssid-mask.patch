@@ -1,0 +1,67 @@
+Index: openwrt/openwrt/build_dir/linux-x86_bowl/compat-wireless-2012-07-16/drivers/net/wireless/ath/ath5k/debug.c
+===================================================================
+--- openwrt.orig/openwrt/build_dir/linux-x86_bowl/compat-wireless-2012-07-16/drivers/net/wireless/ath/ath5k/debug.c	2012-09-13 12:46:06.562968483 +0200
++++ openwrt/openwrt/build_dir/linux-x86_bowl/compat-wireless-2012-07-16/drivers/net/wireless/ath/ath5k/debug.c	2012-09-13 12:46:12.423009219 +0200
+@@ -812,6 +812,52 @@
+ 	.llseek = default_llseek,
+ };
+ 
++/* debugfs: bssid mask setting for odin agent */
++
++static ssize_t read_file_bssid_extra(struct file *file, char __user *user_buf,
++                                size_t count, loff_t *ppos)
++{
++  struct ath5k_hw *ah = sc->sc_ah;
++  struct ath_common *common = ah->common;
++  char buf[32];
++  unsigned int len;
++
++  len = sprintf(buf, "%pM\n", common->bssidmask);
++  return simple_read_from_buffer(user_buf, count, ppos, buf, len);
++}
++
++static ssize_t write_file_bssid_extra(struct file *file, const char __user *user_buf,
++           size_t count, loff_t *ppos)
++{
++  struct ath5k_hw *ah = sc->sc_ah;
++  struct ath_common *common = ah->common;
++  char buf[32];
++  u8 macaddr[ETH_ALEN];
++  ssize_t len;
++
++  len = min(count, sizeof(buf) - 1);
++  if (copy_from_user(buf, user_buf, len))
++    return -EFAULT;
++
++  buf[len] = '\0';
++
++  sscanf(buf, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &macaddr[0], &macaddr[1],
++              &macaddr[2], &macaddr[3], &macaddr[4], &macaddr[5]);
++
++  memcpy(common->bssidmask, macaddr, ETH_ALEN);
++  ath_hw_setbssidmask(common);
++
++  return count;
++}
++
++static const struct file_operations fops_bssid_extra = {
++  .read = read_file_bssid_extra,
++  .write = write_file_bssid_extra,
++  .open = simple_open,
++  .owner = THIS_MODULE,
++  .llseek = default_llseek,
++};
++
+ /* debugfs: bwmode */
+ 
+ static ssize_t read_file_bwmode(struct file *file, char __user *user_buf,
+@@ -991,6 +1037,9 @@
+ 
+ 	debugfs_create_file("reset", S_IWUSR, phydir, ah, &fops_reset);
+ 
++  debugfs_create_file("bssid_extra", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy,
++          sc, &fops_bssid_extra);
++
+ 	debugfs_create_file("antenna", S_IWUSR | S_IRUSR, phydir, ah,
+ 			    &fops_antenna);
+ 

@@ -1,0 +1,115 @@
+--- a/drivers/net/wireless/ath/ath9k/debug.c	2013-03-15 03:12:06.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.c	2013-03-15 03:09:38.000000000 +0800
+@@ -1909,6 +1909,8 @@
+ 		size += 100;
+ 	}
+ 
++	size += sc->debug.rx_count * 16;
++
+ 	buf = kmalloc(size, GFP_KERNEL);
+ 	if (!buf){
+ 		printk("Can't allocate %u bytes space\n", size);
+@@ -1930,6 +1932,13 @@
+ 			cursor->diff_seq, cursor->pkt_counter, tp, rssi);
+ 	}
+ 
++	int i;len += snprintf(buf + len, size - len, "\n\nRx-trace:\n");
++	for (i = 0 ; i < sc->debug.rx_count ; i++){
++		len += snprintf(buf + len, size - len, "%5u%2u%7u |", sc->debug.rx_seqno[i], sc->debug.rx_isretry[i], sc->debug.rx_time[i]);
++		if (i % 20 == 19)
++                        len += snprintf(buf + len, size - len, "\n");
++	}
++
+ 	if (len > size)
+ 		len = size;
+ 
+@@ -1998,7 +2007,7 @@
+ 	struct ath_softc *sc = file->private_data;
+ 	char *buf;
+ 	ssize_t retval;
+-	unsigned int len = 0, size = 100;
++	unsigned int len = 0, size = 100, i;
+ 
+ 	xmit_bw_paused = true;
+ 
+@@ -2008,6 +2017,8 @@
+ 		size += 70;
+ 	}
+ 
++	size += sc->debug.tx_count * 10;
++
+ 	buf = kmalloc(size, GFP_KERNEL);
+ 	if (!buf){
+ 		printk("Can't allocate %u bytes space\n", size);
+@@ -2027,6 +2038,13 @@
+ 			cursor->tx_bytes, cursor->aggr_num, cursor->faultaggr_num, cursor->nonaggr_num, bw);
+ 	}
+ 
++	len += snprintf(buf + len, size - len, "\n\nTx-trace:\n");
++	for (i = 0 ; i < sc->debug.tx_count ; i++){
++		len += snprintf(buf + len, size - len, "%5u%3u |", sc->debug.tx_seqno[i], sc->debug.tx_tries[i]);
++		if (i % 20 == 19)
++			len += snprintf(buf + len, size - len, "\n");
++	}
++
+ 	if (len > size)
+ 		len = size;
+ 
+@@ -2357,6 +2375,8 @@
+ 	setting->retry_limit = 20; // default valude
+ 	setting->subframe_size = 32; //default valude
+ 
++	sc->debug.tx_count = sc->debug.rx_count = 0;
++
+ 	sc->debug.regidx = 0;
+ 	memset(&sc->debug.bb_mac_samp, 0, sizeof(sc->debug.bb_mac_samp));
+ 	sc->debug.sampidx = 0;
+--- a/drivers/net/wireless/ath/ath9k/debug.h	2013-03-15 03:12:06.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.h	2013-03-15 02:31:38.000000000 +0800
+@@ -305,6 +305,14 @@
+ 	struct list_head rx_infos_list;
+ 	struct list_head frame_list;
+ 	unsigned int frame_maxnum;	/*the maximum number of frames in frame list*/
++
++	u16 tx_seqno[100000];
++	u8 tx_tries[100000];
++	int tx_count;
++	u16 rx_seqno[100000];
++	u8 rx_isretry[100000];
++	long rx_time[100000];
++	int rx_count;
+ };
+ 
+ int ath9k_init_debug(struct ath_hw *ah);
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2013-03-15 03:12:06.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2013-03-15 03:11:22.000000000 +0800
+@@ -2115,6 +2115,15 @@
+ 		cur->diff_seq += (seqno - pre_seqno - 1) & 0xff;
+ 		pre_seqno = seqno;
+ 	}
++
++	if (sc->debug.rx_count < 99999){
++		sc->debug.rx_seqno[sc->debug.rx_count] = seqno;
++		sc->debug.rx_isretry[sc->debug.rx_count] = !!ieee80211_has_retry(fc);
++		struct timeval tv;
++		do_gettimeofday(&tv);
++		sc->debug.rx_time[sc->debug.rx_count++] = tv.tv_usec;
++	}
++
+ 	if (need_new_item)
+ 		list_add_tail(&cur->list, tp_list);
+ }
+--- a/drivers/net/wireless/ath/ath9k/xmit.c	2013-03-15 03:12:06.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/xmit.c	2013-03-15 03:10:31.000000000 +0800
+@@ -505,6 +505,11 @@
+ 		tx_info = IEEE80211_SKB_CB(skb);
+ 		fi = get_frame_info(skb);
+ 
++		if (sc->debug.tx_count < 99999){		
++			sc->debug.tx_seqno[sc->debug.tx_count] = seqno;
++			sc->debug.tx_tries[sc->debug.tx_count++] = retries;
++		}
++
+ 		if (ATH_BA_ISSET(ba, ATH_BA_INDEX(seq_st, seqno))) {
+ 			/* transmit completion, subframe is
+ 			 * acked by block ack */

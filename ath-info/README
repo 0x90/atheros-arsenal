@@ -1,0 +1,98 @@
+-= INTRO =-
+
+ABOUT:
+ath_info is a tool created to help us reverse engineer EEPROM layout on atheros AR5xxx
+series of cards and also to debug our drivers. It can also be used to tweak various
+EEPROM values or registers even at runtime (be careful). Please be sure that you know
+what you are doing before playing with this thing, it can render your card useless !!!
+
+DISCLAIMER:
+The authors are in no case responsible for damaged hardware or violation
+of local laws by operating modified hardware.
+
+
+So here is how it works:
+
+First compile...
+
+gcc ath_info.c -o ath_info
+
+then find your card's physical address
+
+lspci -v
+
+02:02.0 Ethernet controller: Atheros Communications, Inc. AR5212 802.11abg NIC (rev 01)
+        Subsystem: Fujitsu Limited. Unknown device 1234
+        Flags: bus master, medium devsel, latency 168, IRQ 23
+        Memory at c2000000 (32-bit, non-prefetchable) [size=64K]
+        Capabilities: [44] Power Management version 2
+
+address here is 0xc2000000
+
+If you don't have a driver loaded for your card (check out using e.g. lsmod), load
+madwifi-ng/madwifi-old/ath5k (be sure the interface is down for safety!) e.g.:
+
+modprobe ath_pci
+
+OR
+
+call:
+setpci -s 02:02.0 command=0x41f cache_line_size=0x10
+
+to enable access to the PCI device.
+
+and then run the thing...
+
+./ath_info 0xc2000000
+
+
+-= EXAMPLES =-
+
+In order to change the regdomain to 0, call:
+
+./ath_info -w 0xc2000000 regdomain 0
+
+To change any PCI ID value, say:
+
+./ath_info -w 0xc2000000 <name> X
+
+with <name> ::= pci_dev_id | pci_vendor_id | pci_class |
+                pci_subsys_dev_id | pci_subsys_vendor_id
+
+To change mac address to 00:11:22:33:44:55, call:
+
+./ath_info -M 0xc2000000 00:11:22:33:44:55
+
+To dump the contents of your EEPROM to a dumpfile, call:
+
+./ath_info -d 0xc2000000
+
+and your dump will be saved on ath-eeprom-dump.bin.
+
+To restore your EEPROM from a dumpfile, call:
+
+./ath_info -r 0xc2000000 <dumpfile>
+
+
+-= EEPROM WRITE PROTECTION =-
+
+With newer chipsets (>= AR5004x, i.e. MAC >= AR5213), Atheros introduced
+write protection on the EEPROM.  On a GIGABYTE GN-WI01HT you can set
+GPIO 4 to low to be able to write the EEPROM.  This depends highly on
+the PCB layout, so there may be different GPIO used.  This program
+currently sets GPIO 4 to low for a MAC >= AR5213, but you can override
+this with the -g option:
+
+./ath_info -g 5:0 -w 0xc2000000 regdomain X
+
+would set GPIO 5 to low (and wouldn't touch GPIO 4).  "-g" can be given
+several times.
+
+The write function is currently not tested with 5210 devices.
+
+Use at your own risk, entering a false device address will have really
+nasty results!  Writing wrong values to the PCI ID fields may prevent
+the driver from detecting the card!
+
+Transmitting on illegal frequencies may violate state laws.  Stick to
+the local regulations!

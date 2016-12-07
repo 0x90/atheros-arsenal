@@ -1,0 +1,405 @@
+#!/usr/bin/python
+#
+# Copyright (c) 2016 Qualcomm Atheros, Inc.
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+import os
+import logging
+import re
+import pprint
+import argparse
+import shutil
+import sys
+import filecmp
+import unittest
+
+# global variables
+logger = None
+blacklist = False
+
+FIRMWARE_BLACKLIST = [
+    '999.999.0.636',
+    '10.2-00082-4-2'
+    ]
+
+class BoardFile():
+    @staticmethod
+    def create_from_path(path):
+        filename = os.path.basename(path)
+
+        match = re.search(r'^board-(\d+).bin', filename)
+        if match == None:
+            match = re.search(r'^board.bin', filename)
+            if match == None:
+                return None
+
+        if len(match.groups()) > 1:
+            bd_api = match.group(1)
+        else:
+            bd_api = None
+
+        return BoardFile(path, bd_api)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return '%s' % (os.path.basename(self.path))
+
+    def __init__(self, path, bd_api):
+        self.path = path
+        self.bd_api = bd_api
+
+class Firmware():
+    @staticmethod
+    def create_from_path(path):
+        filename = os.path.basename(path)
+
+        match = re.search(r'^firmware-(\d+).bin_(.+)', filename)
+        if match == None:
+            return None
+
+        fw_api = match.group(1)
+        fw_ver = match.group(2)
+
+        return Firmware(fw_ver, path, fw_api)
+
+    def get_installation_name(self):
+        return 'firmware-%s.bin' % (self.fw_api)
+
+    def get_notice_filename(self):
+        return 'notice_ath10k_firmware-%s.txt' % (self.fw_api)
+
+    def __eq__(self, other):
+        return self.fw_ver == other.fw_ver
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    # FIXME: firmware-5.bin_10.4-3.2-00080 and
+    # firmware-5.bin_10.4-3.2.1-00028 are sorted incorrectly
+    def __lt__(self, other):
+        s = self.fw_ver
+        o = other.fw_ver
+
+        # FIXME: An ugly hack that to make the comparison easier to
+        # implement. Just to get some sort of simple sorting working
+        # replace '-' with '.' in version string. But now for example
+        # '10.2.4.70.2 > 10.2.4.70-2' is not compared correctly.
+        
+        s = s.replace('-', '.')
+        o = o.replace('-', '.')
+
+        s = s.split('.')
+        o = o.split('.')
+
+        s2 = s
+        o2 = o
+
+        s = []
+        o = []
+
+        for t in s2:
+            try:
+                k = int(t)
+            except:
+                k = t
+
+            s.append(k)
+
+        for t in o2:
+            try:
+                k = int(t)
+            except:
+                k = t
+
+            o.append(k)
+
+        l = min(len(s), len(o))
+
+        for i in range(l):
+            
+            if s[i] < o[i]:
+                return True
+            elif s[i] > o[i]:
+                return False
+
+        if len(s) > len(o):
+            return False
+
+        return True
+        
+    def __le__(self, other):
+        return self.__lt__(other) or self.__eq__(other)
+
+    def __gt__(self, other):
+        return not self.__le__(other)
+
+    def __ge__(self, other):
+        return self.__gt__(other) or self.__eq__(other)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return '%s' % (self.fw_ver)
+
+    # path can be None with unittests
+    def __init__(self, fw_ver, path=None, fw_api=None):
+        self.path = path
+        self.fw_api = fw_api
+        self.fw_ver = fw_ver
+        self.notice_path = None
+
+        if path:
+            s = 'notice.txt_%s' % (self.fw_ver)
+            n = os.path.join(os.path.dirname(path), s)
+            if os.path.isfile(n):
+                self.notice_path = n
+
+class FirmwareTest(unittest.TestCase):
+    def test_comparison(self):
+        self.assertLess(Firmware('10.2.4.48'), Firmware('10.2.4.48-2'))
+        self.assertLess(Firmware('10.2.4.48-2'), Firmware('10.2.4.48-3'))
+        self.assertGreater(Firmware('10.2.4.54'), Firmware('10.2.4.48-2'))
+        self.assertEqual(Firmware('10.2.4.54'), Firmware('10.2.4.54'))
+        self.assertNotEqual(Firmware('10.2.4.54'), Firmware('10.2.4.54.1'))
+
+        # FIXME: these are buggy, need to be fixed
+        #self.assertLess(Firmware('10.4-3.2-00080'), Firmware('10.4-3.2.1-00028'))
+        #self.assertGreater(Firmware('10.2.4.70.2'), Firmware('10.2.4.70-2'))
+
+def scan_dir(path):
+    fw_list = []
+    bd_list = []
+
+    files = os.listdir(path)
+    files.sort()
+
+    for f in files:
+        f_path = os.path.join(path, f)
+        
+        if not os.path.isfile(f_path):
+            continue
+
+        firmware = Firmware.create_from_path(f_path)
+        if firmware:
+            if blacklist and firmware.fw_ver in FIRMWARE_BLACKLIST:
+                logger.debug('\'%s\' blacklisted' % (firmware.fw_ver))
+                continue
+
+            fw_list.append(firmware)
+            continue
+
+        boardfile = BoardFile.create_from_path(f_path)
+        if boardfile:
+            bd_list.append(boardfile)
+            continue
+
+        # skip notice files
+        if f.startswith('notice.txt'):
+            continue
+
+        logger.warning('Unknown file: %s' % (f_path))
+
+    return fw_list, bd_list
+
+# QCA988X/hw2.0
+def scan_hw_ver(path):
+    fw_list = []
+    bd_list = []
+
+    files = os.listdir(path)
+    files.sort()
+
+    for fw_branch in files:
+        fw_branch_path = os.path.join(path, fw_branch)
+        
+        if not os.path.isdir(fw_branch_path):
+            continue
+
+        logger.debug('Found firmware branch: %s' % (fw_branch))
+
+        (fw, bd) = scan_dir(fw_branch_path)
+        fw_list += fw
+        bd_list += bd
+
+    (fw, bd) = scan_dir(path)
+    fw_list += fw
+    bd_list += bd
+
+    logger.debug('Found firmware versions: %s' % (fw_list))
+
+    return sorted(fw_list), sorted(bd_list)
+
+# QCA98XX
+def scan_hw(path):
+    hw_tree = {}
+
+    files = os.listdir(path)
+    files.sort()
+
+    for hw_ver in files:
+        hw_ver_path = os.path.join(path, hw_ver)
+        
+        if not os.path.isdir(hw_ver_path):
+            continue
+
+        logger.debug('Found hw version: %s' % (hw_ver))
+
+        h = scan_hw_ver(hw_ver_path)
+        hw_tree[hw_ver] = h
+
+    return hw_tree
+
+def scan_firmwares(src):
+    fw_tree = {}
+
+    files = os.listdir(src)
+    files.sort()
+
+    for hw_name in files:
+        if not os.path.isdir(hw_name):
+            continue
+
+        # skip hidden directories
+        if hw_name.startswith('.'):
+            continue
+
+        logger.debug('Found hw: %s' % (hw_name))
+
+        hw = scan_hw(hw_name)
+        fw_tree[hw_name] = hw
+
+    return fw_tree
+
+def install_file(args, src, installdir, dest):
+    if args.dry_run:
+        return
+
+    destpath = os.path.join(installdir, dest)
+
+    destdir = os.path.dirname(destpath)
+    if not os.path.isdir(destdir):
+        os.makedirs(destdir)
+
+    shutil.copyfile(src, destpath)
+
+def cmd_check(args):
+    scan_firmwares('.')
+
+def cmd_list(args):
+    fw_tree = scan_firmwares('.')
+    pprint.pprint(fw_tree, indent=4, width=120)
+
+def cmd_install(args):
+    global blacklist
+
+    blacklist = True
+
+    fw_tree = scan_firmwares('.')
+
+    installdir = os.path.join(args.install[0], 'ath10k')
+
+    if not os.path.isdir(installdir):
+        logger.error('%s is not a directory' % (installdir))
+        sys.exit(1)
+
+    logger.debug('Installing to directory %s' % (installdir))
+
+    for hw in fw_tree:
+        for hw_ver in fw_tree[hw]:
+            (fw_list, bd_list) = fw_tree[hw][hw_ver]
+
+            destdir = os.path.join(hw, hw_ver)
+
+            # install latest firmware
+            #
+            # FIXME: should we install the latest for every FW API
+            # version (2, 4, 5 etc.), not just the latest?
+            fw = fw_list[-1]
+
+            dest = os.path.join(destdir, fw.get_installation_name())
+            d = os.path.join(installdir, dest)
+            if not os.path.exists(d) or not filecmp.cmp(fw.path, d):
+                logger.info('Installing %s (%s)' % (dest, fw.fw_ver))
+                install_file(args, fw.path, installdir, dest)
+
+                if fw.notice_path:
+                    dest = os.path.join(destdir, fw.get_notice_filename())
+                    logger.info('Installing %s (%s)' % (dest, fw.fw_ver))
+                    install_file(args, fw.notice_path, installdir, dest)
+            else:
+                logger.debug('No update needed for %s (%s)' % (dest, fw.fw_ver))
+
+            # install board files
+            for bd in bd_list:
+                dest = os.path.join(installdir, bd.path)
+                if not os.path.exists(dest) or not filecmp.cmp(bd.path, dest):
+                    logger.info('Installing %s' % (bd.path))
+                    install_file(args, bd.path, installdir, bd.path)
+                else:
+                    logger.debug('No update needed for %s' % (dest))
+
+def cmd_unit_test(args):
+    runner = unittest.TextTestRunner()
+    itersuite = unittest.TestLoader().loadTestsFromTestCase(FirmwareTest)
+    runner.run(itersuite)
+
+def main():
+    global logger
+
+    logger = logging.getLogger('ath10k-fw-repo')
+
+    parser = argparse.ArgumentParser(description='Install firmware images from the ath10k-firmware git repository. Run it from the top directory of the working tree.')
+
+    parser.add_argument('--debug', action='store_true',
+                        help='Enable debug messages.')
+    parser.add_argument('--dry-run', action='store_true',
+                        help='Do not run any actual commands.')
+
+    parser.add_argument('--check', action='store_true',
+                        help='Check the ath10k-firmware repository content for validity.')
+    parser.add_argument('--list', action='store_true',
+                        help='List all files found from the ath10k-firmware repository.')
+    parser.add_argument('--install', action='store', nargs=1, metavar='DESTINATION',
+                        help='Install all ath10k firmware images to DESTINATION folder, for example /lib/firmware.')
+
+    parser.add_argument('--unit-test', action='store_true',
+                        help='Run unit tests for this script.')
+
+    args = parser.parse_args()
+
+    if args.debug:
+        logging.basicConfig(format='%(levelname)s: %(message)s')
+        logger.setLevel(logging.DEBUG)
+    else:
+        logging.basicConfig(format='%(message)s')
+        logger.setLevel(logging.INFO)
+
+    # commands
+    if args.check:
+        cmd_check(args)
+    elif args.list:
+        cmd_list(args)
+    elif args.install:
+        cmd_install(args)
+    elif args.unit_test:
+        cmd_unit_test(args)
+    else:
+        logger.error('No command defined')
+        parser.print_usage()
+        
+if __name__ == "__main__":
+    main()

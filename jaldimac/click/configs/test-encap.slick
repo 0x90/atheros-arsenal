@@ -1,0 +1,15 @@
+#include "shared.slickh"
+
+jd :: JaldiDecap
+
+InfiniteSource(DATA \<0000>, LIMIT 1, BURST 1, STOP true)
+	-> Print
+	-> JaldiEncap(BULK_FRAME, $DRIVER_ID, $MASTER_ID)
+	-> JaldiPrint(true)
+	-> jd
+
+jd[0] -> Print(Control, 1600) -> Discard
+
+jd[1] -> Print(IP, 1600) -> Discard
+
+jd[2] -> Print(Bad, 1600) -> Discard

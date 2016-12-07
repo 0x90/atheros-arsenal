@@ -1,0 +1,15 @@
+--- a/drivers/net/wireless/ath/ath9k/mac.c	2012-12-21 15:25:58.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/mac.c	2012-12-21 15:25:37.000000000 +0800
+@@ -503,6 +503,12 @@
+ 		break;
+ 	}
+ 
++	REG_WRITE(ah, AR_DLCL_IFS(q),
++			SM(0, AR_D_LCL_IFS_CWMIN) |
++			SM(0, AR_D_LCL_IFS_CWMAX) |
++			SM(qi->tqi_aifs, AR_D_LCL_IFS_AIFS));
++	REG_SET_BIT(ah, AR_DMISC(q), AR_D_MISC_POST_FR_BKOFF_DIS);
++
+ 	if (qi->tqi_intFlags & ATH9K_TXQ_USE_LOCKOUT_BKOFF_DIS) {
+ 		REG_SET_BIT(ah, AR_DMISC(q),
+ 			    SM(AR_D_MISC_ARB_LOCKOUT_CNTRL_GLOBAL,

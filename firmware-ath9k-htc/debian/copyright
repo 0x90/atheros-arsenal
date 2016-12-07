@@ -1,0 +1,431 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: The firmware for QCA AR7010/AR9271 802.11n USB NICs
+Source: https://github.com/qca/open-ath9k-htc-firmware/
+Files-Excluded: sboot/* docs/*
+Comment: Directories sboot/ and docs/ of upstream repository contain binary
+ objects that are useful for reference and in-depth debugging purposes only
+ and are not needed to generate a firmware image, hence they're removed
+ during repacking to provide a DFSG-compliant tarball of original sources.
+ .
+ Contents of the upstream NOTICE.TXT verbatim:
+ .
+ This NOTICE.TXT file contains certain notices of software components included
+ with the software that QUALCOMM ATHEROS Incorporated ('Qualcomm Atheros') is
+ required to provide you. Notwithstanding anything in the notices in this file,
+ your use of these software components together with the Qualcomm Atheros
+ software (Qualcomm Atheros software hereinafter referred to as 'Software') is
+ subject to the terms of your license from Qualcomm Atheros.  Compliance with
+ all copyright laws and software license agreements included in the notice
+ section of this file are the responsibility of the user.  Except as may be
+ granted by separate express written agreement, this file provides no license
+ to any Qualcomm Atheros patents, trademarks, copyrights, or other intellectual
+ property.
+ .
+ Copyright (c) 2013 QUALCOMM ATHEROS Incorporated.  All rights reserved.
+ .
+ QUALCOMM ATHEROS╝ is a registered trademark and registered service mark of
+ QUALCOMM ATHEROS Incorporated.  All other trademarks and service marks are
+ the property of their respective owners.
+ .
+ NOTICES:
+ .
+ /*
+  * Copyright (c) 2005-2012 Atheros Communications Inc.
+  *
+  * Permission to use, copy, modify, and/or distribute this software for any
+  * purpose with or without fee is hereby granted, provided that the above
+  * copyright notice and this permission notice appear in all copies.
+  *
+  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  */
+ .
+ /*
+  * Copyright (c) 2002-2005 Sam Leffler, Errno Consulting
+  * Copyright (c) 2002-2005 Atheros Communications, Inc.
+  * Copyright (c) 2008-2010, Atheros Communications Inc.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions
+  * are met:
+  * 1. Redistributions of source code must retain the above copyright
+  *    notice, this list of conditions and the following NO
+  *    ''WARRANTY'' disclaimer below (''Disclaimer''), without
+  *    modification.
+  * 2. Redistributions in binary form must reproduce at minimum a
+  *    disclaimer similar to the Disclaimer below and any redistribution
+  *    must be conditioned upon including a substantially similar
+  *    Disclaimer requirement for further binary redistribution.
+  * 3. Neither the names of the above-listed copyright holders nor the
+  *    names of any contributors may be used to endorse or promote
+  *    product derived from this software without specific prior written
+  *    permission.
+  *
+  * NO WARRANTY
+  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  * ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  * LIMITED TO, THE IMPLIED WARRANTIES OF NONINFRINGEMENT,
+  * MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+  * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE
+  * FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+  * SUCH DAMAGES.
+  */
+ .
+ ----
+ .
+ The following files are from ECoS with a GPLv2 licence with modification
+ and linking caveats. Please see the licence below for more information:
+ .
+ sboot/magpie_1_1/sboot/cmnos/printf/src/cmnos_printf.c
+ target_firmware/magpie_fw_dev/target/cmnos/cmnos_printf.c
+ target_firmware/magpie_fw_dev/target/cmnos/k2_fw_cmnos_printf.c
+ .
+ //####ECOSGPLCOPYRIGHTBEGIN####
+ // -------------------------------------------
+ // This file is part of eCos, the Embedded Configurable Operating System.
+ // Copyright (C) 1998, 1999, 2000, 2001, 2002 Red Hat, Inc.
+ // Copyright (C) 2002 Gary Thomas
+ //
+ // eCos is free software; you can redistribute it and/or modify it under
+ // the terms of the GNU General Public License as published by the Free
+ // Software Foundation; either version 2 or (at your option) any later version.
+ //
+ // eCos is distributed in the hope that it will be useful, but WITHOUT ANY
+ // WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ // FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ // for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+ // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ //
+ // As a special exception, if other files instantiate templates or use macros
+ // or inline functions from this file, or you compile this file and link it
+ // with other works to produce a work based on this file, this file does not
+ // by itself cause the resulting work to be covered by the GNU General Public
+ // License. However the source code for this file must still be made available
+ // in accordance with section (3) of the GNU General Public License.
+ //
+ // This exception does not invalidate any other reasons why a work based on
+ // this file might be covered by the GNU General Public License.
+ //
+ // Alternative licenses for eCos may be arranged by contacting Red Hat, Inc.
+ // at http://sources.redhat.com/ecos/ecos-license/
+ // -------------------------------------------
+ //####ECOSGPLCOPYRIGHTEND####
+ .
+ ----
+ .
+ Some of the source code is sourced from Tensilica, Inc.
+ .
+ Although most of the files fall under the MIT licence, some of the source
+ files generated as part of the system development have a proprietary
+ Tensilica licence.
+ .
+ With permission from Tensilica, Inc, these files have been relicenced
+ under the following licence:
+ .
+ /*
+  * Copyright (c) 2013 Tensilica Inc.
+  *
+  * Permission is hereby granted, free of charge, to any person obtaining
+  * a copy of this software and associated documentation files (the
+  * "Software"), to deal in the Software without restriction, including
+  * without limitation the rights to use, copy, modify, merge, publish,
+  * distribute, sublicense, and/or sell copies of the Software, and to
+  * permit persons to whom the Software is furnished to do so, subject to
+  * the following conditions:
+  *
+  * The above copyright notice and this permission notice shall be included
+  * in all copies or substantial portions of the Software.
+  *
+  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  */
+
+Files: *
+Copyright: 2013, Qualcomm Atheros, Inc.
+License: BSD-3-clause-from-Qualcomm-Atheros
+
+Files: debian/*
+Copyright: 2016, Paul Fertser <fercerpav@gmail.com>
+	   2016, Oleksij Rempel <linux@rempel-privat.de>
+License: GPL-2+
+
+Files: debian/cross-toolchain.mk
+Copyright: 2016, Aurelien Jarno <aurelien@aurel32.net>
+License: GPL-2+
+
+Files: scripts/*
+Copyright: 2008-2010, Andy Whitcroft <apw@canonical.com>
+ 2007, 2008, Andy Whitcroft <apw@uk.ibm.com> (new conditions, test suite)
+ 2005, Joel Schopp <jschopp@austin.ibm.com> (the ugly bit)
+ 2001, Dave Jones. (the file handling bit)
+License: GPL-2
+
+Files: target_firmware/include/*
+Copyright: 2016, Oleksij Rempel <linux@rempel-privat.de>
+ 2013, Qualcomm Atheros, Inc.
+License: BSD-3-clause-from-Qualcomm-Atheros
+
+Files: target_firmware/magpie_fw_dev/target/cmnos/k2_fw_cmnos_printf.c
+Copyright: 1998, 1999, 2000, 2001, 2002 Red Hat, Inc.
+	   2002, Gary Thomas
+License: GPL-2+ with linking exception
+ -------------------------------------------
+ This file is part of eCos, the Embedded Configurable Operating System.
+ Copyright (C) 1998, 1999, 2000, 2001, 2002 Red Hat, Inc.
+ Copyright (C) 2002 Gary Thomas
+ .
+ eCos is free software; you can redistribute it and/or modify it under
+ the terms of the GNU General Public License as published by the Free
+ Software Foundation; either version 2 or (at your option) any later version.
+ .
+ eCos is distributed in the hope that it will be useful, but WITHOUT ANY
+ WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ for more details.
+ .
+ You should have received a copy of the GNU General Public License along
+ with eCos; if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ .
+ As a special exception, if other files instantiate templates or use macros
+ or inline functions from this file, or you compile this file and link it
+ with other works to produce a work based on this file, this file does not
+ by itself cause the resulting work to be covered by the GNU General Public
+ License. However the source code for this file must still be made available
+ in accordance with section (3) of the GNU General Public License.
+ .
+ This exception does not invalidate any other reasons why a work based on
+ this file might be covered by the GNU General Public License.
+ .
+ Alternative licenses for eCos may be arranged by contacting Red Hat, Inc.
+ at http://sources.redhat.com/ecos/ecos-license/
+ -------------------------------------------
+
+Files: target_firmware/magpie_fw_dev/target/hif/usb_api_main_patch.c
+Copyright: 2016, Oleksij Rempel <linux@rempel-privat.de>
+ 2013, Qualcomm Atheros, Inc.
+License: BSD-3-clause-from-Qualcomm-Atheros
+
+Files: target_firmware/magpie_fw_dev/target/inc/asf_queue.h
+Copyright: 1991, 1993, The Regents of the University of California.
+License: BSD-3-clause-from-Regents
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 4. Neither the name of the University nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+
+Files: target_firmware/magpie_fw_dev/target/inc/xtensa-elf/*
+Copyright: 2013, Tensilica Inc.
+License: Expat
+
+Files: target_firmware/magpie_fw_dev/target/inc/xtensa/*
+Copyright: 2013, Tensilica Inc.
+License: Expat
+
+Files: target_firmware/magpie_fw_dev/target/init/app_start.h
+Copyright: 2016, Oleksij Rempel <linux@rempel-privat.de>
+ 2013, Qualcomm Atheros, Inc.
+License: BSD-3-clause-from-Qualcomm-Atheros
+
+Files: target_firmware/wlan/_ieee80211.h
+ target_firmware/wlan/ieee80211.h
+Copyright: 2002-2005, Sam Leffler, Errno Consulting
+ 2001, Atsushi Onoe
+License: BSD-3-clause or GPL-2
+
+Files: target_firmware/wlan/ah_osdep.h
+Copyright: 2013, Qualcomm Atheros, Inc.
+ 2002-2004, Sam Leffler, Errno Consulting, Atheros
+License: BSD-3-clause-from-Qualcomm-Atheros
+
+Files: target_firmware/wlan/if_ath_pci.c
+ target_firmware/wlan/if_ath_pci.h
+Copyright: 2013, Qualcomm Atheros, Inc.
+ 2004, Atheros Communications, Inc.
+ 2002-2004, Sam Leffler, Errno Consulting
+License: BSD-3-clause-from-Qualcomm-Atheros or GPL-2
+
+Files: target_firmware/wlan/if_athrate.h
+Copyright: 2013, Qualcomm Atheros, Inc.
+ 2004, Video54 Technologies, Inc.
+ 2004, Sam Leffler, Errno Consulting
+License: BSD-3-clause-from-Qualcomm-Atheros or GPL-2
+
+Files: target_firmware/wlan/if_llc.h
+Copyright: 1988, 1993, The Regents of the University of California
+	   2013, Qualcomm Atheros, Inc.
+	    2002-2004, Sam Leffler, Errno Consulting
+License: BSD-3-clause-from-Qualcomm-Atheros and BSD-4-clause-from-Regents or GPL-2
+
+License: BSD-3-clause-from-Qualcomm-Atheros
+ All rights reserved.
+ .
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted (subject to the limitations in the
+ disclaimer below) provided that the following conditions are met:
+ .
+  * Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ .
+  * Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the
+    distribution.
+ .
+  * Neither the name of Qualcomm Atheros nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+ .
+ NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+ GRANTED BY THIS LICENSE.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+ HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+ WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: BSD-4-clause-from-Regents
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. All advertising materials mentioning features or use of this software
+    must display the following acknowledgement:
+	This product includes software developed by the University of
+	California, Berkeley and its contributors.
+ 4. Neither the name of the University nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+
+License: BSD-3-clause
+ All rights reserved.
+ .
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. The name of the author may not be used to endorse or promote products
+    derived from this software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included
+ in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+License: GPL-2
+ This program is free software; you can redistribute it
+ and/or modify it under the terms of the GNU General Public
+ License version 2, as published by the Free Software Foundation.
+ .
+ This program is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the GNU General Public License for more
+ details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
+
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.

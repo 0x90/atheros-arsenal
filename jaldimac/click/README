@@ -1,0 +1,19 @@
+These are the Click elements and Click configurations that make up the JaldiMAC
+implementation.
+
+For this to build, the following must already be installed:
+
+- GNU build tools (gcc, autotools, make, etc.)
+- The Click modular router
+- Graphviz
+
+To build, type "make". To remove the generated files from a previous build,
+type "make clean". The "dist" directory will contain the useful build products;
+for each master and station, there are:
+
+- "clickpkg" files: these are actually ar archives, and can be loaded just as
+  if they were a standalone configuration by the Click tools; they contain all
+  of the custom JaldiMAC elements in addition to a Click configuration matching
+  the name of the package.
+- "pdf" files: these are visualizations of each Click configuration, generated
+  by click-pretty and dot.

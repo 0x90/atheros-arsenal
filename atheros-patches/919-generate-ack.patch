@@ -1,0 +1,103 @@
+--- a/drivers/net/wireless/ath/ath9k/ath9k.h	2013-07-12 15:14:26.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/ath9k.h	2013-07-12 15:00:47.000000000 +0800
+@@ -641,6 +641,10 @@
+ 	short nvifs;
+ 	unsigned long ps_usecount;
+ 
++	unsigned long rx_buf[BITS_TO_LONGS(ATH_TID_MAX_BUFS)];
++	u16 seq_start;
++	int baw_head;
++
+ 	struct ath_config config;
+ 	struct ath_rx rx;
+ 	struct ath_tx tx;
+--- a/drivers/net/wireless/ath/ath9k/init.c	2013-07-12 15:14:26.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/init.c	2013-07-12 15:01:57.000000000 +0800
+@@ -596,6 +596,10 @@
+ 	common->disable_ani = false;
+ 	spin_lock_init(&common->cc_lock);
+ 
++	memset(sc->rx_buf, 0, sizeof(sc->rx_buf));
++	sc->seq_start = 0;
++	sc->baw_head = 0;
++
+ 	sc->debug.txcnt = 0;
+ 	sc->debug.txcnt_bar = 0;
+ 	sc->debug.sending_bar = false;
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2013-07-12 15:14:26.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2013-07-12 15:14:06.000000000 +0800
+@@ -1793,6 +1793,46 @@
+ 	antcomb->alt_recv_cnt = 0;
+ }
+ 
++static void generate_ack_bytes(struct ath_softc *sc, unsigned long *out, u16 seq_start)
++{
++	int index = ATH_BA_INDEX(sc->seq_start, seq_start), start, offset, i, j;
++ 	int cindex = (sc->baw_head + index) & (ATH_TID_MAX_BUFS - 1);
++
++ 	unsigned long *buf = sc->rx_buf;
++ 	memset(out, 0, sizeof(unsigned char) * 16);
++ 	start = cindex / 32;
++ 	offset = cindex % 32;
++ 	out[0] = buf[start] >> offset;
++ 	for (i = start + 1 ; i < 4 ; i++){
++		out[j] |= (buf[i] << (32 - offset)) & 0xFF;
++		out[++j] = buf[i] >> offset;
++	}
++	for (i = 0 ; i < start ; i++){
++		out[j] |= (buf[i] << (32 - offset)) & 0xFF;
++		out[++j] = buf[i] >> offset;
++	}
++	out[j] |= (buf[start] << (32 - offset)) & 0xFF;
++}
++
++static void ath_rx_addto_baw(struct ath_softc *sc, u16 seqno)
++{
++	int index, cindex;
++
++	index  = ATH_BA_INDEX(sc->seq_start, seqno);
++	cindex = (sc->baw_head + index) & (ATH_TID_MAX_BUFS - 1);
++	if (index < ATH_TID_MAX_BUFS){
++		__set_bit(cindex, sc->rx_buf);
++	} else {
++		while (ATH_BA_INDEX(sc->seq_start, seqno) > 127){
++			//index = (sc->baw_head + 1) & (ATH_TID_MAX_BUFS - 1);
++			__clear_bit(sc->baw_head, sc->rx_buf);
++			INCR(sc->seq_start, IEEE80211_SEQ_MAX);
++			INCR(sc->baw_head, ATH_TID_MAX_BUFS);
++		}
++		__set_bit(cindex, sc->rx_buf);
++	}
++}
++
+ int ath_rx_tasklet(struct ath_softc *sc, int flush, bool hp)
+ {
+ 	struct ath_buf *bf;
+@@ -1925,6 +1965,10 @@
+ 			struct sk_buff *ack = skb_copy(skb,GFP_KERNEL);
+ 			struct net_device *dev = dev_get_by_name(&init_net,"wlan0");
+ 
++			u16 seq_start = sc->debug.rtv.seqno;
++			unsigned long ackchars[4];
++			generate_ack_bytes(sc, ackchars, seq_start);
++
+ 			skb_pull(ack,20);
+ 			memcpy(&ack->data[0],&skb->data[10],6);       /*MAC:src to dst*/
+ 			memcpy(&ack->data[6],&skb->data[4],6);        /*MAC:dst to src*/
+@@ -1933,6 +1977,7 @@
+ 			memcpy(&ack->data[42],&skb->data[62],16);     /*Magic,sequ,timestamp*/
+ 
+ 			ack->data[78] = (u8)'A';
++			memcpy(&ack->data[58], ackchars, 16);
+ 			*(__le16 *) & ack->data[12] = htons(ETH_P_IP);
+ 			ack->pkt_type = PACKET_HOST;
+ 
+@@ -2080,6 +2125,8 @@
+ 	u16 seqno = ((le16_to_cpu(hdr->seq_ctrl)) & IEEE80211_SCTL_SEQ) >> 4;
+ 	struct list_head *tp_list = &sc->debug.recv_tp_list;
+ 
++	ath_rx_addto_baw(sc, seqno);
++
+ 	if(pre_seqno == -1)
+ 		pre_seqno = seqno - 1;
+ 

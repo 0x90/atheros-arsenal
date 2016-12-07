@@ -1,0 +1,27 @@
+#!/bin/sh
+. /lib/freifunk/lib_node.sh
+mkdir -p /usr/lib/ath9k-watchdog
+node_id="$(get_node_id)"
+
+logread -f | while read line
+do
+	case "$line" in
+	*"Could not stop RX"*) 
+			# Perform post-mortem dump
+			tstmp=$(/bin/date +%s)
+			echo -n "nodeid=${node_id}&tstmp=${tstmp}&dmesg=" > /tmp/$tstmp
+			/bin/dmesg > /tmp/dmesg.$tstmp
+			/usr/bin/urlencode /tmp/dmesg.$tstmp >> /tmp/$tstmp
+			# Compress to preserve space
+			/bin/gzip /tmp/$tstmp
+			
+			# Move into upload directory
+			mv  /tmp/$tstmp.gz /usr/lib/ath9k-watchdog
+
+			#Bye 
+			/sbin/reboot
+		;;
+	*)
+		;;
+	esac
+done

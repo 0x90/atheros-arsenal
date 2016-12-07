@@ -1,0 +1,3 @@
+debian/ath9k_htc.conf etc/modprobe.d/
+target_firmware/htc_*.fw lib/firmware/ath9k_htc/
+debian/firmware-ath9k-htc.metainfo.xml usr/share/metainfo

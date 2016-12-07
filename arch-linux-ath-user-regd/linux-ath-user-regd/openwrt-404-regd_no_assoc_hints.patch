@@ -1,0 +1,20 @@
+diff -aur linux-4.8.patch1/net/wireless/reg.c linux-4.8.patch2/net/wireless/reg.c
+--- linux-4.8.patch1/net/wireless/reg.c	2016-11-05 13:22:01.610791824 -0400
++++ linux-4.8.patch2/net/wireless/reg.c	2016-11-05 13:47:18.427428611 -0400
+@@ -2411,6 +2411,8 @@
+ 	enum environment_cap env = ENVIRON_ANY;
+ 	struct regulatory_request *request = NULL, *lr;
+ 
++	return;
++
+ 	/* IE len must be evenly divisible by 2 */
+ 	if (country_ie_len & 0x01)
+ 		return;
+@@ -2617,6 +2619,7 @@
+ 
+ void regulatory_hint_disconnect(void)
+ {
++	return;
+ 	pr_debug("All devices are disconnected, going to restore regulatory settings\n");
+ 	restore_regulatory_settings(false);
+ }

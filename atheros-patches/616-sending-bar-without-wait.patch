@@ -1,0 +1,202 @@
+--- a/drivers/net/wireless/ath/ath9k/ath9k.h	2013-03-06 22:34:42.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/ath9k.h	2013-03-06 21:58:03.000000000 +0800
+@@ -640,6 +640,11 @@
+ 	short nbcnvifs;
+ 	short nvifs;
+ 	unsigned long ps_usecount;
++	struct sk_buff_head bf_sending;
++	bool bar_sending;
++	unsigned long rx_buf[BITS_TO_LONGS(ATH_TID_MAX_BUFS)];
++	u16 seq_start;
++	int baw_head;
+ 
+ 	struct ath_config config;
+ 	struct ath_rx rx;
+--- a/drivers/net/wireless/ath/ath9k/init.c	2013-03-06 22:34:42.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/init.c	2013-03-06 21:58:03.000000000 +0800
+@@ -595,6 +595,11 @@
+ 	common->btcoex_enabled = ath9k_btcoex_enable == 1;
+ 	common->disable_ani = false;
+ 	spin_lock_init(&common->cc_lock);
++	__skb_queue_head_init(&sc->bf_sending);
++	sc->bar_sending = false;
++	memset(sc->rx_buf, 0, sizeof(sc->rx_buf));
++	sc->seq_start = 0;
++	sc->baw_head = 0;
+ 
+ 	spin_lock_init(&sc->sc_serial_rw);
+ 	spin_lock_init(&sc->sc_pm_lock);
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2013-03-06 22:34:42.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2013-03-06 22:34:39.000000000 +0800
+@@ -1793,6 +1793,46 @@
+ 	antcomb->alt_recv_cnt = 0;
+ }
+ 
++static void generate_ack_bytes(struct ath_softc *sc, unsigned long *out, u16 seq_start)
++{
++	int index = ATH_BA_INDEX(sc->seq_start, seq_start), start, offset, i, j;
++ 	int cindex = (sc->baw_head + index) & (ATH_TID_MAX_BUFS - 1);
++
++ 	unsigned long *buf = sc->rx_buf;
++ 	memset(out, 0, sizeof(unsigned char) * 16);
++ 	start = cindex / 32;
++ 	offset = cindex % 32;
++ 	out[0] = buf[start] >> offset;
++ 	for (i = start + 1 ; i < 4 ; i++){
++		out[j] |= (buf[i] << (32 - offset)) & 0xFF;
++		out[++j] = buf[i] >> offset;
++	}
++	for (i = 0 ; i < start ; i++){
++		out[j] |= (buf[i] << (32 - offset)) & 0xFF;
++		out[++j] = buf[i] >> offset;
++	}
++	out[j] |= (buf[start] << (32 - offset)) & 0xFF;
++}
++
++static void ath_rx_addto_baw(struct ath_softc *sc, u16 seqno)
++{
++	int index, cindex;
++
++	index  = ATH_BA_INDEX(sc->seq_start, seqno);
++	cindex = (sc->baw_head + index) & (ATH_TID_MAX_BUFS - 1);
++	if (index < ATH_TID_MAX_BUFS){
++		__set_bit(cindex, sc->rx_buf);
++	} else {
++		while (ATH_BA_INDEX(sc->seq_start, seqno) > 127){
++			//index = (sc->baw_head + 1) & (ATH_TID_MAX_BUFS - 1);
++			__clear_bit(sc->baw_head, sc->rx_buf);
++			INCR(sc->seq_start, IEEE80211_SEQ_MAX);
++			INCR(sc->baw_head, ATH_TID_MAX_BUFS);
++		}
++		__set_bit(cindex, sc->rx_buf);
++	}
++}
++
+ int ath_rx_tasklet(struct ath_softc *sc, int flush, bool hp)
+ {
+ 	struct ath_buf *bf;
+@@ -1919,6 +1959,17 @@
+ 			ath9k_rx_skb_postprocess(common, hdr_skb, &rs,
+ 						 rxs, decrypt_error);
+ 
++		if (skb->len < 150 && skb->data[98] == 'M'){
++                        u16 seq_start = skb->data[99] * 100 + skb->data[100];
++                        unsigned long ack[4];
++                        generate_ack_bytes(sc, ack, seq_start);
++                        int i;
++                        printk("%d/%d: ", seq_start, sc->baw_head);
++                        for (i = 0 ; i < 4 ; i++)
++                                printk("%x ", ack[i]);
++                        printk("\n");
++                }
++
+ 		/* We will now give hardware our shiny new allocated skb */
+ 		bf->bf_mpdu = requeue_skb;
+ 		bf->bf_buf_addr = dma_map_single(sc->dev, requeue_skb->data,
+--- a/drivers/net/wireless/ath/ath9k/xmit.c	2013-03-06 22:34:42.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/xmit.c	2013-03-06 22:26:44.000000000 +0800
+@@ -806,6 +806,20 @@
+ 	return ndelim;
+ }
+ 
++static void change_ampdu_to_bar(struct sk_buff *skb, u16 seq_start, int size)
++{
++	skb_trim(skb, 118);
++	/* byte 60 and 61 fix the length in udp header */
++	skb->data[60] = 0x0;
++	skb->data[61] = 0x3E;
++	skb->data[100] = 'M';
++	/* byte 101 - 103 record seq_start and size */
++	skb->data[101] = seq_start / 100;
++	skb->data[102] = seq_start % 100;
++	skb->data[103] = size;
++}
++
++
+ static enum ATH_AGGR_STATUS ath_tx_form_aggr(struct ath_softc *sc,
+ 					     struct ath_txq *txq,
+ 					     struct ath_atx_tid *tid,
+@@ -820,7 +834,9 @@
+ 	enum ATH_AGGR_STATUS status = ATH_AGGR_DONE;
+ 	struct ieee80211_tx_info *tx_info;
+ 	struct ath_frame_info *fi;
+-	struct sk_buff *skb;
++	struct sk_buff *skb, *fskb = skb_peek(&sc->bf_sending);
++	struct ieee80211_hdr *hdr = (fskb != NULL) ? (struct ieee80211_hdr*)fskb->data : NULL;
++	u16 seq_start = (hdr != NULL) ? (le16_to_cpu(hdr->seq_ctrl) & IEEE80211_SCTL_SEQ) >> 4 : 0;
+ 	u16 seqno;
+ 
+ 	do {
+@@ -877,7 +893,8 @@
+ 			break;
+ 
+ 		/* do not exceed subframe limit */
+-		if (nframes >= min((int)h_baw, ATH_AMPDU_SUBFRAME_DEFAULT)) {
++		if (nframes >= min((int)h_baw, ATH_AMPDU_SUBFRAME_DEFAULT) || 
++				(nframes > 0 && fskb && ATH_BA_INDEX(seq_start, seqno) >= 128)) {
+ 			status = ATH_AGGR_LIMITED;
+ 			break;
+ 		}
+@@ -909,6 +926,12 @@
+ 
+ 		bf_prev = bf;
+ 
++		if (fskb && ATH_BA_INDEX(seq_start, seqno) >= 128){
++			change_ampdu_to_bar(skb, seq_start, 127);
++			sc->bar_sending = true;
++			get_frame_info(skb)->framelen = 120;
++			break;
++		}
+ 	} while (!skb_queue_empty(&tid->buf_q));
+ 
+ 	*aggr_len = al;
+@@ -1092,10 +1115,24 @@
+ 			     struct ath_txq *txq, int len)
+ {
+ 	struct ath_hw *ah = sc->sc_ah;
+-	struct ieee80211_tx_info *tx_info = IEEE80211_SKB_CB(bf->bf_mpdu);
++	struct sk_buff *first_skb = bf->bf_mpdu, *fskb = skb_peek(&sc->bf_sending);
++	struct ieee80211_tx_info *tx_info = IEEE80211_SKB_CB(first_skb);
++	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)first_skb->data;
++	struct ieee80211_hdr *fhdr = ((fskb) ? (struct ieee80211_hdr*)fskb->data : NULL);
+ 	struct ath_buf *bf_first = bf;
+ 	struct ath_tx_info info;
+ 	bool aggr = !!(bf->bf_state.bf_type & BUF_AGGR);
++	u16 seqno, seq_start = ((fhdr) ? (le16_to_cpu(fhdr->seq_ctrl) & IEEE80211_SCTL_SEQ) >> 4 : 0);
++
++	if (!aggr && first_skb->data[100] != 'M' && ieee80211_is_data_qos(hdr->frame_control)){
++		/* I don't know whether the seqno in bf is always right */
++		seqno =  (le16_to_cpu(hdr->seq_ctrl) & IEEE80211_SCTL_SEQ) >> 4;
++		if (skb_queue_len(&sc->bf_sending) > 0 && ATH_BA_INDEX(seq_start, seqno) >= 128){
++			change_ampdu_to_bar(first_skb, seq_start, 127);
++                        sc->bar_sending = true;
++			get_frame_info(first_skb)->framelen = len = 120;
++		}
++	}
+ 
+ 	memset(&info, 0, sizeof(info));
+ 	info.is_first = true;
+@@ -1122,6 +1159,11 @@
+ 	while (bf) {
+ 		frame_num++;
+ 		struct sk_buff *skb = bf->bf_mpdu;
++		if (!sc->bar_sending && (bf->bf_state.bf_type & BUF_AMPDU)){
++			/* I can't find out how the driver manage the buffers in tid and txq, 
++			 * the struct may be released before we expected, so i have no idea but do a copy */
++			__skb_queue_tail(&sc->bf_sending, skb_copy(skb, GFP_KERNEL));
++		}
+ 		struct ath_frame_info *fi = get_frame_info(skb);
+ 
+ 		info.type = get_hw_packet_type(skb);
+@@ -1152,6 +1194,11 @@
+ 		bf = bf->bf_next;
+ 	}
+ 
++	if (sc->bar_sending){
++                sc->bar_sending = false;
++                skb_queue_purge(&sc->bf_sending);
++        }
++
+ 	record_aggr(sc, len, frame_num, aggr);
+ }
+ 

@@ -1,0 +1,68 @@
+--- ./drivers/net/wireless/ath/ath9k/htc_drv_debug.c-orig	2014-11-04 19:03:42.611596343 +0100
++++ ./drivers/net/wireless/ath/ath9k/htc_drv_debug.c	2014-11-05 13:02:39.731887606 +0100
+@@ -983,6 +983,55 @@
+ }
+ 
+ 
++static ssize_t read_file_bssid_extra(struct file *file, char __user *user_buf,
++		size_t count, loff_t *ppos)
++{
++	struct ath9k_htc_priv *priv = file->private_data;
++	struct ath_common *common = ath9k_hw_common(priv->ah);
++
++	char buf[32];
++	unsigned int len;
++
++	len = sprintf(buf, "%pM\n", common->bssidmask);
++	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
++}
++
++
++static ssize_t write_file_bssid_extra(struct file *file, const char __user *user_buf,
++		size_t count, loff_t *ppos)
++{
++	struct ath9k_htc_priv *priv = file->private_data;
++	struct ath_common *common = ath9k_hw_common(priv->ah);
++
++	char buf[32];
++	u8 macaddr[ETH_ALEN];
++	ssize_t len;
++
++	len = min(count, sizeof(buf) - 1);
++	if (copy_from_user(buf, user_buf, len))
++		return -EFAULT;
++
++	buf[len] = '\0';
++
++	sscanf(buf, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &macaddr[0], &macaddr[1],
++			&macaddr[2], &macaddr[3], &macaddr[4], &macaddr[5]);
++
++	memcpy(common->bssidmask, macaddr, ETH_ALEN);
++	ath_hw_setbssidmask(common);
++
++	return count;
++}
++
++static const struct file_operations fops_bssid_extra = {
++		.read = read_file_bssid_extra,
++		.write = write_file_bssid_extra,
++		.open = simple_open, //	.open = ath9k_debugfs_open,
++		.owner = THIS_MODULE,
++		.llseek = default_llseek,
++};
++
++
++
+ int ath9k_htc_init_debug(struct ath_hw *ah)
+ {
+ 	struct ath_common *common = ath9k_hw_common(ah);
+@@ -1013,6 +1062,9 @@
+ 			    priv, &fops_base_eeprom);
+ 	debugfs_create_file("modal_eeprom", S_IRUSR, priv->debug.debugfs_phy,
+ 			    priv, &fops_modal_eeprom);
++	debugfs_create_file("bssid_extra", S_IRUSR | S_IWUSR, priv->debug.debugfs_phy,
++				priv, &fops_bssid_extra);
++
+ 
+ 	return 0;
+ }

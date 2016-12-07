@@ -1,0 +1,277 @@
+#!/usr/bin/python
+#
+# Copyright (c) 2015 Qualcomm Atheros, Inc.
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+
+import struct
+import ctypes
+import sys
+import os.path
+from optparse import OptionParser
+import json
+
+MAX_BUF_LEN = 200000
+ATH10K_BOARD_SIGNATURE = "QCA-ATH10K-BOARD"
+
+DEFAULT_BD_API = 2
+DEFAULT_BOARD_FILE = 'board-%d.bin' % DEFAULT_BD_API
+DEFAULT_JSON_FILE = 'board-%d.json' % DEFAULT_BD_API
+TYPE_LENGTH_SIZE = 8
+
+ATH10K_BD_IE_BOARD = 0
+
+ATH10K_BD_IE_BOARD_NAME = 0
+ATH10K_BD_IE_BOARD_DATA = 1
+
+
+def padding_needed(len):
+    if len % 4 != 0:
+        return 4 - len % 4
+    return 0
+
+
+def add_ie(buf, offset, id, value):
+    length = len(value)
+    padding_len = padding_needed(length)
+    length = length + padding_len
+
+    padding = ctypes.create_string_buffer(padding_len)
+
+    for i in range(padding_len):
+        struct.pack_into('<B', padding, i, 0x6d)
+
+    fmt = '<2i%ds%ds' % (len(value), padding_len)
+    struct.pack_into(fmt, buf, offset, id, len(value), value, padding.raw)
+    offset = offset + TYPE_LENGTH_SIZE + len(value) + padding_len
+
+    return offset
+
+
+class BoardContainer:
+
+    def create_board(self, filename, names):
+        if os.path.getsize(filename) > MAX_BUF_LEN:
+            print "file %s is too large, maximum size is %d" % (filename,
+                                                                MAX_BUF_LEN)
+            return -1
+
+        buf = ctypes.create_string_buffer(MAX_BUF_LEN)
+        offset = 0
+
+        # add name IEs
+        for name in names:
+            offset = add_ie(buf, offset, ATH10K_BD_IE_BOARD_NAME, str(name))
+
+        # add data IEs
+        f = open(filename, 'rb')
+        data = f.read()
+        offset = add_ie(buf, offset, ATH10K_BD_IE_BOARD_DATA, data)
+        f.close()
+
+        # return the full IE including padding
+        return buf[:offset]
+
+    def pack_boards(self, mapping):
+        for board in mapping:
+            filename = board['data']
+            payload = self.create_board(filename, board['names'])
+
+            self.buf_len = add_ie(self.buf, self.buf_len,
+                                  ATH10K_BD_IE_BOARD, payload)
+
+    def create_single_bin(self, name):
+        fd = open(name, 'wb')
+        fd.write(self.buf.raw[0:self.buf_len])
+        fd.close()
+        print "board binary file '%s' is created" % name
+
+    def add_signature(self, signature):
+        signature = signature + '\0'
+        length = len(signature)
+        pad_len = padding_needed(length)
+        length = length + pad_len
+
+        padding = ctypes.create_string_buffer(pad_len)
+
+        for i in range(pad_len):
+            struct.pack_into('<B', padding, i, 0x6d)
+
+        fmt = '<%ds%ds' % (len(signature), pad_len)
+        struct.pack_into(fmt, self.buf, self.buf_len, signature, padding.raw)
+        self.buf_len = self.buf_len + length
+        self.sig_len = length  # signature length includes null byte+padding
+
+    def open(self, name):
+        f = open(name, 'rb')
+        self.buf = f.read()
+        f.close()
+        self.buf_len = len(self.buf)
+
+        offset = 0
+        self.boards = []
+
+        fmt = '<%dsb' % (len(ATH10K_BOARD_SIGNATURE))
+        (signature, null) = struct.unpack_from(fmt, self.buf, offset)
+
+        if signature != ATH10K_BOARD_SIGNATURE or null != 0:
+            print "invalid signature found in %s" % name
+            return 1
+
+        offset = offset + self.sig_len
+        i = 0
+
+        # FIXME: this supports only ATH10K_BD_IE_BOARD for now, needs
+        # to refactored to support more IEs
+
+        # looping main IEs
+        while offset < self.buf_len:
+            (ie_id, ie_len) = struct.unpack_from('<2i', self.buf, offset)
+            offset = offset + TYPE_LENGTH_SIZE
+
+            if offset + ie_len > self.buf_len:
+                print 'Error: Buffer too short (%d + %d > %d)' % (offset,
+                                                                  ie_len,
+                                                                  self.buf_len)
+                return 1
+
+            # skip if an unknown IE
+            if ie_id != ATH10K_BD_IE_BOARD:
+                offset = offset + ie_len + padding_needed(ie_len)
+                continue
+
+            board = {}
+            board['names'] = []
+
+            # looping board IEs
+            while ie_len > 0:
+                (board_ie_id, board_ie_len) = struct.unpack_from('<2i',
+                                                                 self.buf,
+                                                                 offset)
+                offset = offset + TYPE_LENGTH_SIZE
+
+                if board_ie_len > ie_len:
+                    print 'Error: board_ie_len too big (%d > %d)' % (board_ie_len, ie_len)
+                    return 1
+
+                if board_ie_id == ATH10K_BD_IE_BOARD_NAME:
+                    fmt = '<%ds' % board_ie_len
+                    (name, ) = struct.unpack_from(fmt, self.buf, offset)
+                    board['names'].append(name)
+                elif board_ie_id == ATH10K_BD_IE_BOARD_DATA:
+                    fmt = '<%ds' % board_ie_len
+                    (board_data, ) = struct.unpack_from(fmt, self.buf, offset)
+                    board['data'] = board_data
+
+                offset = offset + board_ie_len + padding_needed(board_ie_len)
+                ie_len = ie_len - TYPE_LENGTH_SIZE - board_ie_len - padding_needed(board_ie_len)
+
+            self.boards.append(board)
+            i = i + 1
+
+    def __init__(self):
+        self.buf = ctypes.create_string_buffer(MAX_BUF_LEN)
+        self.buf_len = 0
+
+        self.add_signature(ATH10K_BOARD_SIGNATURE)
+
+
+def extract(options, args):
+    if len(args) != 1:
+        print "Error: extract option requires input filename\n"
+        usage()
+        return 1
+
+    cont = BoardContainer()
+    cont.open(args[0])
+
+    mapping = []
+
+    for board in cont.boards:
+        filename = board['names'][0] + '.bin'
+
+        b = {}
+        b['names'] = board['names']
+        b['data'] = filename
+        mapping.append(b)
+
+        f = open(filename, 'w')
+        f.write(board['data'])
+        f.close()
+
+        print "%s created size: %d" % (filename, len(board['data']))
+
+    filename = DEFAULT_JSON_FILE
+    f = open(filename, 'w')
+    f.write(json.dumps(mapping))
+    f.close()
+
+    print "%s created" % (filename)
+
+
+def create(options):
+
+    mapping_file = options.create
+
+    if options.output:
+        output = options.output
+    else:
+        output = DEFAULT_BOARD_FILE
+
+    cont = BoardContainer()
+
+    if not os.path.exists(mapping_file):
+        print 'mapping file %s not found' % (mapping_file)
+        return
+
+    f = open(mapping_file, 'r')
+    mapping = json.loads(f.read())
+    cont.pack_boards(mapping)
+    f.close()
+
+    cont.create_single_bin(output)
+
+
+def usage():
+    print "Usage:"
+    print "ath10k-board-encoder <-c or --create> <optional -o or --output> <FILE>"
+    print "ath10k-board-encoder <-e or --extract> <FILE>"
+
+
+def main():
+    parser = OptionParser()
+
+    parser.add_option("-c", "--create", dest="create",
+                      help='Create single board binary for ath10k from '
+                           'mapping file')
+    parser.add_option("-e", "--extract", action="store_true", dest="extract",
+                      help='extract board file from encoded single binary')
+    parser.add_option("-o", "--output", action="store", type="string",
+                      dest="output", help='Name of output file')
+
+    (options, args) = parser.parse_args()
+
+    if options.create:
+        try:
+            return create(options)
+        except Exception as e:
+            print 'Create failed: %s' % e
+            sys.exit(2)
+    elif options.extract:
+        return extract(options, args)
+    else:
+        return usage()
+
+if __name__ == "__main__":
+    main()

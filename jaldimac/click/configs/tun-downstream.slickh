@@ -1,0 +1,14 @@
+// JaldiMAC Click configuration for downstream traffic from a tun device
+
+// Defines $DOWNSTREAM_SOURCE and $DOWNSTREAM_SINK for tun devices.
+// $HOST_IP_NETMASK must be defined before this file is included.
+
+// ======================================================
+// Component Graph
+// ======================================================
+
+AddressInfo(tun0 $HOST_IP_NETMASK)
+tunDevice :: KernelTun(tun0)
+
+#define $DOWNSTREAM_SOURCE tunDevice
+#define $DOWNSTREAM_SINK tunDevice

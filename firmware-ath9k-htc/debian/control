@@ -1,0 +1,37 @@
+Source: open-ath9k-htc-firmware
+Maintainer: Oleksij Rempel <linux@rempel-privat.de>
+Uploaders:
+ Paul Fertser <fercerpav@gmail.com>,
+Section: misc
+Priority: extra
+Build-Depends:
+ binutils-source,
+ bison,
+ cmake,
+ debhelper (>= 10),
+ flex,
+ gcc-6-source,
+ libmpc-dev,
+Standards-Version: 3.9.8
+Homepage: https://github.com/qca/open-ath9k-htc-firmware
+Vcs-Browser: https://github.com/olerem/firmware-ath9k-htc
+Vcs-Git: https://github.com/olerem/firmware-ath9k-htc
+
+Package: firmware-ath9k-htc
+Architecture: all
+Multi-Arch: foreign
+Depends:
+ ${misc:Depends},
+Description: QCA ath9k-htc Firmware
+ Opensource version of QCA ath9k-htc Firmware.
+ Supported chips are: ar9271 and ar7010
+
+Package: firmware-ath9k-htc-dbgsym
+Architecture: all
+Multi-Arch: foreign
+Section: debug
+Depends:
+ ${misc:Depends},
+Description: QCA ath9k-htc Firmware ELF file
+ Full unstripped ELF file for debugging the opensource version of
+ QCA ath9k-htc Firmware. Supported chips are: ar9271 and ar7010.

@@ -1,0 +1,69 @@
+diff -aur linux/config linux-ath-user-regd/config
+--- linux/config	2016-11-05 14:41:31.990697849 -0400
++++ linux-ath-user-regd/config	2016-11-05 14:15:33.737395215 -0400
+@@ -8205,3 +8205,4 @@
+ CONFIG_SG_POOL=y
+ CONFIG_ARCH_HAS_SG_CHAIN=y
+ CONFIG_ARCH_HAS_MMIO_FLUSH=y
++CONFIG_ATH_USER_REGD=y
+diff -aur linux/config.x86_64 linux-ath-user-regd/config.x86_64
+--- linux/config.x86_64	2016-11-05 14:41:31.990697849 -0400
++++ linux-ath-user-regd/config.x86_64	2016-11-05 14:15:44.794061664 -0400
+@@ -7955,3 +7955,4 @@
+ CONFIG_ARCH_HAS_SG_CHAIN=y
+ CONFIG_ARCH_HAS_PMEM_API=y
+ CONFIG_ARCH_HAS_MMIO_FLUSH=y
++CONFIG_ATH_USER_REGD=y
+Only in linux-ath-user-regd: openwrt-402-ath_regd_optional.patch
+Only in linux-ath-user-regd: openwrt-404-regd_no_assoc_hints.patch
+diff -aur linux/PKGBUILD linux-ath-user-regd/PKGBUILD
+--- linux/PKGBUILD	2016-11-05 14:41:31.990697849 -0400
++++ linux-ath-user-regd/PKGBUILD	2016-11-05 14:43:50.310695127 -0400
+@@ -2,8 +2,8 @@
+ # Maintainer: Tobias Powalowski <tpowa@archlinux.org>
+ # Maintainer: Thomas Baechler <thomas@archlinux.org>
+ 
+-pkgbase=linux               # Build stock -ARCH kernel
+-#pkgbase=linux-custom       # Build kernel with a different name
++#pkgbase=linux               # Build stock -ARCH kernel
++pkgbase=linux-ath-user-regd       # Build kernel with a different name
+ _srcname=linux-4.8
+ pkgver=4.8.6
+ pkgrel=1
+@@ -21,16 +21,20 @@
+         # standard config files for mkinitcpio ramdisk
+         'linux.preset'
+         'change-default-console-loglevel.patch'
++        'openwrt-402-ath_regd_optional.patch'
++        'openwrt-404-regd_no_assoc_hints.patch'
+         )
+ 
+ sha256sums=('3e9150065f193d3d94bcf46a1fe9f033c7ef7122ab71d75a7fb5a2f0c9a7e11a'
+             'SKIP'
+             '3ac0ea443ac8a7aa40f8d5ce8ec33b84abbad4dbfc567c7699df728c2c21df37'
+             'SKIP'
+-            '2ac8818414beb7dbacbd3ad450c516e6ada804827132a7132f63b8189e5f5151'
+-            '93a4ad4f6c7bb9296fddec436ed7477a5a5c11cf4d6e68482fa6610442cbcb1f'
++            'b492bb0a2b866e0654919f297f5dcfa0de2e851a94db1ffbae762953490c6d52'
++            '8f20d53b639f60a7d40420b7c15051b74ce87a69997a6ec8e19cad534d805f94'
+             'f0d90e756f14533ee67afda280500511a62465b4f76adcc5effa95a40045179c'
+-            '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99')
++            '1256b241cd477b265a3c2d64bdc19ffe3c9bbcee82ea3994c590c2c76e767d99'
++            'c4ed87c3b71ba4aa96c157bbd7181f537279bfd4920b86ec4e7805d3fd2f8769'
++            '098426c5725f78461452a9e81e3e2e35b869d13936e6eee555c86e6094f58691')
+ validpgpkeys=(
+               'ABAF11C65A2970B130ABE3C479BE3E4300411886' # Linus Torvalds
+               '647F28654894E3BD457199BE38DBBDC86092693E' # Greg Kroah-Hartman
+@@ -52,6 +56,12 @@
+   # (relevant patch sent upstream: https://lkml.org/lkml/2011/7/26/227)
+   patch -p1 -i "${srcdir}/change-default-console-loglevel.patch"
+ 
++  # Atheros: ignore regulatory domain in EEPROM
++  patch -p1 -i "${srcdir}/openwrt-402-ath_regd_optional.patch"
++
++  # Disable regdomain association hints
++  patch -p1 -i "${srcdir}/openwrt-404-regd_no_assoc_hints.patch"
++
+   if [ "${CARCH}" = "x86_64" ]; then
+     cat "${srcdir}/config.x86_64" > ./.config
+   else

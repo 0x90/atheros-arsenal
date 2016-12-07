@@ -1,0 +1,12 @@
+#!/usr/bin/lua
+require("luci.http.protocol")
+filename = arg[1]
+if not filename then
+        print("Error - No file given - usage: urlencode <file>")
+        os.exit(1)
+end
+local f = io.open(filename, "rb")
+local content = f:read("*all")
+f:close()
+local str = luci.http.protocol.urlencode(content)
+print(str)

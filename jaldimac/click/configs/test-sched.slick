@@ -1,0 +1,30 @@
+#include "shared.slickh"
+
+sched :: JaldiScheduler
+
+elementclass BulkGen
+{
+	InfiniteSource(DATA \<00>, LIMIT 1, BURST 1, STOP false)
+		-> IPEncap(6, 192.168.0.1, 192.168.0.2)
+		-> CheckIPHeader
+		-> JaldiEncap(BULK_FRAME, 1, 2)
+		-> output
+}
+
+elementclass RCMGen
+{
+	$limit |
+	InfiniteSource(DATA \<00>, LIMIT $limit, BURST 1, STOP false)
+		-> JaldiEncap(ROUND_COMPLETE_MESSAGE, 0, 1)
+		-> JaldiPrint
+		-> output
+}
+
+RCMGen(0) -> [0]sched
+RCMGen(1) -> [1]sched
+BulkGen -> Print(Bulk1) -> JaldiQueue(2000) -> [2]sched
+BulkGen -> Print(Bulk2) -> JaldiQueue(2000) -> [3]sched
+BulkGen -> Print(Bulk3) -> JaldiQueue(2000) -> [4]sched
+BulkGen -> Print(Bulk4) -> JaldiQueue(2000) -> [5]sched
+
+sched -> JaldiPrint -> Discard

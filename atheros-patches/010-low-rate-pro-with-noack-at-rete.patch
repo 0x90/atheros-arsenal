@@ -1,0 +1,12 @@
+--- a/net/mac80211/rate.c	2011-12-02 18:33:05.000000000 +0800
++++ b/net/mac80211/rate.c	2012-05-22 16:30:50.000000000 +0800
+@@ -209,8 +209,7 @@
+ 
+ 	fc = hdr->frame_control;
+ 
+-	return (info->flags & (IEEE80211_TX_CTL_NO_ACK |
+-			       IEEE80211_TX_CTL_USE_MINRATE)) ||
++	return (info->flags & IEEE80211_TX_CTL_USE_MINRATE) ||
+ 		!ieee80211_is_data(fc);
+ }
+ 

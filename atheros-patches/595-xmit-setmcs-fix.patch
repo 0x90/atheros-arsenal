@@ -1,0 +1,28 @@
+--- a/drivers/net/wireless/ath/ath9k/xmit.c	2012-11-22 20:32:16.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/xmit.c	2012-11-22 20:32:11.000000000 +0800
+@@ -493,6 +493,7 @@
+ 	ath_tx_count_frames(sc, bf, ts, txok, &nframes, &nbad);
+ 	tid->buf_pending -= nframes;
+ 
++	nbad = 0;
+ 	while (bf) {
+ 		u16 seqno = bf->bf_state.seqno;
+ 
+@@ -503,7 +504,7 @@
+ 		tx_info = IEEE80211_SKB_CB(skb);
+ 		fi = get_frame_info(skb);
+ 
+-		if (ATH_BA_ISSET(ba, ATH_BA_INDEX(seq_st, seqno))) {
++		if (1) {
+ 			/* transmit completion, subframe is
+ 			 * acked by block ack */
+ 			acked_cnt++;
+@@ -701,7 +702,7 @@
+ 	 * not a probe rate, if rate selected is a probe rate then
+ 	 * avoid aggregation of this packet.
+ 	 */
+-	if (tx_info->flags & IEEE80211_TX_CTL_RATE_CTRL_PROBE || legacy)
++	if (legacy)
+ 		return 0;
+ 
+ 	if ((sc->sc_ah->caps.hw_caps & ATH9K_HW_CAP_MCI) && mci->aggr_limit)

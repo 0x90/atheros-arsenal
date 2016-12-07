@@ -1,0 +1,14 @@
+--- a/drivers/net/wireless/ath/ath9k/xmit.c	2013-01-23 18:42:26.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/xmit.c	2013-01-23 18:41:40.000000000 +0800
+@@ -691,7 +691,10 @@
+ 		if (rates[i].flags & IEEE80211_TX_RC_SHORT_GI)
+ 			modeidx++;
+ 
+-		frmlen = ath_max_4ms_framelen[modeidx][rates[i].idx];
++		if (sc->debug.setting->auto_mcs)
++			frmlen = ath_max_4ms_framelen[modeidx][rates[i].idx];
++		else
++			frmlen = ath_max_4ms_framelen[modeidx][sc->debug.setting->mcs_number];
+ 		if(sc->debug.setting->auto_ampdu)
+ 			max_4ms_framelen = min(max_4ms_framelen, frmlen);
+ 		else

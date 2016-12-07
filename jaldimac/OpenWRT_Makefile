@@ -1,0 +1,56 @@
+#
+# Makefile for TIER-specific kernel modules
+#
+
+include $(TOPDIR)/rules.mk
+include $(INCLUDE_DIR)/kernel.mk
+
+PKG_NAME:=jaldi
+
+PKG_VERSION:=2010-07-20
+PKG_RELEASE:=1
+
+#PKG_SOURCE:=jaldi.tar.bz2
+PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/jaldi
+#PKG_CAT:=bzcat
+
+include $(INCLUDE_DIR)/package.mk
+
+WMENU:=Wireless Drivers
+
+define KernelPackage/jaldi
+	TITLE:=JaldiMAC driver for Atheros wireless devices
+	DEPENDS+= @PCI_SUPPORT
+	SUBMENU:=$(WMENU)
+	VERSION:=$(LINUX_VERSION)+$(PKG_VERSION)
+	FILES:= \
+		$(PKG_BUILD_DIR)/jaldi.$(LINUX_KMOD_SUFFIX)
+	AUTOLOAD:=$(call AutoLoad,27,jaldi)
+	MENU:=1
+endef
+
+MAKE_OPTS:= \
+	CROSS_COMPILE="$(KERNEL_CROSS)" \
+	ARCH="$(LINUX_KARCH)" \
+	KLIB_BUILD="$(LINUX_DIR)" \
+	KLIB=$(TARGET_MODULES_DIR)
+	
+	
+define Build/Prepare
+	rm -rf $(PKG_BUILD_DIR)
+	cp -pr /home/shaddi/Code/jaldi-openwrt/jaldi/jaldi/kerneldriver $(KERNEL_BUILD_DIR)/jaldi
+	#rm -rf $(PKG_BUILD_DIR)/.git $(PKG_BUILD_DIR)/OpenWRT_Makefile
+endef
+
+define Build/Compile/kmod
+	rm -rf $(PKG_BUILD_DIR)/modules
+	$(MAKE) -C "$(PKG_BUILD_DIR)" $(MAKE_OPTS)
+endef
+
+define Build/Compile
+	$(call Build/Compile/kmod)
+endef
+
+$(eval $(call KernelPackage,jaldi))
+
+

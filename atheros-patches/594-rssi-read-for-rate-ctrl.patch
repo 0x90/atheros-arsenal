@@ -1,0 +1,81 @@
+--- a/drivers/net/wireless/ath/ath9k/debug.c	2013-04-18 21:06:56.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.c	2013-04-18 21:03:14.000000000 +0800
+@@ -1799,6 +1799,29 @@
+ 	.llseek = default_llseek,
+ };
+ 
++/**
++ * @author zs, read rssi by second
++ */
++static ssize_t read_file_realtime_info(struct file *file, char __user *user_buf, size_t count, loff_t *ppos)
++{
++	struct ath_softc *sc = file->private_data;
++	char buf[64];
++	unsigned int len = 0;
++
++	len = snprintf(buf, sizeof(buf), "%d\t%d\t%d\t%d\n", sc->debug.rtv.seqno, 
++			sc->debug.rtv.rssi, sc->debug.rtv.noise, sc->debug.rtv.rate_idx);	
++	if(len > sizeof(buf))
++		len = sizeof(buf);
++	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
++}
++
++static const struct file_operations fops_realtime_info = {
++	.read = read_file_realtime_info,
++	.open = ath9k_debugfs_open,
++	.owner = THIS_MODULE,
++	.llseek = default_llseek,
++};
++
+ int ath9k_init_debug(struct ath_hw *ah)
+ {
+ 	struct ath_common *common = ath9k_hw_common(ah);
+@@ -1874,6 +1897,8 @@
+ 
+ 	debugfs_create_file("pkt_record", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc,
+ 				&fops_pkt_record);
++	debugfs_create_file("realtime_var", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc,
++				&fops_realtime_info);
+ 
+ 	INIT_LIST_HEAD(&sc->debug.recv_tp_list);
+ 	sc->debug.regidx = 0;
+--- a/drivers/net/wireless/ath/ath9k/debug.h	2013-04-18 21:06:56.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.h	2013-04-18 21:04:35.000000000 +0800
+@@ -238,6 +238,13 @@
+ 	u32 pkt_counter;
+ };
+ 
++struct realtime_var{
++	u16 seqno;
++	int8_t rssi;
++	s8 noise;
++	int rate_idx;
++};
++
+ struct ath9k_debug {
+ 	struct dentry *debugfs_phy;
+ 	u32 regidx;
+@@ -249,6 +256,7 @@
+ 	u8 rsidx;
+ 
+ 	struct list_head recv_tp_list;
++	struct realtime_var rtv;
+ };
+ 
+ int ath9k_init_debug(struct ath_hw *ah);
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2013-04-18 21:06:56.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2013-04-18 21:06:37.000000000 +0800
+@@ -1878,6 +1878,13 @@
+ 		if (retval)
+ 			goto requeue_drop_frag;
+ 
++		if(!rs.rs_moreaggr && rs.rs_rssi != ATH9K_RSSI_BAD && ieee80211_is_data(hdr->frame_control)){
++			sc->debug.rtv.rssi = rs.rs_rssi;
++			sc->debug.rtv.seqno = (le16_to_cpu(hdr->seq_ctrl) >> 4);
++			sc->debug.rtv.noise = ah->noise;
++			sc->debug.rtv.rate_idx = rxs->rate_idx;
++		}
++
+ 		/* Ensure we always have an skb to requeue once we are done
+ 		 * processing the current buffer's skb */
+ 		requeue_skb = ath_rxbuf_alloc(common, common->rx_bufsize, GFP_ATOMIC);

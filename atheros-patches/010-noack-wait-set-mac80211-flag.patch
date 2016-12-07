@@ -1,0 +1,93 @@
+--- a/net/mac80211/debugfs.c	2011-12-02 18:33:04.000000000 +0800
++++ b/net/mac80211/debugfs.c	2012-04-19 10:52:06.000000000 +0800
+@@ -96,6 +96,39 @@
+ 	.open = mac80211_open_file_generic,
+ 	.llseek = noop_llseek,
+ };
++static ssize_t noack_read(struct file *file, char __user *user_buf,
++			  size_t count, loff_t *ppos)
++{
++	struct ieee80211_local *local = file->private_data;
++
++	return mac80211_format_buffer(user_buf, count, ppos, "%d\n",
++				      local->wifi_wme_noack_test);
++}
++
++static ssize_t noack_write(struct file *file,
++			   const char __user *user_buf,
++			   size_t count, loff_t *ppos)
++{
++	struct ieee80211_local *local = file->private_data;
++	char buf[10];
++ size_t len;
++
++	len = min(count, sizeof(buf) - 1);
++	if (copy_from_user(buf, user_buf, len))
++		return -EFAULT;
++	buf[len] = '\0';
++
++	local->wifi_wme_noack_test = !!simple_strtoul(buf, NULL, 0);
++
++	return count;
++}
++
++static const struct file_operations noack_ops = {
++	.read = noack_read,
++	.write = noack_write,
++	.open = mac80211_open_file_generic,
++	.llseek = default_llseek,
++};
+ 
+ static ssize_t uapsd_queues_read(struct file *file, char __user *user_buf,
+ 				 size_t count, loff_t *ppos)
+@@ -364,6 +397,7 @@
+ 	DEBUGFS_ADD(wep_iv);
+ 	DEBUGFS_ADD(queues);
+ 	DEBUGFS_ADD_MODE(reset, 0200);
++	DEBUGFS_ADD(noack);
+ 	DEBUGFS_ADD(uapsd_queues);
+ 	DEBUGFS_ADD(uapsd_max_sp_len);
+ 	DEBUGFS_ADD(channel_type);
+--- a/net/mac80211/ieee80211_i.h	2012-04-16 18:19:11.000000000 +0800
++++ b/net/mac80211/ieee80211_i.h	2012-04-19 10:53:10.000000000 +0800
+@@ -972,6 +972,7 @@
+ 	int total_ps_buffered; /* total number of all buffered unicast and
+ 				* multicast packets for power saving stations
+ 				*/
++	int wifi_wme_noack_test;
+ 	unsigned int wmm_acm; /* bit field of ACM bits (BIT(802.1D tag)) */
+ 
+ 	/*
+--- a/net/mac80211/tx.c	2012-04-16 18:19:11.000000000 +0800
++++ b/net/mac80211/tx.c	2012-04-19 10:55:49.000000000 +0800
+@@ -1186,9 +1186,17 @@
+ 	if (is_multicast_ether_addr(hdr->addr1)) {
+ 		tx->flags &= ~IEEE80211_TX_UNICAST;
+ 		info->flags |= IEEE80211_TX_CTL_NO_ACK;
+-	} else
++	} else{
+ 		tx->flags |= IEEE80211_TX_UNICAST;
+-
++		if (unlikely(local->wifi_wme_noack_test))
++			info->flags |= IEEE80211_TX_CTL_NO_ACK;
++		/*
++		 * Flags are initialized to 0. Hence, no need to
++		 * explicitly unset IEEE80211_TX_CTL_NO_ACK since
++		 * it might already be set for injected frames.
++		 */
++	}
++	
+ 	if (!(info->flags & IEEE80211_TX_CTL_DONTFRAG)) {
+ 		if (!(tx->flags & IEEE80211_TX_UNICAST) ||
+ 		    skb->len + FCS_LEN <= local->hw.wiphy->frag_threshold ||
+--- a/net/mac80211/wme.c	2011-12-02 18:33:04.000000000 +0800
++++ b/net/mac80211/wme.c	2012-04-19 10:59:26.000000000 +0800
+@@ -176,7 +176,7 @@
+ 		ack_policy = *p & IEEE80211_QOS_CTL_EOSP;
+ 
+ 		if (is_multicast_ether_addr(hdr->addr1) ||
+-		    sdata->noack_map & BIT(tid)) {
++		    unlikely(sdata->local->wifi_wme_noack_test) || sdata->noack_map & BIT(tid)) {
+ 			ack_policy |= IEEE80211_QOS_CTL_ACK_POLICY_NOACK;
+ 			info->flags |= IEEE80211_TX_CTL_NO_ACK;
+ 		}

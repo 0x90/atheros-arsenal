@@ -1,0 +1,123 @@
+--- a/drivers/net/wireless/ath/ath9k/init.c
++++ b/drivers/net/wireless/ath/ath9k/init.c
+@@ -40,6 +40,8 @@ static ssize_t reg_log_read(struct file
+ 	size_t len, n, ret;
+ 	size_t sum = 0;
+ 	u8 i;
++	u32 delta_mac, delta_tx, delta_rx, delta_ed;
++	u64 rel;
+ 	loff_t pos;
+ 
+ 	spin_lock_bh(&sc->reg_lock);
+@@ -47,16 +49,82 @@ static ssize_t reg_log_read(struct file
+ 	while (sc->reg_last != sc->reg_current && count > 0) {
+ 		spin_unlock_bh(&sc->reg_lock);
+ 
+-		/* first entry host time, second wifi cards mac time */
+-		len = scnprintf(buf, sizeof(buf), "%.19lld %.8x%.8x",
++		/* 1st kernel time, 2nd  TSF */
++		len = scnprintf(buf, sizeof(buf),
++				"ktime: %.19lld tsf: %.8d%.8d",
+ 				sc->reg_hosttime[sc->reg_last],
+ 				(unsigned int) sc->reg_log[0][sc->reg_last],
+ 				(unsigned int) sc->reg_log[1][sc->reg_last]);
+ 
+-		/* print register values */
+-		for (i = 2; i < MAX_REG_COUNT; i++) {
++		/* calculate mac state stats */
++		/* usual condition is a linear increasing mac counter */
++		if (likely(sc->reg_log[2][sc->reg_last] >
++		    sc->reg_log[2][sc->reg_last - 1])) {
++			delta_mac = sc->reg_log[2][sc->reg_last] -
++					sc->reg_log[2][sc->reg_last - 1];
++			delta_tx = sc->reg_log[3][sc->reg_last] -
++					sc->reg_log[3][sc->reg_last - 1];
++			delta_rx = sc->reg_log[4][sc->reg_last] -
++					sc->reg_log[4][sc->reg_last - 1];
++			delta_ed = sc->reg_log[5][sc->reg_last] -
++					sc->reg_log[5][sc->reg_last - 1];
++		/* in case of a counter reset, use the actual values */
++		} else if (sc->reg_log[2][sc->reg_last] > 0) {
++			delta_mac = sc->reg_log[2][sc->reg_last];
++			delta_tx = sc->reg_log[3][sc->reg_last];
++			delta_rx = sc->reg_log[4][sc->reg_last];
++			delta_ed = sc->reg_log[5][sc->reg_last];
++		} else {
++			delta_mac = delta_ed = delta_tx = delta_rx = 1;
++		}
++
++		len += scnprintf(buf + len, sizeof(buf) - len,
++					 " mac: %.8d", delta_mac);
++
++		/* tx state */
++		rel = delta_tx;
++		rel = rel * 1000 / delta_mac;
++		len += scnprintf(buf + len, sizeof(buf) - len,
++				 " tx: %.8d %3u.%1u%%", delta_tx,
++				 (unsigned int) rel / 10,
++				 (unsigned int) rel % 10);
++
++		/* rx state */
++		rel = delta_rx;
++		rel = rel * 1000 / delta_mac;
++		len += scnprintf(buf + len, sizeof(buf) - len,
++				 " rx: %.8d %3u.%1u%%", delta_rx,
++				 (unsigned int) rel / 10,
++				 (unsigned int) rel % 10);
++
++		/* energy detection state */
++		if (delta_ed > delta_tx + delta_rx) {
++			delta_ed = delta_ed - delta_tx - delta_rx;
++			rel = delta_ed;
++			rel = rel * 1000 / delta_mac;
++		} else {
++			delta_ed = 0;
++			rel = 0;
++		}
++		len += scnprintf(buf + len, sizeof(buf) - len,
++				 " ed: %.8d %3u.%1u%%",
++				 delta_ed,
++				 (unsigned int) rel / 10,
++				 (unsigned int) rel % 10);
++
++		/* idle state */
++		rel = delta_mac - delta_tx - delta_rx - delta_ed;
++		rel = rel * 1000 / delta_mac;
++		len += scnprintf(buf + len, sizeof(buf) - len,
++				 " idle: %.8d %3u.%1u%%",
++				 delta_mac - delta_tx - delta_rx - delta_ed,
++				 (unsigned int) rel / 10,
++				 (unsigned int) rel % 10);
++
++		/* print individual register values */
++		for (i = 7; i < MAX_REG_COUNT; i++) {
+ 			len += scnprintf(buf + len, sizeof(buf) - len,
+-					 " %.8x", (unsigned int)
++					 " #%.1d: %.8d", i, (unsigned int)
+ 					 sc->reg_log[i][sc->reg_last]);
+ 		}
+ 
+@@ -171,10 +239,10 @@ static ssize_t reg_log_read(struct file
+ 	spin_unlock(&sc->reg_lock);
+ 
+ 	/* set sampling interval if changed */
+-	if (sc->reg_interval > 0)
++	if ((sc->reg_interval > 100) && (sc->reg_interval < 10000000000))
+ 		hrtimer_forward(hrtimer, ktime_get(), ns_to_ktime(sc->reg_interval));
+ 	else
+-		hrtimer_forward(hrtimer, ktime_get(), ns_to_ktime(10000000));
++		hrtimer_forward(hrtimer, ktime_get(), ns_to_ktime(1000000000));
+ 
+ 	return HRTIMER_RESTART;
+  }
+@@ -1163,8 +1231,8 @@ int ath9k_init_device(u16 devid, struct
+ 		}
+ 		printk(KERN_ERR "ath9k debug: RegMon debugsfs created.\n");
+ 
+-		/* init hrtimers with default interval of 10.000.000 nsec */
+-		sc->reg_interval = 10000000;
++		/* init hrtimers with default interval of 1000.000.000 nsec */
++		sc->reg_interval = 1000000000;
+ 		hrtimer_init(&sc->hrtm.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 		sc->hrtm.timer.function = read_registers;
+ 		printk(KERN_ERR "ath9k debug: RegMon hrtimer initialized.\n");

@@ -52,12 +52,6 @@
 [submodule "Atheros-CSI-Tool"]
 	path = Atheros-CSI-Tool
 	url = https://github.com/xieyaxiongfly/Atheros-CSI-Tool
-[submodule "Atheros-CSI-Tool-UserSpace-APP"]
-	path = Atheros-CSI-Tool-UserSpace-APP
-	url = https://github.com/xieyaxiongfly/Atheros-CSI-Tool-UserSpace-APP
-[submodule "Qualcomm-Atheros-QCA9377-Wifi-Linux"]
-	path = Qualcomm-Atheros-QCA9377-Wifi-Linux
-	url = https://github.com/ajaybhatia/Qualcomm-Atheros-QCA9377-Wifi-Linux
 [submodule "ath9k"]
 	path = ath9k
 	url = https://github.com/mengyuan411/ath9k

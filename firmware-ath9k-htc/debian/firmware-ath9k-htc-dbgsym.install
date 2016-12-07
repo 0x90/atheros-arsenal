@@ -1,0 +1,1 @@
+target_firmware/htc_*.elf usr/lib/debug/lib/firmware/ath9k_htc

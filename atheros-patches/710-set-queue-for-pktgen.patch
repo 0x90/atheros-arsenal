@@ -1,0 +1,15 @@
+--- a/net/mac80211/tx.c	2012-11-23 20:14:53.000000000 +0800
++++ b/net/mac80211/tx.c	2012-11-23 21:33:34.000000000 +0800
+@@ -1730,6 +1730,12 @@
+ 	u32 info_flags = 0;
+ 	u16 info_id = 0;
+ 
++	if (skb->len > 58){
++		__le32 *magic = &skb->data[42];
++		if(*magic == 0xbe9be955)				/* magic number of pktgen */
++			skb_set_queue_mapping(skb, 2);	/* BE */
++	}
++
+ 	if (unlikely(skb->len < ETH_HLEN)) {
+ 		ret = NETDEV_TX_OK;
+ 		goto fail;

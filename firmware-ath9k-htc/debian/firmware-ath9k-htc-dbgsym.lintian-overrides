@@ -1,0 +1,3 @@
+# these binaries are targetting USB device itself, not the host system
+firmware-ath9k-htc-dbgsym: arch-independent-package-contains-binary-or-object usr/lib/debug/lib/firmware/ath9k_htc/htc_7010-1.dev.0.elf
+firmware-ath9k-htc-dbgsym: arch-independent-package-contains-binary-or-object usr/lib/debug/lib/firmware/ath9k_htc/htc_9271-1.dev.0.elf

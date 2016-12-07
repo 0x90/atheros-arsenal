@@ -1,0 +1,271 @@
+--- a/drivers/net/wireless/ath/ath9k/ath9k.h	2012-11-14 21:25:45.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/ath9k.h	2012-11-14 16:45:26.000000000 +0800
+@@ -139,7 +139,7 @@
+ #define ATH_AGGR_ENCRYPTDELIM      10
+ /* minimum h/w qdepth to be sustained to maximize aggregation */
+ #define ATH_AGGR_MIN_QDEPTH        2
+-#define ATH_AMPDU_SUBFRAME_DEFAULT 32
++#define ATH_AMPDU_SUBFRAME_DEFAULT sc->debug.setting->subframe_size
+ 
+ #define IEEE80211_SEQ_SEQ_SHIFT    4
+ #define IEEE80211_SEQ_MAX          4096
+@@ -553,7 +553,7 @@
+ #define DEFAULT_CACHELINE       32
+ #define ATH_REGCLASSIDS_MAX     10
+ #define ATH_CABQ_READY_TIME     80      /* % of beacon interval */
+-#define ATH_MAX_SW_RETRIES      20
++#define ATH_MAX_SW_RETRIES      sc->debug.setting->retry_limit
+ #define ATH_CHAN_MAX            255
+ 
+ #define ATH_TXPOWER_MAX         100     /* .5 dBm units */
+--- a/drivers/net/wireless/ath/ath9k/debug.c	2012-11-14 21:25:45.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.c	2012-11-14 19:10:35.000000000 +0800
+@@ -26,6 +26,9 @@
+ #define REG_READ_D(_ah, _reg) \
+ 	ath9k_hw_common(_ah)->ops->read((_ah), (_reg))
+ 
++#define CHAR_IS_WHITE_SPACE(c) \
++	(c == '\"' || c == '\n' || c == '\r' || c == '\t' || c == ' ' || c == '=')
++
+ static int ath9k_debugfs_open(struct inode *inode, struct file *file)
+ {
+ 	file->private_data = inode->i_private;
+@@ -1723,6 +1726,165 @@
+ 	.llseek = default_llseek,
+ };
+ 
++/**
++ * reference from code in pktgen, find the first char which is not in 
++ * ['"', '\n', '\r', '\t', ' ', '=']
++ */
++static int count_trail_chars(const char __user * user_buffer, unsigned int maxlen)
++{
++	int i = 0;
++
++	for (; i < maxlen; i++) {
++		char c;
++		if (get_user(c, &user_buffer[i]))
++			return -EFAULT;
++		if (!CHAR_IS_WHITE_SPACE(c))
++			goto done;
++	}
++done:
++	return i;
++}
++
++/* reference from code in pktgen */
++static int strn_len(const char __user * user_buffer, unsigned int maxlen)
++{
++	int i;
++
++	for (i = 0; i < maxlen; i++) {
++		char c;
++		if (get_user(c, &user_buffer[i]))
++			return -EFAULT;
++		if (CHAR_IS_WHITE_SPACE(c))
++			goto done_str;
++	}
++done_str:
++	return i;
++}
++
++static unsigned long num_arg(const char __user * user_buffer,
++			     unsigned long maxlen, unsigned long *num)
++{
++	int i = 0;
++	*num = 0;
++
++	for (; i < maxlen; i++) {
++		char c;
++		if (get_user(c, &user_buffer[i]))
++			return -EFAULT;
++		if ((c >= '0') && (c <= '9')) {
++			*num *= 10;
++			*num += c - '0';
++		} else
++			break;
++	}
++	return i;
++}
++
++static ssize_t read_file_inject_settings(struct file *file, char __user *user_buf, 
++			     size_t count, loff_t *ppos)
++{
++	struct ath_softc *sc = file->private_data;
++	char buf[1024];
++	int retval = 0, size = 1024;
++	unsigned int len = 0;
++
++	struct inject_settings *setting = sc->debug.setting;
++	len += snprintf(buf + len, size - len, "auto_mcs:%d\t\t", setting->auto_mcs);
++	len += snprintf(buf + len, size - len, "mcs_number:%d\n", setting->mcs_number);
++	len += snprintf(buf + len, size - len, "auto_ampdu:%d\t\t", setting->auto_ampdu);
++	len += snprintf(buf + len, size - len, "ampdu_len:%d\n", setting->ampdu_len);
++	len += snprintf(buf + len, size - len, "retry_limit:%d\t\t", setting->retry_limit);
++	len += snprintf(buf + len, size - len, "subframe_size:%d\n", setting->subframe_size);
++
++	if(len > size)
++		len = size;
++
++	retval = simple_read_from_buffer(user_buf, count, ppos, buf, len);
++	kfree(buf);
++
++	return retval;
++}
++
++static ssize_t write_file_inject_settings(struct file *file, const char __user *user_buf,
++			     size_t count, loff_t *ppos)
++{
++	struct ath_softc *sc = file->private_data;
++	int i = 0, max, len;
++	char name[16];
++	unsigned long value = 0;
++	int tmp = 0;
++
++	max = count - i;
++	tmp = count_trail_chars(&user_buf[i], max);
++	if(tmp < 0){
++		printk("illegal format\n");
++		return tmp;
++	}
++	i += tmp;
++	len = strn_len(&user_buf[i], sizeof(name) - 1);
++	if(len < 0)
++		return len;
++	memset(name, 0, sizeof(name));
++	if (copy_from_user(name, &user_buf[i], len))
++		return -EFAULT;
++	i += len;
++	max = count - i;
++	len = count_trail_chars(&user_buf[i], max);
++	if(len < 0)
++		return len;
++	i += len;
++	max = count - i;
++
++	if(!strcmp(name, "mcs_number")){
++		len = num_arg(&user_buf[i], max, &value);
++		if(len < 0)
++			return len;
++		sc->debug.setting->mcs_number = value;
++	}
++	else if(!strcmp(name, "auto_mcs")){
++		len = num_arg(&user_buf[i], max, &value);
++		if(len < 0)
++			return len;
++		sc->debug.setting->auto_mcs = !!value;
++	}
++    else if(!strcmp(name, "ampdu_len")){
++		len = num_arg(&user_buf[i], max, &value);
++		if(len < 0)
++			return len;
++		sc->debug.setting->ampdu_len = value;
++	}
++    else if(!strcmp(name, "auto_ampdu")){
++		len = num_arg(&user_buf[i], max, &value);
++		if(len < 0)
++			return len;
++		sc->debug.setting->auto_ampdu = !!value;
++	}
++    else if(!strcmp(name, "retry_limit")){
++		len = num_arg(&user_buf[i], max, &value);
++		if(len < 0)
++			return len;
++		sc->debug.setting->retry_limit = value;
++	}
++    else if(!strcmp(name, "subframe_size")){
++		len = num_arg(&user_buf[i], max, &value);
++		if(len < 0)
++			return len;
++		sc->debug.setting->subframe_size = value;
++	}
++	else{
++		printk("illegal command\n");
++	}
++
++	return count;
++}
++
++static const struct file_operations fops_inject_settings = {
++	.read = read_file_inject_settings,
++	.write = write_file_inject_settings,
++	.open = ath9k_debugfs_open,
++	.owner = THIS_MODULE,
++	.llseek = default_llseek,
++};
+ 
+ int ath9k_init_debug(struct ath_hw *ah)
+ {
+@@ -1797,6 +1959,18 @@
+ 	debugfs_create_file("chanbw", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy,
+ 			    sc, &fops_chanbw);
+ 
++	debugfs_create_file("isettings", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc, 
++				&fops_inject_settings);
++
++	sc->debug.setting = kmalloc(sizeof(struct inject_settings), GFP_KERNEL);
++	struct inject_settings *setting = sc->debug.setting;
++	setting->auto_mcs = true;
++	setting->mcs_number = 0;
++	setting->auto_ampdu = true;
++	setting->ampdu_len = ATH_AMPDU_LIMIT_MAX;
++	setting->retry_limit = 20; // default valude
++	setting->subframe_size = 32; //default valude
++
+ 	sc->debug.regidx = 0;
+ 	memset(&sc->debug.bb_mac_samp, 0, sizeof(sc->debug.bb_mac_samp));
+ 	sc->debug.sampidx = 0;
+--- a/drivers/net/wireless/ath/ath9k/debug.h	2012-11-14 21:25:45.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.h	2012-11-12 22:14:17.000000000 +0800
+@@ -222,6 +222,15 @@
+ 	struct ath9k_nfcal_hist nfCalHist[NUM_NF_READINGS];
+ };
+ 
++struct inject_settings{
++	u16 mcs_number;
++	bool auto_mcs;
++	u16 ampdu_len;
++	bool auto_ampdu;
++	u16 retry_limit;
++	u16 subframe_size;
++};
++
+ struct ath9k_debug {
+ 	struct dentry *debugfs_phy;
+ 	u32 regidx;
+@@ -231,6 +240,7 @@
+ 	u8 sampidx;
+ 	u8 tsidx;
+ 	u8 rsidx;
++	struct inject_settings *setting;
+ };
+ 
+ int ath9k_init_debug(struct ath_hw *ah);
+--- a/drivers/net/wireless/ath/ath9k/xmit.c	2012-11-14 21:25:45.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/xmit.c	2012-11-14 17:03:46.000000000 +0800
+@@ -690,7 +690,10 @@
+ 			modeidx++;
+ 
+ 		frmlen = ath_max_4ms_framelen[modeidx][rates[i].idx];
+-		max_4ms_framelen = min(max_4ms_framelen, frmlen);
++		if(sc->debug.setting->auto_ampdu)
++			max_4ms_framelen = min(max_4ms_framelen, frmlen);
++		else
++			max_4ms_framelen = sc->debug.setting->ampdu_len;
+ 	}
+ 
+ 	/*
+@@ -975,6 +978,13 @@
+ 			continue;
+ 
+		rix = rates[i].idx;
++		if(sc->debug.setting->auto_mcs){
++			rix = rates[i].idx;
++		}
++		else if(ieee80211_is_data(hdr->frame_control)){
++			rates[i].flags |= IEEE80211_TX_RC_MCS;
++			rix = sc->debug.setting->mcs_number;
++		}
+ 		info->rates[i].Tries = rates[i].count;
+ 
+ 		    if (rates[i].flags & IEEE80211_TX_RC_USE_RTS_CTS) {

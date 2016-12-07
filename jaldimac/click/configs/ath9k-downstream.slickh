@@ -1,0 +1,37 @@
+// JaldiMAC Click configuration for downstream traffic from an ath9k monitor device
+
+// Defines $DOWNSTREAM_SOURCE and $DOWNSTREAM_SINK for ath9k monitor-mode devices.
+
+// ======================================================
+// Component Graph
+// ======================================================
+
+elementclass FromMonitor
+{
+	FromDevice(mon0)
+	-> RadiotapDecap() -> Strip(2) // we're using a custom radiotap header, so we need to strip 2 more bytes
+	-> WifiDecap()
+	-> Strip(14)  // strip ethernet
+	-> output
+}
+
+elementclass Injectorizer {
+       input
+       -> EtherEncap(0x9000, a1:a1:ff:a1:ff:ff, ff:ff:ff:0f:ff:ff) // note the address we put here doesn't matter: everyone gets everything 'cause they're all in monitor mode!  probably should set them to something distinctive for debugging purposes
+       -> WifiEncap(0x00, 0:0:0:0:0:0)  // same applies here
+       -> Unstrip(18)
+       -> StoreData(0, DATA \<00 00 10 00 08 0c 08 00 3c 14 20 80 0c
+00 03 00>) // radiotap header: same for all stations. may need to be updated later, but I think it's set to the way we want it (5180Mhz, MCS 3)
+       -> output
+}
+
+elementclass ToMonitor
+{
+	input -> Injectorizer -> Align(4, 0) -> ToDevice(mon0)
+}
+
+fromMonitor :: FromMonitor
+toMonitor :: ToMonitor
+
+#define $DOWNSTREAM_SOURCE fromMonitor
+#define $DOWNSTREAM_SINK toMonitor

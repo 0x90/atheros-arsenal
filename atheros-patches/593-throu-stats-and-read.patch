@@ -1,0 +1,272 @@
+--- a/drivers/net/wireless/ath/ath9k/debug.c	2012-11-21 21:31:25.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.c	2012-11-21 21:21:54.000000000 +0800
+@@ -28,6 +28,7 @@
+ 
+ #define CHAR_IS_WHITE_SPACE(c) \
+ 	(c == '\"' || c == '\n' || c == '\r' || c == '\t' || c == ' ' || c == '=')
++extern bool recv_tp_paused;
+ 
+ static int ath9k_debugfs_open(struct inode *inode, struct file *file)
+ {
+@@ -1886,6 +1887,86 @@
+ 	.llseek = default_llseek,
+ };
+ 
++/**
++ * @author zhfch 2012-11-15
++ * @source add by zs @ 2012-6-7
++ */
++static ssize_t read_file_pkt_record(struct file *file, char __user *user_buf,
++				size_t count, loff_t *ppos)
++{
++	struct ath_softc *sc = file->private_data;
++	char *buf;
++	ssize_t retval;
++	unsigned int len = 0, size = 100;
++
++	recv_tp_paused = true;
++
++	struct list_head *tp_list = &sc->debug.recv_tp_list;
++	struct throughput *cursor;
++	list_for_each_entry(cursor, tp_list, list){
++		size += 100;
++	}
++
++	buf = kmalloc(size, GFP_KERNEL);
++	if (!buf){
++		printk("Can't allocate %u bytes space\n", size);
++		return -ENOMEM;
++	}
++
++	len += snprintf(buf + len, size - len,
++			"%4s%4s%4s%10s%10s%10s%8s%10s%8s%12s%8s\n", "sec", "mcs", "nf",
++			"rx-bytes", "noretry", "rssi_all", "nrssi", "lost", "total", "throughput", "rssi");
++
++	list_for_each_entry(cursor, tp_list, list){
++		if (cursor->sec == 0)
++			len += snprintf(buf + len, size - len, "\n");
++		u16 tp = cursor->tp * 8 / 1000000;
++		u8 rssi = cursor->rssi / cursor->rssi_counter;
++		len += snprintf(buf + len, size - len,
++			"%4u%4u%4u%10u%10u%10u%8u%10u%8u%8uMbps%8u\n", cursor->sec, cursor->mcs, 
++			cursor->nframe, cursor->tp, cursor->tp_noretry, cursor->rssi, cursor->rssi_counter, 
++			cursor->diff_seq, cursor->pkt_counter, tp, rssi);
++	}
++
++	if (len > size)
++		len = size;
++
++	recv_tp_paused = false;
++
++	retval = simple_read_from_buffer(user_buf, count, ppos, buf, len);
++	kfree(buf);
++	return retval;
++}
++
++static ssize_t write_file_pkt_record(struct file *file, const char __user *user_buf,
++				size_t count, loff_t *ppos)
++{
++	struct ath_softc *sc = file->private_data;
++	struct list_head *tp_list = &sc->debug.recv_tp_list;
++
++	recv_tp_paused = true;
++
++	if (count > 0 && !list_empty(tp_list)){
++		struct throughput *cursor;
++		struct throughput *next;
++		list_for_each_entry_safe(cursor, next, tp_list, list){
++			list_del(&cursor->list);
++			kfree(cursor);
++		}
++	}
++
++	recv_tp_paused = false;
++	return count;
++}
++
++static const struct file_operations fops_pkt_record = {
++	.read = read_file_pkt_record,
++	.write = write_file_pkt_record,
++	.open = ath9k_debugfs_open,
++	.owner = THIS_MODULE,
++	.llseek = default_llseek,
++};
++
+ int ath9k_init_debug(struct ath_hw *ah)
+ {
+ 	struct ath_common *common = ath9k_hw_common(ah);
+@@ -1961,7 +2042,10 @@
+ 
+ 	debugfs_create_file("isettings", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc, 
+				&fops_inject_settings);
++	debugfs_create_file("pkt_record", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc,
++				&fops_pkt_record);
+ 
++	INIT_LIST_HEAD(&sc->debug.recv_tp_list);
+ 	sc->debug.setting = kmalloc(sizeof(struct inject_settings), GFP_KERNEL);
+ 	struct inject_settings *setting = sc->debug.setting;
+ 	setting->auto_mcs = true;
+--- a/drivers/net/wireless/ath/ath9k/debug.h	2012-11-21 21:31:25.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.h	2012-11-21 21:09:46.000000000 +0800
+@@ -231,6 +231,23 @@
+ 	u16 subframe_size;
+ };
+ 
++/**
++ * @author zhfch 2012-11-15
++ */
++struct throughput{
++	struct list_head list;
++	u16 sec;		/* based 0 */
++	u8 mcs;			/* mcs number which is used */
++	u8 nframe;		/* subframe size which is used */
++	u32 tp;			/* all-rx-bytes in this second */
++	u32 tp_noretry;
++	u32 rssi;		/* total rssi */
++	u32 rssi_counter;
++	int diff_seq;
++	unsigned long jiff;	/* the lastest time of the current second */
++	u32 pkt_counter;
++};
++
+ struct ath9k_debug {
+ 	struct dentry *debugfs_phy;
+ 	u32 regidx;
+@@ -240,7 +257,9 @@
+ 	u8 sampidx;
+ 	u8 tsidx;
+ 	u8 rsidx;
++
+ 	struct inject_settings *setting;
++	struct list_head recv_tp_list;
+ };
+ 
+ int ath9k_init_debug(struct ath_hw *ah);
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2012-11-21 21:31:25.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2012-11-21 21:31:21.000000000 +0800
+@@ -18,6 +18,9 @@
+ #include "ath9k.h"
+ #include "ar9003_mac.h"
+ 
++bool recv_tp_paused = false;
++int pre_seqno = -1;
++static void record_pkt(struct ath_softc *sc, struct sk_buff *skb, struct ath_rx_status *rs);
+ #define SKB_CB_ATHBUF(__skb)	(*((struct ath_buf **)__skb->cb))
+ 
+ static inline bool ath_is_alt_ant_ratio_better(int alt_ratio, int maxdelta,
+@@ -1976,6 +1979,7 @@
+ 		if ((ah->caps.hw_caps & ATH9K_HW_CAP_ANT_DIV_COMB) && sc->ant_rx == 3)
+ 			ath_ant_comb_scan(sc, &rs);
+ 
++		record_pkt(sc, skb, &rs);
+ 		ieee80211_rx(hw, skb);
+ 
+ requeue_drop_frag:
+@@ -2004,3 +2008,93 @@
+ 
+ 	return 0;
+ }
++
++/**
++ * @author zhfch 2012-11-15
++ * @source zs 2012-6-7
++ */
++static void record_pkt(struct ath_softc *sc, struct sk_buff *skb, struct ath_rx_status *rs){
++	if (recv_tp_paused)
++		return;
++
++	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *)skb->data;
++	__le16 fc = hdr->frame_control;
++	if (!ieee80211_is_data_qos(fc) || skb->len < 1000)
++		return;
++
++	u8 mcs = (u8)skb->data[98];skb->data[98] = 0x36;
++	u8 nframe = (u8)skb->data[99];skb->data[99] = 0x37;
++	u16 seqno = ((le16_to_cpu(hdr->seq_ctrl)) & IEEE80211_SCTL_SEQ) >> 4;
++	struct list_head *tp_list = &sc->debug.recv_tp_list;
++
++	if(pre_seqno == -1)
++		pre_seqno = seqno - 1;
++
++	struct throughput *cur;
++	if (!list_empty(tp_list))
++		cur = list_entry(tp_list->prev, struct throughput, list);
++	else
++		cur = NULL;
++	if (!cur && skb->len < 1000){
++		/* ignore the first special frame */
++		return;
++	}
++
++	if (cur && skb->len < 1000){
++		/* ignore the mcs and nframe for special frames */
++		/* here we assume that the length of a normal frame is longer than 1000 */
++		mcs = cur->mcs;
++		nframe = cur->nframe;
++	}
++
++	unsigned long jiff = jiffies;
++	bool need_new_item = false;
++	if (!cur || time_after(jiff, cur->jiff) || mcs != cur->mcs || nframe != cur->nframe)
++		need_new_item = true;
++
++	while (need_new_item){
++		unsigned long next_jiff;
++		u16 sec;
++		if (cur && mcs == cur->mcs && nframe == cur->nframe){
++			next_jiff = cur->jiff + HZ;
++			sec = cur->sec + 1;
++		}
++		else{
++			next_jiff = jiff + HZ;
++			sec = 0;
++		}
++		cur = kmalloc(sizeof(struct throughput), GFP_KERNEL);
++		if (!cur){
++			printk("Can't alloc new struct throughput!\n");
++			return;
++		}
++		cur->mcs = mcs;
++		cur->nframe = nframe;
++		cur->sec = sec;
++		cur->jiff = next_jiff;
++		cur->tp = 0;
++		cur->tp_noretry = 0;
++		cur->rssi = 0;
++		cur->rssi_counter = 0;
++		cur->pkt_counter = 0;
++		cur->diff_seq = 0;
++		if (time_after(jiff, cur->jiff))
++			list_add_tail(&cur->list, tp_list);
++		else
++			break;
++	}
++	int8_t rssi = rs->rs_rssi;
++	if(!rs->rs_moreaggr && rssi != ATH9K_RSSI_BAD){
++		cur->rssi += rssi;
++		cur->rssi_counter++;
++	}
++	cur->pkt_counter++;
++	cur->tp += skb->len;
++	if (!ieee80211_has_retry(fc)){
++		cur->tp_noretry += skb->len;
++		cur->diff_seq += (seqno - pre_seqno - 1) & 0xff;
++		pre_seqno = seqno;
++	}
++	if (need_new_item)
++		list_add_tail(&cur->list, tp_list);
++}
+--- a/drivers/net/wireless/ath/ath9k/xmit.c	2012-11-21 21:31:25.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/xmit.c	2012-11-19 19:32:59.000000000 +0800
+@@ -1945,6 +1945,11 @@
+ 		hdr->seq_ctrl |= cpu_to_le16(sc->tx.seq_no);
+ 	}
+ 
++	if (ieee80211_is_data_qos(hdr->frame_control) && skb->len >= 1000){
++		skb->data[98] = sc->debug.setting->mcs_number;
++		skb->data[99] = sc->debug.setting->subframe_size;
++	}
++
+ 	/* Add the padding after the header if this is not already done */
+ 	padpos = ath9k_cmn_padpos(hdr->frame_control);
+ 	padsize = padpos & 3;

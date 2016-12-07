@@ -1,0 +1,230 @@
+--- a/drivers/net/wireless/ath/ath9k/debug.c	2013-01-03 19:41:11.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.c	2013-01-03 19:21:36.000000000 +0800
+@@ -29,6 +29,7 @@
+ #define CHAR_IS_WHITE_SPACE(c) \
+ 	(c == '\"' || c == '\n' || c == '\r' || c == '\t' || c == ' ' || c == '=')
+ extern bool recv_tp_paused;
++extern bool xmit_bw_paused;
+ 
+ static int ath9k_debugfs_open(struct inode *inode, struct file *file)
+ {
+@@ -1990,6 +1991,80 @@
+ 	.llseek = default_llseek,
+ };
+ 
++static ssize_t read_file_aggr_record(struct file *file, char __user *user_buf,
++				size_t count, loff_t *ppos)
++{
++	struct ath_softc *sc = file->private_data;
++	char *buf;
++	ssize_t retval;
++	unsigned int len = 0, size = 100;
++
++	xmit_bw_paused = true;
++
++	struct list_head *bw_list = &sc->debug.xmit_bw_list;
++	struct bandwidth *cursor;
++	list_for_each_entry(cursor, bw_list, list){
++		size += 70;
++	}
++
++	buf = kmalloc(size, GFP_KERNEL);
++	if (!buf){
++		printk("Can't allocate %u bytes space\n", size);
++		return -ENOMEM;
++	}
++
++	len += snprintf(buf + len, size - len,
++			"%4s%4s%4s%10s%10s%10s%10s%12s\n", "sec", "mcs", "nf",
++			"tx_bytes", "aggr_num", "faggr_num", "nonaggr_num", "bandwidth");
++
++	list_for_each_entry(cursor, bw_list, list){
++		if (cursor->sec == 0)
++			len += snprintf(buf + len, size - len, "\n");
++		u16 bw = cursor->aggr_len * 8 / 1000000;
++		len += snprintf(buf + len, size - len,
++			"%4u%4u%4u%10u%10u%10u%10u%8uMbps\n", cursor->sec, cursor->mcs, cursor->nframe,
++			cursor->tx_bytes, cursor->aggr_num, cursor->faultaggr_num, cursor->nonaggr_num, bw);
++	}
++
++	if (len > size)
++		len = size;
++
++	xmit_bw_paused = false;
++
++	retval = simple_read_from_buffer(user_buf, count, ppos, buf, len);
++	kfree(buf);
++	return retval;
++}
++
++static ssize_t write_file_aggr_record(struct file *file, const char __user *user_buf,
++			size_t count, loff_t *ppos)
++{
++	struct ath_softc *sc = file->private_data;
++	struct list_head *bw_list = &sc->debug.xmit_bw_list;
++
++	xmit_bw_paused = true;
++
++	if (count > 0 && !list_empty(bw_list)){
++		struct bandwidth *cursor;
++		struct bandwidth *next;
++		list_for_each_entry_safe(cursor, next, bw_list, list){
++			list_del(&cursor->list);
++			kfree(cursor);
++		}
++	}
++
++	xmit_bw_paused = false;
++	return count;
++}
++
++static const struct file_operations fops_aggr_record = {
++	.read = read_file_aggr_record,
++	.write = write_file_aggr_record,
++	.open = ath9k_debugfs_open,
++	.owner = THIS_MODULE,
++	.llseek = default_llseek,
++};
++
+ int ath9k_init_debug(struct ath_hw *ah)
+ {
+ 	struct ath_common *common = ath9k_hw_common(ah);
+@@ -2069,7 +2144,10 @@
+ 				&fops_pkt_record);
+ 	debugfs_create_file("realtime_var", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc,
+ 				&fops_realtime_info);
++	debugfs_create_file("aggr_record", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc,
++				&fops_aggr_record);
+
++	INIT_LIST_HEAD(&sc->debug.xmit_bw_list);
+ 	INIT_LIST_HEAD(&sc->debug.recv_tp_list);
+ 	sc->debug.setting = kmalloc(sizeof(struct inject_settings), GFP_KERNEL);
+ 	struct inject_settings *setting = sc->debug.setting;
+--- a/drivers/net/wireless/ath/ath9k/debug.h	2013-01-03 19:41:11.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.h	2013-01-03 19:25:41.000000000 +0800
+@@ -255,6 +255,18 @@
+ 	int rate_idx;
+ };
+ 
++struct bandwidth{
++	struct list_head list;
++	u16 sec;
++	u8 mcs;
++	u8 nframe;
++	unsigned long jiff;
++	u32 tx_bytes;
++	u32 aggr_num;
++	u32 faultaggr_num;
++	u32 nonaggr_num;
++};
++
+ struct ath9k_debug {
+ 	struct dentry *debugfs_phy;
+ 	u32 regidx;
+@@ -268,6 +280,7 @@
+ 	struct inject_settings *setting;
+ 	struct list_head recv_tp_list;
+ 	struct realtime_var rtv;
++	struct list_head xmit_bw_list;
+ };
+ 
+ int ath9k_init_debug(struct ath_hw *ah);
+--- a/drivers/net/wireless/ath/ath9k/xmit.c	2013-01-03 19:41:11.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/xmit.c	2013-01-03 19:40:39.000000000 +0800
+@@ -32,6 +32,8 @@
+ #define NUM_SYMBOLS_PER_USEC(_usec) (_usec >> 2)
+ #define NUM_SYMBOLS_PER_USEC_HALFGI(_usec) (((_usec*5)-4)/18)
+ 
++static void record_aggr(struct ath_softc *sc, int frame_len, int frame_num, bool is_aggr);
++bool xmit_bw_paused = false;
+ 
+ static u16 bits_per_symbol[][2] = {
+ 	/* 20MHz 40MHz */
+@@ -1105,7 +1107,9 @@
+ 		info.flags |= (u32) bf->bf_state.bfs_paprd << ATH9K_TXDESC_PAPRD_S;
+ 
+ 
++	int frame_num = 0;
+ 	while (bf) {
++		frame_num++;
+ 		struct sk_buff *skb = bf->bf_mpdu;
+ 		struct ath_frame_info *fi = get_frame_info(skb);
+ 
+@@ -1136,6 +1140,8 @@
+ 		ath9k_hw_set_txdesc(ah, bf->bf_desc, &info);
+ 		bf = bf->bf_next;
+ 	}
++
++	record_aggr(sc, len, frame_num, aggr);
+ }
+ 
+ static void ath_tx_sched_aggr(struct ath_softc *sc, struct ath_txq *txq,
+@@ -2526,3 +2532,68 @@
+ 		ath_txq_unlock(sc, txq);
+ 	}
+ }
++
++static void record_aggr(struct ath_softc *sc, int frame_len, int frame_num, bool is_aggr)
++{
++	if (xmit_bw_paused || frame_len < 1000)
++		return;
++
++	WARN_ON_ONCE(!is_aggr && frame_num > 1);
++
++	struct list_head *bw_list = &sc->debug.xmit_bw_list;
++
++	u8 mcs = sc->debug.setting->mcs_number;
++	u8 nframe = sc->debug.setting->subframe_size;
++	struct bandwidth *cur;
++	if (!list_empty(bw_list))
++		cur = list_entry(bw_list->prev, struct bandwidth, list);
++	else
++		cur = NULL;
++	unsigned long jiff = jiffies;
++	bool need_new_item = false;
++	if (!cur || time_after(jiff, cur->jiff) || mcs != cur->mcs || nframe != cur->nframe)
++		need_new_item = true;
++
++	while (need_new_item){
++		unsigned long next_jiff;
++		u16 sec;
++		if (cur && mcs == cur->mcs && nframe == cur->nframe){
++			next_jiff = cur->jiff + HZ;
++			sec = cur->sec + 1;
++		}
++		else{
++			next_jiff = jiff + HZ;
++			sec = 0;
++		}
++		cur = kmalloc(sizeof(struct bandwidth), GFP_KERNEL);
++		if (!cur){
++			printk("Can't alloc new struct bandwidth!\n");
++			return;
++		}
++		cur->mcs = mcs;
++		cur->nframe = nframe;
++		cur->sec = sec;
++		cur->jiff = next_jiff;
++		cur->tx_bytes = 0;
++		cur->aggr_num = 0;
++		cur->faultaggr_num = 0;
++		cur->nonaggr_num = 0;
++
++		if(time_after(jiff, cur->jiff))
++			list_add_tail(&cur->list, bw_list);
++		else
++			break;
++	}
++	cur->tx_bytes += frame_len;
++	if (is_aggr){
++		cur->aggr_num++;
++		if (frame_num < ATH_AMPDU_SUBFRAME_DEFAULT)
++			cur->faultaggr_num++;
++	}
++	else {
++		cur->nonaggr_num++;
++	}
++
++	if (need_new_item)
++		list_add_tail(&cur->list, bw_list);
++}

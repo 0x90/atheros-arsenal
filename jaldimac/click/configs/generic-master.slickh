@@ -1,0 +1,80 @@
+// JaldiMAC Click configuration for the master
+
+// Before this file is included, $UPSTREAM_SOURCE, $UPSTREAM_SINK,
+// $DOWNSTREAM_SOURCE, and $DOWNSTREAM_SINK must be defined.
+
+// ======================================================
+// Configuration
+// ======================================================
+
+// Click port names
+#define $STATION_1_BULK 2
+#define $STATION_2_BULK 3
+#define $STATION_3_BULK 4
+#define $STATION_4_BULK 5
+
+// ======================================================
+// Components
+// ======================================================
+
+// Include shared components
+#include "shared.slickh"
+
+// Classifier
+elementclass MasterIPClassifier
+{
+	// For now the number of stations is fixed to 4.
+	ic :: IPClassifier(ip dscp 1,	// Station 1 bulk
+			   ip dscp 2,	// Station 1 VoIP
+			   ip dscp 3,	// Station 2 bulk
+			   ip dscp 4,	// Station 2 VoIP
+			   ip dscp 5,	// Station 3 bulk
+			   ip dscp 6,	// Station 3 VoIP
+			   ip dscp 7,	// Station 4 bulk
+			   ip dscp 8,	// Station 4 VoIP
+			   -)
+
+	input -> ic
+	ic[0] -> JaldiEncap(BULK_FRAME, $MASTER_ID, $STATION_1_ID) -> [$STATION_1_BULK]output
+	ic[1] -> JaldiEncap(VOIP_FRAME, $MASTER_ID, $STATION_1_ID) -> [$ALL_VOIP]output
+	ic[2] -> JaldiEncap(BULK_FRAME, $MASTER_ID, $STATION_2_ID) -> [$STATION_2_BULK]output
+	ic[3] -> JaldiEncap(VOIP_FRAME, $MASTER_ID, $STATION_2_ID) -> [$ALL_VOIP]output
+	ic[4] -> JaldiEncap(BULK_FRAME, $MASTER_ID, $STATION_3_ID) -> [$STATION_3_BULK]output
+	ic[5] -> JaldiEncap(VOIP_FRAME, $MASTER_ID, $STATION_3_ID) -> [$ALL_VOIP]output
+	ic[6] -> JaldiEncap(BULK_FRAME, $MASTER_ID, $STATION_4_ID) -> [$STATION_4_BULK]output
+	ic[7] -> JaldiEncap(VOIP_FRAME, $MASTER_ID, $STATION_4_ID) -> [$ALL_VOIP]output
+	ic[8] -> [$OUT]output
+}
+
+ipClassifier :: MasterIPClassifier
+
+// Encapsulation / decapsulation
+jaldiDecap :: JaldiDecap($MASTER_ID)
+
+// Scheduler and driver components
+scheduler :: JaldiScheduler
+driver :: JaldiFakeDriverPrecise
+
+// ======================================================
+// Component Graph
+// ======================================================
+
+// Handle incoming upstream traffic
+$UPSTREAM_SOURCE -> CheckIPHeader -> ipClassifier
+ipClassifier[$OUT] -> $UPSTREAM_SINK
+ipClassifier[$ALL_VOIP] -> JaldiQueue(2000) -> [$DRIVER_UPSTREAM_VOIP]driver
+ipClassifier[$STATION_1_BULK] -> JaldiQueue(2000) -> [$STATION_1_BULK]scheduler
+ipClassifier[$STATION_2_BULK] -> JaldiQueue(2000) -> [$STATION_2_BULK]scheduler
+ipClassifier[$STATION_3_BULK] -> JaldiQueue(2000) -> [$STATION_3_BULK]scheduler
+ipClassifier[$STATION_4_BULK] -> JaldiQueue(2000) -> [$STATION_4_BULK]scheduler
+
+// Handle incoming downstream traffic
+$DOWNSTREAM_SOURCE -> [$DRIVER_FROM_DOWNSTREAM]driver
+driver[$DRIVER_FROM_DOWNSTREAM] -> jaldiDecap
+jaldiDecap[$CONTROL] -> [$CONTROL]scheduler
+jaldiDecap[$DATA] -> ipClassifier
+
+// Plumbing for scheduler and driver
+InfiniteSource(DATA \<00>, LIMIT 1, BURST 1) -> JaldiEncap(ROUND_COMPLETE_MESSAGE, $DRIVER_ID, $MASTER_ID) -> [$ALT_CONTROL]scheduler
+scheduler -> JaldiQueue(2000) -> [$DRIVER_FROM_SCHEDULER]driver
+driver[$DRIVER_TO_DOWNSTREAM] -> JaldiQueue(2000) -> $DOWNSTREAM_SINK

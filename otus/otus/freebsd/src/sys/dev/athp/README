@@ -1,0 +1,93 @@
+Porting bits from ath10k:
+
+Based on linux-next commit id 76d164f582150fd0259ec0fcbc485470bcd8033e .
+
+* pci/pcie - includes a lot of SoC futzing to do things like cold/warm reset, etc
+* legacy interrupts require magic, check pci.c
+* copy engine pipe config
+* copy engine basics
+* bmi
+* .. at this point we should be able to load in firmware
+
+Then:
+
+* finish off copy engine bits
+* htt
+* wmi
+* whatever missing pieces for tx/rx dma at this point (should've been done above, but..)
+* send/recieve commands to firmware
+* data!
+
+Notes:
+
+* ath10k has more than Peregrine 2.0 (QCA988x) support
+* it supports newer firmware, but chances are peregrine support is only 10.1 / 10.2
+* .. so don't cheat by hard-coding 10.1 or 10.2 APIs; we have to do this somewhat
+  clean early on.
+
+
+Bring-up order; more detail
+
+* probe/attach
+* pci bits (chip)
+* sleep/wake
+* ce bits
+* busdma bits for mbuf, etc
+* pipe bits, stubbed out
+* wire up interrupts, enable/disable interrupts, even if it's legacy interrupts
+* .. and add per-pipe interrupt task, schedule it appropriately
+* wire up the global rx retry taskqueue as a taskqueue_timer
+* .. and ensure the above gets cleaned up during shutdown
+
+Then look at what calls init_pipes() - cold/warm reset, chip reset, etc.
+And hif_powerup().  The target is to complete hif_powerup / hif_powerdown.
+
+* then, just port / stub appropriately the hif layer, only implementing the
+  pieces we need and printf() stubbing the rest.
+
+The mac80211 setup sequence ends up calling ath10k_core_probe_fw() which
+brings things up and then tears them down again so the ath10k_start() routine
+can bring it up again.  It's .. silly, but that's what ath10k does.
+ath10k_core_probe_fw() is a good finishing point to verify that the basic bits
+are working - I don't think I need interrupts working (yet); I don't think
+I need WMI/HTT working.
+
+However, to tear the state down afterwards (ie, put the core into suspend mode)
+I need to have WMI working as the target suspend call is a WMI message.
+So stub that part of the setup out and just verify that the core can be brought
+up and stopped.
+
+Ie:
+
+* init pipes, incl. replenishing rx mbufs, etc
+* init config
+* wake target cpu
+
+This requires pci_diag_read32(), pci_diag_write32(), pci_diag_writemem()
+to work.  And /these/ require the CE bits to work, DMA map/unmap to work, etc.
+It doesn't require interrupts; it's polled; so it should be pretty fun to bringup.
+
+I /think/ TX alignment is 4 bytes, not 8 bytes.  Hm.
+
+At this point the diag read/write works, the CE bits work w/ polling, and
+basic locking is working.  Hopefully the target wakes up and accepts a pipe
+config, and we can make a start on porting the rest of the BMI code for
+firmware injection and start stubbing out the HIF layer for implementing.
+The only bits of HIF layer we need are power_on, stop, power_off and the BMI
+HIF wait for message routine.
+
+
+Things to undo:
+
+* dma coherent API - is now there
+* find the conversions to the freebsd list structs - that's now there
+
+NEED TO DO THIS OR THE FIRMWARE CRASHES
+
+* the regulatory code programs in the regdomain in a regdomain callback handler.
+  If we don't call that WMI routine then things fail badly and the firmware
+  panics.
+
+  Go find ath10k_regd_update() and ensure we call it as part of dev/vif up or
+  firmware will panic upon scan!
+

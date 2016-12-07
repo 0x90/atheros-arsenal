@@ -1,0 +1,45 @@
+--- a/drivers/net/wireless/ath/ath9k/rc.c	2013-02-21 17:56:12.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/rc.c	2013-02-21 17:55:40.000000000 +0800
+@@ -1433,6 +1433,42 @@
+ 
+ 	ath_rc_priv->ht_cap = ath_rc_build_ht_caps(sc, sta, is_cw40, is_sgi);
+ 	ath_rc_init(sc, priv_sta, sband, sta, rate_table);
++	printk("\n");
++	printk("valid_rate_index:\n");
++	for (i = 0 ; i < RATE_TABLE_SIZE ; i++){
++		if (i % 10 == 0)
++			printk("\n");
++		printk("%d ", ath_rc_priv->valid_rate_index[i]);
++	}
++	printk("\n");
++	printk("valid_phy_ratecnt:\n");
++        for (i = 0 ; i < WLAN_RC_PHY_MAX ; i++){
++                if (i % 10 == 0)
++                        printk("\n");
++                printk("%d ", ath_rc_priv->valid_phy_ratecnt[i]);
++        }
++	printk("\n");
++	printk("valid_phy_rateidx:\n");
++        for (i = 0 ; i < WLAN_RC_PHY_MAX ; i++){
++		for (j = 0 ; j < RATE_TABLE_SIZE ; j++){
++                	printk("%d ", ath_rc_priv->valid_phy_rateidx[i][j]);
++        	}printk("\n");
++        }
++	printk("\n");
++	printk("rate_table_size:%d\n", ath_rc_priv->rate_table_size);
++	printk("ht_cap:0x%x\n", ath_rc_priv->ht_cap);
++	printk("rate_max_phy:%d\n", ath_rc_priv->rate_max_phy);
++	printk("max_valid_rate:%d\n", ath_rc_priv->max_valid_rate);
++	printk("neg_rates, nrates:%d\n", ath_rc_priv->neg_rates.rs_nrates);
++        for (i = 0 ; i < ATH_RATE_MAX ; i++){
++                printk("%d ", ath_rc_priv->neg_rates.rs_rates[i]);
++        }
++	printk("\n");
++	printk("neg_ht_rates, nrates:%d\n", ath_rc_priv->neg_ht_rates.rs_nrates);
++        for (i = 0 ; i < ATH_RATE_MAX ; i++){
++                printk("%d ", ath_rc_priv->neg_ht_rates.rs_rates[i]);
++        }
++	printk("\n");
+ }
+ 
+ static void ath_rate_update(void *priv, struct ieee80211_supported_band *sband,

@@ -1,0 +1,66 @@
+// JaldiMAC Click configuration for the stations
+
+// ======================================================
+// Components
+// ======================================================
+
+// Include shared components
+#include "shared.slickh"
+
+// Classifiers
+elementclass StationIPClassifier
+{
+	ic :: IPClassifier(ip dscp 2,	// Station 1 VoIP
+			   ip dscp 4,	// Station 2 VoIP
+			   ip dscp 6,	// Station 3 VoIP
+			   ip dscp 8,	// Station 4 VoIP
+			   -)		// Everything else (bulk)
+
+	input -> ic
+	ic[0] -> [$ALL_VOIP]output
+	ic[1] -> [$ALL_VOIP]output
+	ic[2] -> [$ALL_VOIP]output
+	ic[3] -> [$ALL_VOIP]output
+	ic[4] -> [$OUT]output
+}
+
+ipClassifier :: StationIPClassifier
+voipDemux :: JaldiVoIPDemux(3)
+
+// Encapsulation / decapsulation
+elementclass ToJaldiAndQueue
+{
+	$type, $size |
+	input -> JaldiEncap($type, $STATION_ID, $MASTER_ID)
+	      -> JaldiQueue($size) -> output
+}
+
+jaldiDecap :: JaldiDecap($STATION_ID)
+
+// Gate
+gate :: JaldiGate($STATION_ID)
+
+// ======================================================
+// Component Graph
+// ======================================================
+
+// Handle incoming downstream traffic
+$DOWNSTREAM_SOURCE -> CheckIPHeader -> ipClassifier
+
+ipClassifier[$OUT] -> ToJaldiAndQueue(BULK_FRAME, 2000) -> [$BULK]gate
+ipClassifier[$ALL_VOIP] -> voipDemux
+
+// FIXME: Should really use a drop-front queue
+voipDemux[$VOIP_OUT_1] -> ToJaldiAndQueue(VOIP_FRAME, 10) -> [$VOIP_IN_1]gate
+voipDemux[$VOIP_OUT_2] -> ToJaldiAndQueue(VOIP_FRAME, 10) -> [$VOIP_IN_2]gate
+voipDemux[$VOIP_OUT_3] -> ToJaldiAndQueue(VOIP_FRAME, 10) -> [$VOIP_IN_3]gate
+voipDemux[$VOIP_OUT_4] -> ToJaldiAndQueue(VOIP_FRAME, 10) -> [$VOIP_IN_4]gate
+voipDemux[$VOIP_OUT_OVERFLOW] -> ToJaldiAndQueue(VOIP_FRAME, 10) -> [$VOIP_IN_OVERFLOW]gate
+
+gate -> JaldiQueue(2000) -> $UPSTREAM_SINK
+
+// Handle incoming upstream traffic
+$UPSTREAM_SOURCE -> jaldiDecap
+
+jaldiDecap[$DATA] -> $DOWNSTREAM_SINK
+jaldiDecap[$CONTROL] -> [$CONTROL]gate

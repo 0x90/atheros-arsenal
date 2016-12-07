@@ -1,0 +1,149 @@
+--- a/drivers/net/wireless/ath/ath9k/ath9k.h	2013-04-08 19:03:54.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/ath9k.h	2013-04-08 17:05:15.000000000 +0800
+@@ -247,6 +247,7 @@
+ 	u16 seq_start;
+ 	u16 seq_next;
+ 	u16 baw_size;
++	u16 macseq_next;
+ 	int tidno;
+ 	int baw_head;   /* first un-acked tx buffer */
+ 	int baw_tail;   /* next unused tx buffer slot */
+@@ -635,6 +636,9 @@
+ 	u32 sc_flags; /* SC_OP_* */
+ 	u16 ps_flags; /* PS_* */
+ 	u16 curtxpow;
++	u16 rx_seq_start;
++	u16 rx_baw_head;
++	unsigned long rx_buf[BITS_TO_LONGS(ATH_TID_MAX_BUFS)];
+ 	bool ps_enabled;
+ 	bool ps_idle;
+ 	short nbcnvifs;
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2013-04-08 19:03:54.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2013-04-08 19:03:06.000000000 +0800
+@@ -20,7 +20,6 @@
+ 
+ bool recv_tp_paused = false;
+ bool rx_infos_paused = false;
+-int pre_seqno = -1;
+ static void record_pkt(struct ath_softc *sc, struct sk_buff *skb, struct ath_rx_status *rs);
+ static void record_rx_infos(struct ath_softc *sc, struct ath_rx_status *rs);
+ char *get_error_type(struct ath_rx_status *rs);
+@@ -1793,6 +1792,41 @@
+ 	antcomb->alt_recv_cnt = 0;
+ }
+ 
++static void ath_rx_update_baw(struct ath_softc *sc, struct throughput *cur, int seqno)
++{
++	cur->pkt_counter++;
++
++	int index, cindex;
++
++	index  = ATH_BA_INDEX(sc->rx_seq_start, seqno);
++	cindex = (sc->rx_baw_head + index) & (ATH_TID_MAX_BUFS - 1);
++
++	if (index != 0 && index < ATH_TID_MAX_BUFS){
++		__set_bit(cindex, sc->rx_buf);
++	} else if (index == 0){
++		while (test_bit(sc->rx_baw_head, sc->rx_buf)) {
++			__clear_bit(sc->rx_baw_head, sc->rx_buf);
++			INCR(sc->rx_seq_start, IEEE80211_SEQ_MAX);
++			INCR(sc->rx_baw_head, ATH_TID_MAX_BUFS);
++		}
++	} else {
++		while (ATH_BA_INDEX(sc->rx_seq_start, seqno) > 127){
++			if (!test_bit(sc->rx_baw_head, sc->rx_buf)){
++				cur->diff_seq++;	
++			}
++			__clear_bit(sc->rx_baw_head, sc->rx_buf);
++			INCR(sc->rx_seq_start, IEEE80211_SEQ_MAX);
++			INCR(sc->rx_baw_head, ATH_TID_MAX_BUFS);
++		}
++		__set_bit(127, sc->rx_buf);
++		while (test_bit(sc->rx_baw_head, sc->rx_buf)) {
++                        __clear_bit(sc->rx_baw_head, sc->rx_buf);
++                        INCR(sc->rx_seq_start, IEEE80211_SEQ_MAX);
++                        INCR(sc->rx_baw_head, ATH_TID_MAX_BUFS);
++                }
++	}
++}
++
+ int ath_rx_tasklet(struct ath_softc *sc, int flush, bool hp)
+ {
+ 	struct ath_buf *bf;
+@@ -2040,30 +2074,23 @@
+ 	if (!ieee80211_is_data_qos(fc) || skb->len < 1000)
+ 		return;
+ 
+-	u8 mcs = (u8)skb->data[78];//skb->data[98] = 0x36;
+-	u8 nframe = (u8)skb->data[79];//skb->data[99] = 0x37;
+-	u16 seqno = ((le16_to_cpu(hdr->seq_ctrl)) & IEEE80211_SCTL_SEQ) >> 4;
+-	struct list_head *tp_list = &sc->debug.recv_tp_list;
++	u8 mcs = (u8)skb->data[38];
++	u8 nframe = (u8)skb->data[39];
++	/*
++	 * the 38th and 39th byte are the first two bytes in field identifier in ip header, 
++	 * the default value is 0
++	 */
++	skb->data[38] = 0;
++	skb->data[39] = 0;
+ 
+-	if(pre_seqno == -1)
+-		pre_seqno = seqno - 1;
++	u16 *seqno = &skb->data[34];
++	struct list_head *tp_list = &sc->debug.recv_tp_list;
+ 
+ 	struct throughput *cur;
+ 	if (!list_empty(tp_list))
+ 		cur = list_entry(tp_list->prev, struct throughput, list);
+ 	else
+ 		cur = NULL;
+-	if (false /*!cur && skb->len < 1000*/){
+-		/* ignore the first special frame */
+-		return;
+-	}
+-
+-	if (false /*cur && skb->len < 1000*/){
+-		/* ignore the mcs and nframe for special frames */
+-		/* here we assume that the length of a normal frame is longer than 1000 */
+-		mcs = cur->mcs;
+-		nframe = cur->nframe;
+-	}
+ 
+ 	unsigned long jiff = jiffies;
+ 	bool need_new_item = false;
+@@ -2108,15 +2135,17 @@
+ 		cur->rssi_counter++;
+ 		cur->noise += sc->sc_ah->noise;
+ 	}
+-	cur->pkt_counter++;
++	ath_tx_update_baw(sc, cur, *seqno);
+ 	cur->tp += skb->len;
+ 	if (!ieee80211_has_retry(fc)){
+ 		cur->tp_noretry += skb->len;
+-		cur->diff_seq += (seqno - pre_seqno - 1) & 0xff;
+-		pre_seqno = seqno;
+ 	}
+ 	if (need_new_item)
+ 		list_add_tail(&cur->list, tp_list);
++
++	/* recover the ip header */
++	skb->data[34] = 0x45;
++	skb->data[35] = 0;
+ }
+ 
+ static void record_rx_infos(struct ath_softc *sc, struct ath_rx_status *rs){
+--- a/drivers/net/wireless/ath/ath9k/xmit.c	2013-04-08 19:03:54.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/xmit.c	2013-04-08 16:35:32.000000000 +0800
+@@ -2021,6 +2021,12 @@
+ 	 * info are no longer valid (overwritten by the ath_frame_info data.
+ 	 */
+ 
++	if (tid){
++		u16 *seqno = &skb->data[36];
++		*seqno = tid->macseq_next;
++		INCR(tid->macseq_next, IEEE80211_SEQ_MAX);
++	}
++
+ 	q = skb_get_queue_mapping(skb);
+ 
+ 	ath_txq_lock(sc, txq);

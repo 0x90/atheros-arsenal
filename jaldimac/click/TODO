@@ -1,0 +1,4 @@
+- Add support for bulk ACKs - or, indeed, any ACKs at all!
+- Make a drop front variant of JaldiQueue for use with VoIP flows.
+- Make JaldiScheduler create the layout online instead of being an offline algorithm; this will enable better VoIP performance. (The current arrangement of inserting VoIP packets from upstream into the downstream transmissions dynamically in the fake driver is only a temporary hack.)
+- Complete this TODO list. =)

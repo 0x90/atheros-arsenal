@@ -1,0 +1,52 @@
+--- a/drivers/net/wireless/ath/ath9k/debug.c	2013-02-05 12:15:17.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.c	2013-02-05 12:14:19.000000000 +0800
+@@ -1916,8 +1916,8 @@
+ 	}
+ 
+ 	len += snprintf(buf + len, size - len,
+-			"%4s%4s%4s%10s%10s%10s%8s%10s%8s%12s%8s\n", "sec", "mcs", "nf",
+-			"rx-bytes", "noretry", "rssi_all", "nrssi", "lost", "total", "throughput", "rssi");
++			"%4s%4s%4s%10s%10s%10s%10s%8s%10s%8s%12s%8s\n", "sec", "mcs", "nf",
++			"rx-bytes", "noretry", "rssi_all", "noise_all", "nrssi", "lost", "total", "throughput", "rssi");
+ 
+ 	list_for_each_entry(cursor, tp_list, list){
+ 		if (cursor->sec == 0)
+@@ -1925,8 +1925,8 @@
+ 		u16 tp = cursor->tp * 8 / 1024 / 1024;
+ 		u8 rssi = cursor->rssi / cursor->rssi_counter;
+ 		len += snprintf(buf + len, size - len,
+-			"%4u%4u%4u%10u%10u%10u%8u%10u%8u%8uMbps%8u\n", cursor->sec, cursor->mcs, 
+-			cursor->nframe, cursor->tp, cursor->tp_noretry, cursor->rssi, cursor->rssi_counter, 
++			"%4u%4u%4u%10u%10u%10u%10d%8u%10u%8u%8uMbps%8u\n", cursor->sec, cursor->mcs, 
++			cursor->nframe, cursor->tp, cursor->tp_noretry, cursor->rssi, cursor->noise, cursor->rssi_counter, 
+ 			cursor->diff_seq, cursor->pkt_counter, tp, rssi);
+ 	}
+ 
+--- a/drivers/net/wireless/ath/ath9k/debug.h	2013-02-05 12:15:17.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.h	2013-02-05 12:14:19.000000000 +0800
+@@ -242,6 +242,7 @@
+ 	u32 tp;			/* all-rx-bytes in this second */
+ 	u32 tp_noretry;
+ 	u32 rssi;		/* total rssi */
++	int noise;		/* total noise level, number of it is rssi_counter */
+ 	u32 rssi_counter;
+ 	int diff_seq;
+ 	unsigned long jiff;	/* the lastest time of the current second */
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2013-02-05 12:15:17.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2013-02-05 12:15:11.000000000 +0800
+@@ -2093,6 +2093,7 @@
+ 		cur->tp = 0;
+ 		cur->tp_noretry = 0;
+ 		cur->rssi = 0;
++		cur->noise = 0;
+ 		cur->rssi_counter = 0;
+ 		cur->pkt_counter = 0;
+ 		cur->diff_seq = 0;
+@@ -2105,6 +2106,7 @@
+ 	if(!rs->rs_moreaggr && rssi != ATH9K_RSSI_BAD){
+ 		cur->rssi += rssi;
+ 		cur->rssi_counter++;
++		cur->noise += sc->sc_ah->noise;
+ 	}
+ 	cur->pkt_counter++;
+ 	cur->tp += skb->len;

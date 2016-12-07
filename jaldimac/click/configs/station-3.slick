@@ -1,0 +1,11 @@
+// Station configuration
+#define $HOST_IP 10.3.3.5
+#define $HOST_IP_NETMASK 10.3.3.5/24
+#define $STATION_ID 3
+
+// Devices
+#include "tun-downstream.slickh"
+#include "ath9k-upstream.slickh"
+
+// Implementation
+#include "generic-station.slickh"

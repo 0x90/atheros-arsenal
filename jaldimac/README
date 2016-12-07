@@ -1,0 +1,25 @@
+This is the jaldimac kernel driver. Not currently functional, but more 
+documentation will be added once the driver is in a working state.
+
+Getting JaldiMAC to compile under OpenWRT
+=========================================
+This assumes you are able to build OpenWRT from source already. I've only 
+tested with Backfire, and I make no guarantees that it will work with anything 
+but my specific buildroot (but it probably will).
+
+First, create a directory called "jaldi" under backfire/packages. Rename 
+OpeNWRT_Makefile to Makefile and drop it in here. You need to modify this file 
+to reflect the location of wherever you have the source for JaldiMAC located on 
+your machine. Edit line 41 (under Build/Prepare) to point to this. In the 
+future, this will all be automated in keeping with the spirit of the OpenWRT 
+build system, but for now copying the source into the build_dir on every build 
+makes development a bit easier.
+
+After this you should be good to go. Go into 'make menuconfig' and select the 
+kmod-jaldi package under Kernel Modules > Wireless Drivers. Compile it as 
+normal.
+
+If you're hacking on jaldi and want to just rebuild the jaldi package and 
+create an updated image to flash onto your device, just run 'make 
+package/jaldi-{clean,compile,install} ; make target/install' (assuming you've 
+selected the kmod-jaldi package to begin with, of course).

@@ -1,0 +1,318 @@
+--- a/drivers/net/wireless/ath/ath9k/debug.c	2013-01-16 19:05:44.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.c	2013-01-16 18:58:30.000000000 +0800
+@@ -2140,6 +2140,122 @@
+ 	.llseek = default_llseek,
+ };
+ 
++/**
++ * export the received frame in sc->debug.iperf_list to user space
++ * @author : zhfch
++ */
++static ssize_t read_file_frame_info(struct file *file, 
++				char __user *user_buf, size_t count, loff_t *ppos)
++{
++	struct ath_softc *sc = file->private_data;
++	char *buf;
++	unsigned int len = 0, size = 0, i = 0;
++	ssize_t retval = 0;
++	if(list_empty(&sc->debug.frame_list)){
++		size = 100;
++		buf = kzalloc(size, GFP_KERNEL);
++		if (!buf)
++			return -ENOMEM;
++		len = snprintf(buf, size, "there is no packet in the list!\n");
++		retval = simple_read_from_buffer(user_buf, count, ppos, buf, len);
++		kfree(buf);
++		return retval;
++	}
++
++	struct t_frame_info *cursor;
++	list_for_each_entry(cursor, &sc->debug.frame_list, list){
++		if (!cursor->data)		//cursor->data may be null due to no available space
++			size += 100;		//suppose the length of other infos is less than 100
++		else
++			size += 200 * 3 + 100;	//100 is header and 100 is payload, together, 200
++	}
++	buf = kzalloc(size, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	list_for_each_entry(cursor, &sc->debug.frame_list, list){
++		if (!cursor->data){
++			len += snprintf(buf + len, size - len,
++					"Seqno:%d, Length:%d, ErrType:%s\n__nomem\n", 
++					cursor->seqno, cursor->data_len, cursor->err_type);
++		} else if (cursor->data_len < 100) {
++			len += snprintf(buf + len, size - len,
++					"Seqno:%d, Length:%d, ErrType:%s\n", 
++					cursor->seqno, cursor->data_len, cursor->err_type);
++			for(i = 0 ; i < cursor->data_len ; i++){
++				len += snprintf(buf + len, size - len, "%x ", cursor->data[i]);
++			}
++			len += snprintf(buf + len, size - len, "\n");
++		} else {
++			len += snprintf(buf + len, size - len,
++					"Seqno:%d, Length:%d, ErrType:%s\n",
++					cursor->seqno, cursor->data_len, cursor->err_type);
++			for(i = 0 ; i < 82 ; i++){
++				len += snprintf(buf + len, size - len, "%x ", cursor->data[i]);
++			}
++			for(i = 82 ; i < cursor->data_len - 4 ; i++){
++				if (!cursor->data[i])
++					len += snprintf(buf + len, size - len, "%d:%x ", i, cursor->data[i]);
++			}
++			for(i = cursor->data_len - 4 ; i < cursor->data_len ; i++){
++				if (!cursor->data[i])
++					len += snprintf(buf + len, size - len, "%x ", cursor->data[i]);
++			}
++		}
++	}
++	
++	if(len > size)
++		len = size;
++	retval = simple_read_from_buffer(user_buf, count, ppos, buf, len);
++	kfree(buf);
++
++	return retval;
++}
++
++/**
++ * assign the maximum number of error frames to be recorded, if 0 is written, no frames
++ * will be recorded, then flush the frame_list and free the space
++ * @author : zhfch
++ */
++static ssize_t write_file_frame_info(struct file *file, 
++				const char __user *user_buf, size_t count, loff_t *ppos){
++	struct ath_softc *sc = file->private_data;
++	unsigned int frame_maxnum;
++	char buf[32];
++	ssize_t len;
++
++	len = min(count, sizeof(buf) - 1);
++	if (copy_from_user(buf, user_buf, len))
++		return -EFAULT;
++
++	buf[len] = '\0';
++	if (strict_strtoul(buf, 0, &frame_maxnum))
++		return -EINVAL;
++
++	sc->debug.frame_maxnum = frame_maxnum;
++	if(!list_empty(&sc->debug.frame_list)){
++		struct list_head *iter;
++		struct list_head *iter_next;
++		struct t_frame_info *cursor;
++		list_for_each_safe(iter, iter_next, &sc->debug.frame_list){
++			cursor = list_entry(iter, struct t_frame_info, list);
++			kfree(cursor->data);
++			list_del(&cursor->list);
++			kfree(cursor);
++		}
++	}
++
++	return count;
++}
++
++static const struct file_operations fops_frame_info = {
++	.read = read_file_frame_info,
++	.write = write_file_frame_info,
++	.open = ath9k_debugfs_open,
++	.owner = THIS_MODULE,
++	.llseek = default_llseek,
++};
++
+ int ath9k_init_debug(struct ath_hw *ah)
+ {
+ 	struct ath_common *common = ath9k_hw_common(ah);
+@@ -2223,6 +2339,11 @@
+ 				&fops_aggr_record);
+ 	debugfs_create_file("rx_infos", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc,
+ 				&fops_rx_infos);
++	debugfs_create_file("frame_info", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc, 
++				&fops_frame_info);
++
++	INIT_LIST_HEAD(&sc->debug.frame_list);
++	sc->debug.frame_maxnum = 0;
+ 
+ 	INIT_LIST_HEAD(&sc->debug.rx_infos_list);
+ 	INIT_LIST_HEAD(&sc->debug.xmit_bw_list);
+--- a/drivers/net/wireless/ath/ath9k/debug.h	2013-01-16 19:05:44.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.h	2013-01-16 18:59:43.000000000 +0800
+@@ -277,6 +277,16 @@
+ 	u32 phy_err;
+ };
+ 
++/*structure to store a iperf packet*/
++struct t_frame_info{
++	struct list_head list;
++	unsigned int index;		/*sequence added to the list, based 0*/
++	u16 seqno;				/*sequence number*/
++	unsigned int data_len;	/*number of bytes of the data*/
++	unsigned char *data;	/*origin data*/
++	char *err_type;			/*type of error, like crc_err*/
++};
++
+ struct ath9k_debug {
+ 	struct dentry *debugfs_phy;
+ 	u32 regidx;
+@@ -292,6 +302,8 @@
+ 	struct realtime_var rtv;
+ 	struct list_head xmit_bw_list;
+ 	struct list_head rx_infos_list;
++	struct list_head frame_list;
++	unsigned int frame_maxnum;	/*the maximum number of frames in frame list*/
+ };
+ 
+ int ath9k_init_debug(struct ath_hw *ah);
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2013-01-16 19:05:44.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2013-01-16 19:04:50.000000000 +0800
+@@ -23,6 +23,9 @@
+ int pre_seqno = -1;
+ static void record_pkt(struct ath_softc *sc, struct sk_buff *skb, struct ath_rx_status *rs);
+ static void record_rx_infos(struct ath_softc *sc, struct ath_rx_status *rs);
++char *get_error_type(struct ath_rx_status *rs);
++void record_frame_data(struct ath_softc *sc, struct ath_rx_status *rs, 
++				struct sk_buff *skb, unsigned int skb_len);
+ #define SKB_CB_ATHBUF(__skb)	(*((struct ath_buf **)__skb->cb))
+ 
+ static inline bool ath_is_alt_ant_ratio_better(int alt_ratio, int maxdelta,
+@@ -1856,6 +1859,9 @@
+ 		else
+ 			rs.is_mybeacon = false;
+ 
++		if(sc->debug.frame_maxnum > 0)
++			record_frame_data(sc, &rs, skb, rs.rs_datalen);
++
+ 		ath_debug_stat_rx(sc, &rs);
+ 
+ 		if(ieee80211_is_data_qos(hdr->frame_control))
+@@ -2164,3 +2170,130 @@
+ 	if (need_new_item)
+ 		list_add_tail(&cur->list, ri_list);
+ }
++
++/**
++ * get the error type of the packet through the rx_status
++ * @author: zhfch
++ */
++char *get_error_type(struct ath_rx_status *rs){
++#define AER(s) rs->rs_status & ATH9K_RXERR_##s
++#define DER(s) rs->rs_status & ATH9K_RX_##s
++#define PHY_ERR(s, des) \
++	if(rs->rs_phyerr == ATH9K_PHYERR_##s) \
++		sprintf(err_type, "%s & %s", err_type, des);
++		
++	/*I don't know whether a frame could have both crc error and physical error 
++	 *or some other errors, just suppose it could have only one type of error and
++	 *ignore the following errors*/
++	if (AER(CRC))
++		return "crc_err";		/*maybe this is not safe enough when there is no space*/
++	if (AER(DECRYPT))
++		return "decrypt_crc_err";
++	if (AER(MIC))
++		return "mic_err & pre_delim_crc_err";	/*they have the same value...*/
++	/*if (DER(DELIM_CRC_PRE))
++		return "pre_delim_crc_err";*/
++	if (DER(DELIM_CRC_POST))
++		return "post_delim_crc_err";
++	if (DER(DECRYPT_BUSY))
++		return "decrypt_busy_err";
++	if (!AER(PHY))
++		return "no_err";
++
++	/*physical error*/
++	char *err_type = kmalloc(64, GFP_KERNEL);
++	if (!err_type)
++		return "phy_err __nomem";
++	sprintf(err_type, "phy_err");
++	
++	PHY_ERR(UNDERRUN, "Transmit underrun");
++	PHY_ERR(TIMING, "Timing error");
++	PHY_ERR(PARITY, "Illegal parity");
++	PHY_ERR(RATE, "Illegal rate");
++	PHY_ERR(LENGTH, "Illegal length");
++	PHY_ERR(RADAR, "Radar detect");
++	PHY_ERR(SERVICE, "Illegal service");
++	PHY_ERR(TOR, "Transmit override receive");
++	
++	PHY_ERR(OFDM_TIMING, "OFDM_TIMING");
++	PHY_ERR(OFDM_SIGNAL_PARITY, "OFDM_SIGNAL_PARITY");
++	PHY_ERR(OFDM_RATE_ILLEGAL, "OFDM_RATE_ILLEGAL");
++	PHY_ERR(OFDM_LENGTH_ILLEGAL, "OFDM_LENGTH_ILLEGAL");
++	PHY_ERR(OFDM_POWER_DROP, "OFDM_POWER_DROP");
++	PHY_ERR(OFDM_SERVICE, "OFDM_SERVICE");
++	PHY_ERR(OFDM_RESTART, "OFDM_RESTART");
++	PHY_ERR(FALSE_RADAR_EXT, "FALSE_RADAR_EXT");
++	PHY_ERR(CCK_TIMING, "CCK_TIMING");
++	PHY_ERR(CCK_HEADER_CRC, "CCK_HEADER_CRC");
++	PHY_ERR(CCK_RATE_ILLEGAL, "CCK_RATE_ILLEGAL");
++	PHY_ERR(CCK_SERVICE, "CCK_SERVICE");
++	PHY_ERR(CCK_RESTART, "CCK_RESTART");
++	PHY_ERR(CCK_LENGTH_ILLEGAL, "CCK_LENGTH_ILLEGAL");
++	PHY_ERR(CCK_POWER_DROP, "CCK_POWER_DROP");
++	PHY_ERR(HT_CRC_ERROR, "HT_CRC_ERROR");
++	PHY_ERR(HT_LENGTH_ILLEGAL, "HT_LENGTH_ILLEGAL");
++	PHY_ERR(HT_RATE_ILLEGAL, "HT_RATE_ILLEGAL");
++	PHY_ERR(MAX, "MAX");
++	
++	return err_type;
++#undef PHY_ERR
++#undef DER
++#undef AER
++}
++/**
++ * record the packet info to the iperf_list in sc->debug
++ * @param : sometimes skb->len doesn't present the real size, 
++ *          then skb_len is needed, if skb->len is avaliable, set skb_len to 0
++ * @author : zhfch
++ */
++void record_frame_data(struct ath_softc *sc, struct ath_rx_status *rs, 
++						struct sk_buff *skb, unsigned int skb_len){
++#define AER(s) ATH9K_RXERR_##s
++#define DER(s) ATH9K_RX_##s
++/*ATH9K_RX_DELIM_CRC_PRE has the same value with ATH9K_RXERR_MIC, so omit it...*/
++#define HAS_ERR (AER(CRC) | AER(DECRYPT) | AER(MIC) |	\
++			DER(DELIM_CRC_POST) | DER(DECRYPT_BUSY) | AER(PHY))
++	if(!(rs->rs_status & HAS_ERR)) {
++		return;
++	}
++#undef HAS_ERR
++#undef DER
++#undef AER
++
++	unsigned int data_len = (skb->len > 0) ? skb->len : skb_len;
++	if(data_len <= 0)
++		return;
++		
++	unsigned int index;
++	struct list_head *frame_list = &sc->debug.frame_list;
++	if(list_empty(frame_list))
++		index = 0;
++	else{
++		struct t_frame_info *frame_last;
++		frame_last = list_entry(frame_list->prev, struct t_frame_info, list);
++		if(frame_last->index >= sc->debug.frame_maxnum - 1)
++			return;
++		index = frame_last->index + 1;
++	}
++	
++	struct ieee80211_hdr_3addr *hdr = (struct ieee80211_hdr_3addr *)skb->data;
++	u16 seq_ctrl = le16_to_cpu(hdr->seq_ctrl);
++	/*u16 fragno = seq_ctrl & IEEE80211_SCTL_FRAG;*/
++	u16 seqno = (seq_ctrl & IEEE80211_SCTL_SEQ) >> IEEE80211_SEQ_SEQ_SHIFT;
++
++	unsigned char *data = kmalloc(data_len + 1, GFP_KERNEL);
++	if(likely(data)){
++		memcpy(data, skb->data, data_len);
++	}
++
++	struct t_frame_info *new;
++	new = kmalloc(sizeof(struct t_frame_info), GFP_KERNEL);
++	if(likely(new)){
++		new->data = data;
++		new->index = index;
++		new->data_len = data_len;
++		new->seqno = seqno;
++		new->err_type = get_error_type(rs);
++		list_add_tail(&new->list, frame_list);
++	}
++}

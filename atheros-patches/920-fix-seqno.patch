@@ -1,0 +1,44 @@
+--- a/drivers/net/wireless/ath/ath9k/ath9k.h	2013-07-17 20:37:48.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/ath9k.h	2013-07-17 17:32:59.000000000 +0800
+@@ -642,6 +642,7 @@
+ 	unsigned long ps_usecount;
+ 
+ 	unsigned long rx_buf[BITS_TO_LONGS(ATH_TID_MAX_BUFS)];
++	u16 seq_next; /* custom seqno in xmit */
+ 	u16 seq_start;
+ 	int baw_head;
+ 
+--- a/drivers/net/wireless/ath/ath9k/init.c	2013-07-17 20:37:48.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/init.c	2013-07-17 17:34:34.000000000 +0800
+@@ -597,6 +597,7 @@
+ 	spin_lock_init(&common->cc_lock);
+ 
+ 	memset(sc->rx_buf, 0, sizeof(sc->rx_buf));
++	sc->seq_next = 0;
+ 	sc->seq_start = 0;
+ 	sc->baw_head = 0;
+ 
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2013-07-17 20:37:48.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2013-07-17 20:29:32.000000000 +0800
+@@ -2125,7 +2125,8 @@
+ 	u16 seqno = ((le16_to_cpu(hdr->seq_ctrl)) & IEEE80211_SCTL_SEQ) >> 4;
+ 	struct list_head *tp_list = &sc->debug.recv_tp_list;
+ 
+-	//ath_rx_addto_baw(sc, seqno);
++	u16 cus_seqno = skb->data[120] * 100 + skb->data[121];
++	ath_rx_addto_baw(sc, cus_seqno);
+ 
+ 	if(pre_seqno == -1)
+ 		pre_seqno = seqno - 1;
+--- a/drivers/net/wireless/ath/ath9k/xmit.c	2013-07-17 20:37:48.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/xmit.c	2013-07-17 17:41:24.000000000 +0800
+@@ -1988,6 +1988,9 @@
+ 		skb->data[78] = sc->debug.setting->mcs_number;
+ 		skb->data[79] = sc->debug.setting->subframe_size;
+ 		skb->data[98] = 'D';
++		skb->data[120] = sc->seq_next / 100;
++		skb->data[121] = sc->seq_next % 100;
++		INCR(sc->seq_next, IEEE80211_SEQ_MAX);
+ 	}
+ 
+ 	/* Add the padding after the header if this is not already done */

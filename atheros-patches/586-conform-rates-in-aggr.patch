@@ -1,0 +1,47 @@
+--- a/drivers/net/wireless/ath/ath9k/xmit.c	2013-03-13 14:33:10.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/xmit.c	2013-03-13 14:31:59.000000000 +0800
+@@ -813,7 +813,7 @@
+ {
+ #define PADBYTES(_len) ((4 - ((_len) % 4)) % 4)
+ 	struct ath_buf *bf, *bf_first = NULL, *bf_prev = NULL;
+-	int rl = 0, nframes = 0, ndelim, prev_al = 0;
++	int rl = 0, nframes = 0, ndelim, prev_al = 0, max_frame = -1;
+ 	u16 aggr_limit = 0, al = 0, bpad = 0,
+ 		al_delta, h_baw = tid->baw_size / 2;
+ 	enum ATH_AGGR_STATUS status = ATH_AGGR_DONE;
+@@ -821,6 +821,7 @@
+ 	struct ath_frame_info *fi;
+ 	struct sk_buff *skb;
+ 	u16 seqno;
++	u8 rate, flags;
+ 
+ 	do {
+ 		skb = skb_peek(&tid->buf_q);
+@@ -875,8 +875,11 @@
+ 		if (nframes && (tx_info->flags & IEEE80211_TX_CTL_RATE_CTRL_PROBE))
+ 			break;
+ 
++		if (max_frame < 0){
++			max_frame = tx_info->control.nframes;
++		}
+ 		/* do not exceed subframe limit */
+-		if (nframes >= min((int)h_baw, ATH_AMPDU_SUBFRAME_DEFAULT)) {
++		if (nframes >= min((int)h_baw, max_frame)) {
+ 			status = ATH_AGGR_LIMITED;
+ 			break;
+ 		}
+@@ -895,6 +899,14 @@
+ 		nframes++;
+ 		bf->bf_next = NULL;
+ 
++		if (nframes == 1){
++			rate = tx_info->control.rates[0].idx;
++			flags = tx_info->control.rates[0].flags;
++		} else {
++			tx_info->control.rates[0].idx = rate;
++			tx_info->control.rates[0].flags = flags;
++		}
++
+ 		/* link buffers of this frame to the aggregate */
+ 		if (!fi->retries)
+ 			ath_tx_addto_baw(sc, tid, seqno);

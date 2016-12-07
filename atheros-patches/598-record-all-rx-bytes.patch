@@ -1,0 +1,211 @@
+--- a/drivers/net/wireless/ath/ath9k/debug.c	2012-12-26 17:12:45.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.c	2012-12-26 17:10:09.000000000 +0800
+@@ -30,6 +30,7 @@
+ 	(c == '\"' || c == '\n' || c == '\r' || c == '\t' || c == ' ' || c == '=')
+ extern bool recv_tp_paused;
+ extern bool xmit_bw_paused;
++extern bool rx_infos_paused;
+ 
+ static int ath9k_debugfs_open(struct inode *inode, struct file *file)
+ {
+@@ -2065,6 +2066,80 @@
+ 	.llseek = default_llseek,
+ };
+ 
++static ssize_t read_file_rx_infos(struct file *file, char __user *user_buf,
++					size_t count, loff_t *ppos)
++{
++	struct ath_softc *sc = file->private_data;
++	char *buf;
++	ssize_t retval;
++	unsigned int len = 0, size = 100;
++
++	rx_infos_paused = true;
++
++	struct list_head *ri_list = &sc->debug.rx_infos_list;
++	struct rx_infos *cursor;
++	list_for_each_entry(cursor, ri_list, list){
++		size += 60;
++	}
++
++	buf = kmalloc(size, GFP_KERNEL);
++	if (!buf){
++		printk("Can't allocate %u bytes space\n", size);
++		return -ENOMEM;
++	}
++
++	len += snprintf(buf + len, size - len,
++			"%4s%10s%10s%10s%10s%12s\n", "sec", "tp_all", "pkts_all",
++			"crcerr", "phyerr", "rate");
++
++	list_for_each_entry(cursor, ri_list, list){
++		if (cursor->sec == 0)
++			len += snprintf(buf + len, size - len, "\n");
++		u16 rate = cursor->rx_all_bytes * 8 / 1024 / 1024;
++		len += snprintf(buf + len, size - len,
++				"%4u%10u%10u%10u%10u%8uMbps\n", cursor->sec, cursor->rx_all_bytes,
++				cursor->rx_counter, cursor->crc_err, cursor->phy_err, rate);
++		}
++
++	if (len > size)
++		len = size;
++
++	rx_infos_paused = false;
++
++	retval = simple_read_from_buffer(user_buf, count, ppos, buf, len);
++	kfree(buf);
++	return retval;
++}
++
++static ssize_t write_file_rx_infos(struct file *file, const char __user *user_buf,
++					size_t count, loff_t *ppos)
++{
++	struct ath_softc *sc = file->private_data;
++	struct list_head *ri_list = &sc->debug.rx_infos_list;
++
++	rx_infos_paused = true;
++
++	if (count > 0 && !list_empty(ri_list)){
++		struct rx_infos *cursor;
++		struct rx_infos *next;
++		list_for_each_entry_safe(cursor, next, ri_list, list){
++			list_del(&cursor->list);
++			kfree(cursor);
++		}
++	}
++
++	rx_infos_paused = false;
++	return count;
++}
++
++static const struct file_operations fops_rx_infos = {
++	.read = read_file_rx_infos,
++	.write = write_file_rx_infos,
++	.open = ath9k_debugfs_open,
++	.owner = THIS_MODULE,
++	.llseek = default_llseek,
++};
++
+ int ath9k_init_debug(struct ath_hw *ah)
+ {
+ 	struct ath_common *common = ath9k_hw_common(ah);
+@@ -2146,7 +2221,10 @@
+ 				&fops_realtime_info);
+ 	debugfs_create_file("aggr_record", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc,
+ 				&fops_aggr_record);
++	debugfs_create_file("rx_infos", S_IRUSR | S_IWUSR, sc->debug.debugfs_phy, sc,
++				&fops_rx_infos);
+ 
++	INIT_LIST_HEAD(&sc->debug.rx_infos_list);
+ 	INIT_LIST_HEAD(&sc->debug.xmit_bw_list);
+ 	INIT_LIST_HEAD(&sc->debug.recv_tp_list);
+ 	sc->debug.setting = kmalloc(sizeof(struct inject_settings), GFP_KERNEL);
+--- a/drivers/net/wireless/ath/ath9k/debug.h	2012-12-26 17:12:45.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/debug.h	2012-12-26 17:10:09.000000000 +0800
+@@ -265,6 +265,16 @@
+ 	u32 nonaggr_num;
+ };
+ 
++struct rx_infos {
++	struct list_head list;
++	u16 sec;
++	unsigned long jiff;
++	u32 rx_all_bytes;
++	u32 rx_counter;
++	u32 crc_err;
++	u32 phy_err;
++};
++
+ struct ath9k_debug {
+ 	struct dentry *debugfs_phy;
+ 	u32 regidx;
+@@ -279,6 +289,7 @@
+ 	struct list_head recv_tp_list;
+ 	struct realtime_var rtv;
+ 	struct list_head xmit_bw_list;
++	struct list_head rx_infos_list;
+ };
+ 
+ int ath9k_init_debug(struct ath_hw *ah);
+--- a/drivers/net/wireless/ath/ath9k/recv.c	2012-12-26 17:12:45.000000000 +0800
++++ b/drivers/net/wireless/ath/ath9k/recv.c	2012-12-26 17:12:10.000000000 +0800
+@@ -19,8 +19,10 @@
+ #include "ar9003_mac.h"
+ 
+ bool recv_tp_paused = false;
++bool rx_infos_paused = false;
+ int pre_seqno = -1;
+ static void record_pkt(struct ath_softc *sc, struct sk_buff *skb, struct ath_rx_status *rs);
++static void record_rx_infos(struct ath_softc *sc, struct ath_rx_status *rs);
+ #define SKB_CB_ATHBUF(__skb)	(*((struct ath_buf **)__skb->cb))
+ 
+ static inline bool ath_is_alt_ant_ratio_better(int alt_ratio, int maxdelta,
+@@ -1858,6 +1860,9 @@
+ 
+ 		ath_debug_stat_rx(sc, &rs);
+ 
++		if(ieee80211_is_data_qos(hdr->frame_control))
++			record_rx_infos(sc, &rs);
++
+ 		/*
+ 		 * If we're asked to flush receive queue, directly
+ 		 * chain it back at the queue without processing it.
+@@ -2115,3 +2120,57 @@
+ 	if (need_new_item)
+ 		list_add_tail(&cur->list, tp_list);
+ }
++
++static void record_rx_infos(struct ath_softc *sc, struct ath_rx_status *rs){
++	if (rx_infos_paused)
++		return;
++
++	struct list_head *ri_list = &sc->debug.rx_infos_list;
++
++	struct rx_infos *cur;
++	if (!list_empty(ri_list))
++		cur = list_entry(ri_list->prev, struct rx_infos, list);
++	else
++		cur = NULL;
++	unsigned long jiff = jiffies;
++	bool need_new_item = false;
++	if (!cur || time_after(jiff, cur->jiff))
++		need_new_item = true;
++
++	while (need_new_item){
++		unsigned long next_jiff;
++		u16 sec;
++		if (cur){
++			next_jiff = cur->jiff + HZ;
+r
++			sec = cur->sec + 1;
++		}
++		else{
++			next_jiff = jiff + HZ;
++			sec = 0;
++		}
++		cur = kmalloc(sizeof(struct rx_infos), GFP_KERNEL);
++		if (!cur){
++			printk("Can't alloc new struct rx_infos!\n");
++			return;
++		}
++		cur->sec = sec;
++		cur->jiff = next_jiff;
++		cur->rx_all_bytes = 0;
++		cur->crc_err = 0;
++		cur->phy_err = 0;
++		cur->rx_counter = 0;
++		if (time_after(jiff, cur->jiff))
++			list_add_tail(&cur->list, ri_list);
++		else
++			break;
++	}
++
++	cur->rx_counter++;
++	cur->rx_all_bytes += rs->rs_datalen;
++	if (rs->rs_status & ATH9K_RXERR_CRC)
++		cur->crc_err++;
++	if (rs->rs_status & ATH9K_RXERR_PHY)
++		cur->phy_err++;
++	if (need_new_item)
++		list_add_tail(&cur->list, ri_list);
++}

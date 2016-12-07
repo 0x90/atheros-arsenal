@@ -1,0 +1,28 @@
+#!/bin/sh /etc/rc.common
+
+START=95
+APP=ath9k-watchdog
+POSTM=ath9k-watchdog-pm
+PID_FILE=/var/run/$APP.pid
+POSTM_PID_FILE=/var/run/$POSTM.pid
+
+start() {
+		if [ -f $PID_FILE ]; then
+			echo "Ath9k-watchdog: Already Running"
+		else 
+	        start-stop-daemon -S -x $APP -p $PID_FILE -m -b
+		fi
+
+		if [ -f $POSTM_PID_FILE ]; then
+			echo "ath9k-watchdog-pm: Already Running"
+		else 
+	        start-stop-daemon -S -x $POSTM -p $POSTM_PID_FILE -m -b
+		fi
+}
+
+stop() {
+        start-stop-daemon -K -n $APP -p $PID_FILE -s TERM
+        start-stop-daemon -K -n $POSTM -p $POSTM_PID_FILE -s TERM
+        rm -rf $PID_FILE
+        rm -rf $POSTM_PID_FILE
+}

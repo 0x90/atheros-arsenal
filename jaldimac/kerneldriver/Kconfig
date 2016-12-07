@@ -1,0 +1,5 @@
+config JALDI
+	tristate "Atheros 802.11n wireless cards support"
+	depends on PCI
+	---help---
+	  This is the Jaldi module.

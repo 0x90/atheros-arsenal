@@ -1,0 +1,25 @@
+--- a/include/net/mac80211.h	2013-02-28 15:08:33.000000000 +0800
++++ b/include/net/mac80211.h	2013-02-28 15:11:27.000000000 +0800
+@@ -555,12 +555,22 @@
+ 			struct ieee80211_vif *vif;
+ 			struct ieee80211_key_conf *hw_key;
+ 			struct ieee80211_sta *sta;
++			char buffer[8];
++			u8 try_limit;
++			u8 rateset_index;
++			u8 rate_index;
++			u8 nframes;
+ 		} control;
+ 		struct {
+ 			struct ieee80211_tx_rate rates[IEEE80211_TX_MAX_RATES];
+ 			u8 ampdu_ack_len;
+ 			int ack_signal;
+ 			u8 ampdu_len;
++			char buffer[15];
++			u8 try_limit;
++			u8 rateset_index;
++			u8 rate_index;
++			u8 nframes;
+ 			/* 15 bytes free */
+ 		} status;
+ 		struct {

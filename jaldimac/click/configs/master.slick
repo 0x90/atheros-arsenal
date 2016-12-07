@@ -1,0 +1,17 @@
+// Master configuration
+#define $HOST_IP 10.3.3.2
+#define $HOST_IP_NETMASK 10.3.3.2/24
+#define $STATION_ID $MASTER_ID
+
+// Station configuration
+#define $STATION_1_IP 192.168.0.2
+#define $STATION_2_IP 192.168.0.3
+#define $STATION_3_IP 192.168.0.4
+#define $STATION_4_IP 192.168.0.5
+
+// Devices
+#include "tun-upstream.slickh"
+#include "ath9k-downstream.slickh"
+
+// Implementation
+#include "generic-master.slickh"

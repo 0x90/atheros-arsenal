@@ -1,0 +1,5 @@
+FreeBSD - a new otus driver, using the carl9170 firmware and (if I can get it)
+parts of the carl9170 driver re-licenced under the BSD licence.
+
+OpenBSD - the openbsd reference code and firmware.
+

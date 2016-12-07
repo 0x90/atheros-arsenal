@@ -1,0 +1,47 @@
+#include "shared.slickh"
+
+voipDemux :: JaldiVoIPDemux(3)
+jaldiGate :: JaldiGate(2)
+
+InfiniteSource(DATA \<00>, LIMIT 100, BURST 1, STOP true)
+	-> UDPIPEncap(192.168.0.1, 5555, 192.168.0.2, 6666)
+	-> CheckIPHeader
+	-> Print
+	-> voipDemux
+
+voipDemux[$VOIP_OUT_1] -> Print(Output1) -> JaldiEncap(VOIP_FRAME, 2, 1) -> JaldiQueue(10) -> [2]jaldiGate
+voipDemux[$VOIP_OUT_2] -> Print(Output2) -> JaldiEncap(VOIP_FRAME, 2, 1) -> JaldiQueue(10) -> [3]jaldiGate
+voipDemux[$VOIP_OUT_3] -> Print(Output3) -> JaldiEncap(VOIP_FRAME, 2, 1) -> JaldiQueue(10) -> [4]jaldiGate
+voipDemux[$VOIP_OUT_4] -> Print(Output4) -> JaldiEncap(VOIP_FRAME, 2, 1) -> JaldiQueue(10) -> [5]jaldiGate
+voipDemux[$VOIP_OUT_OVERFLOW] -> Print(OverflowOutput) -> JaldiEncap(VOIP_FRAME, 2, 1) -> JaldiQueue(10) -> [6]jaldiGate
+voipDemux[$VOIP_OUT_BAD] -> Print(BadOutput) -> Discard
+
+InfiniteSource(DATA \<00>, LIMIT 100, BURST 1, STOP false)
+	-> IPEncap(6, 192.168.0.1, 192.168.0.2)
+	-> CheckIPHeader
+	-> Print
+	-> JaldiEncap(BULK_FRAME, 2, 1)
+	-> JaldiQueue(2000)
+	-> [1]jaldiGate
+
+
+/*
+InfiniteSource(DATA \<ff0f0000 00>, LIMIT 100, BURST 1, STOP false)
+	-> JaldiEncap(TRANSMIT_SLOT, 1, 2)
+	-> JaldiPrint
+	-> [0]jaldiGate
+*/
+
+/*
+InfiniteSource(DATA \<ff0f0000>, LIMIT 100, BURST 1, STOP false)
+	-> JaldiEncap(CONTENTION_SLOT, 1, 2)
+	-> JaldiPrint
+	-> [0]jaldiGate
+*/
+
+InfiniteSource(DATA \<ff0f0000 02020202>, LIMIT 100, BURST 1, STOP false)
+	-> JaldiEncap(VOIP_SLOT, 1, 2)
+	-> JaldiPrint
+	-> [0]jaldiGate
+
+jaldiGate -> JaldiPrint -> Discard
