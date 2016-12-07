@@ -1,0 +1,117 @@
+[submodule "wifi-atheros-fix"]
+	path = wifi-atheros-fix
+	url = https://github.com/rogeriolaguilar/wifi-atheros-fix
+[submodule "open-ath9k-htc-firmware"]
+	path = open-ath9k-htc-firmware
+	url = https://github.com/qca/open-ath9k-htc-firmware
+[submodule "qca-swiss-army-knife"]
+	path = qca-swiss-army-knife
+	url = https://github.com/qca/qca-swiss-army-knife
+[submodule "re_ar5523"]
+	path = re_ar5523
+	url = https://github.com/olerem/re_ar5523
+[submodule "ath9k-htc-firmware-blob"]
+	path = ath9k-htc-firmware-blob
+	url = https://github.com/olerem/ath9k-htc-firmware-blob
+[submodule "firmware-ath9k-htc"]
+	path = firmware-ath9k-htc
+	url = https://github.com/olerem/firmware-ath9k-htc
+[submodule "open-ath9k-htc-firmware-sboot"]
+	path = open-ath9k-htc-firmware-sboot
+	url = https://github.com/olerem/open-ath9k-htc-firmware-sboot
+[submodule "atheros-patches"]
+	path = atheros-patches
+	url = https://github.com/zeplios/atheros-patches
+[submodule "arch-linux-ath-user-regd"]
+	path = arch-linux-ath-user-regd
+	url = https://github.com/twisteroidambassador/arch-linux-ath-user-regd
+[submodule "ath9k-nav"]
+	path = ath9k-nav
+	url = https://github.com/hughobrien/ath9k-nav
+[submodule "atheros10k_pci_QCA6174_wireless_ubuntu"]
+	path = atheros10k_pci_QCA6174_wireless_ubuntu
+	url = https://github.com/climaxx/atheros10k_pci_QCA6174_wireless_ubuntu
+[submodule "ath9k_ocb_linux_4.7.rc3"]
+	path = ath9k_ocb_linux_4.7.rc3
+	url = https://github.com/jfpastrana/ath9k_ocb_linux_4.7.rc3
+[submodule "ath9k_ocb_linux_4.2.8"]
+	path = ath9k_ocb_linux_4.2.8
+	url = https://github.com/jfpastrana/ath9k_ocb_linux_4.2.8
+[submodule "AtherosROMKit"]
+	path = AtherosROMKit
+	url = https://github.com/andyvand/AtherosROMKit
+[submodule "ath9k_ath5k_full_permissive_unlock_all_channels.patch"]
+	path = ath9k_ath5k_full_permissive_unlock_all_channels.patch
+	url = https://github.com/doom5/ath9k_ath5k_full_permissive_unlock_all_channels.patch
+[submodule "odin-utilities"]
+	path = odin-utilities
+	url = https://github.com/josemariasaldana/odin-utilities
+[submodule "linux-ath9k-channel-context"]
+	path = linux-ath9k-channel-context
+	url = https://github.com/albfan/linux-ath9k-channel-context
+[submodule "Atheros-CSI-Tool"]
+	path = Atheros-CSI-Tool
+	url = https://github.com/xieyaxiongfly/Atheros-CSI-Tool
+[submodule "Atheros-CSI-Tool-UserSpace-APP"]
+	path = Atheros-CSI-Tool-UserSpace-APP
+	url = https://github.com/xieyaxiongfly/Atheros-CSI-Tool-UserSpace-APP
+[submodule "Qualcomm-Atheros-QCA9377-Wifi-Linux"]
+	path = Qualcomm-Atheros-QCA9377-Wifi-Linux
+	url = https://github.com/ajaybhatia/Qualcomm-Atheros-QCA9377-Wifi-Linux
+[submodule "ath9k"]
+	path = ath9k
+	url = https://github.com/mengyuan411/ath9k
+[submodule "ath9k-hmac"]
+	path = ath9k-hmac
+	url = https://github.com/szehl/ath9k-hmac
+[submodule "ath9k-watchdog"]
+	path = ath9k-watchdog
+	url = https://github.com/ff-kbu/ath9k-watchdog
+[submodule "ath9k-4W-patch"]
+	path = ath9k-4W-patch
+	url = https://github.com/rboninsegna/ath9k-4W-patch
+[submodule "ath9k-docs"]
+	path = ath9k-docs
+	url = https://github.com/erikarn/ath9k-docs
+[submodule "ath_spectral"]
+	path = ath_spectral
+	url = https://github.com/LorenzoBianconi/ath_spectral
+[submodule "ath9k_dynack"]
+	path = ath9k_dynack
+	url = https://github.com/LorenzoBianconi/ath9k_dynack
+[submodule "fft_plot"]
+	path = fft_plot
+	url = https://github.com/yinshengrong/fft_plot
+[submodule "fixsum"]
+	path = fixsum
+	url = https://github.com/joycechu/fixsum
+[submodule "ar9300_eeprom"]
+	path = ar9300_eeprom
+	url = https://github.com/pepe2k/ar9300_eeprom
+[submodule "atheros"]
+	path = atheros
+	url = https://github.com/Deoptim/atheros
+[submodule "jaldimac"]
+	path = jaldimac
+	url = https://github.com/shaddi/jaldimac
+[submodule "RegMon"]
+	path = RegMon
+	url = https://github.com/thuehn/RegMon
+[submodule "ath-info"]
+	path = ath-info
+	url = https://github.com/mickflemm/ath-info
+[submodule "backport-ath9k"]
+	path = backport-ath9k
+	url = https://github.com/dongjin80/backport-ath9k
+[submodule "ath9k-spectral-scan"]
+	path = ath9k-spectral-scan
+	url = https://github.com/kazikcz/ath9k-spectral-scan
+[submodule "otus"]
+	path = otus
+	url = https://github.com/erikarn/otus
+[submodule "qcamain_open_hal_public"]
+	path = qcamain_open_hal_public
+	url = https://github.com/qca/qcamain_open_hal_public
+[submodule "speccy"]
+	path = speccy
+	url = https://github.com/bcopeland/speccy
