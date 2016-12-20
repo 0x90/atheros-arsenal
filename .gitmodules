@@ -109,3 +109,6 @@
 [submodule "speccy"]
 	path = speccy
 	url = https://github.com/bcopeland/speccy
+[submodule "module_wifi_ath"]
+	path = module_wifi_ath
+	url = https://github.com/uniflex/module_wifi_ath
