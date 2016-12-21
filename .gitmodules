@@ -112,3 +112,9 @@
 [submodule "module_wifi_ath"]
 	path = module_wifi_ath
 	url = https://github.com/uniflex/module_wifi_ath
+[submodule "wifibroadcast"]
+	path = wifibroadcast
+	url = https://github.com/goodwin/wifibroadcast
+[submodule "Atheros-AR9271"]
+	path = Atheros-AR9271
+	url = https://github.com/aaronkish/Atheros-AR9271
